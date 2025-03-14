@@ -1,8 +1,116 @@
-﻿@{
+﻿@* @{ *@
+@*     ViewData["Title"] = "Home Page"; *@
+@* } *@
+
+@* <div class="text-center"> *@
+@*     <h1 class="display-4">Welcome</h1> *@
+@*     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+@* </div> *@
+
+@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+    .calculation-box {
+        height: 75px;
+        width: 150px;
+        position: absolute;
+        bottom: 40px;
+        left: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        text-align: center;
+    }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    p {
+        font-family: 'Open Sans';
+        margin: 0;
+        font-size: 13px;
+    }
+
+    .maplibregl-map {
+        height: 50vh;
+        width: 100%;
+    }
+</style>
+
+<script src="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
+<link rel="stylesheet"
+      href="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css" />
+
+<div id="map"></div>
+
+<script type="module">
+    import * as turf from 'https://esm.sh/@@turf/turf@7.1.0';
+
+    MapboxDraw.constants.classes.CANVAS  = 'maplibregl-canvas';
+    MapboxDraw.constants.classes.CONTROL_BASE  = 'maplibregl-ctrl';
+    MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+    MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+    MapboxDraw.constants.classes.ATTRIBUTION = 'maplibregl-ctrl-attrib';
+
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+        center: [-91.874, 42.76],
+        zoom: 12
+    });
+
+    const draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+            polygon: true,
+            trash: true
+        },
+        styles: [
+            {
+                'id': 'gl-draw-polygon-and-line-vertex-active',
+                'type': 'circle',
+                'filter': ['==', '$type', 'Point'],
+                'paint': {
+                    'circle-radius': 5,
+                    'circle-color': '#fff',
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#f00'
+                }
+            },
+            {
+                'id': 'gl-draw-polygon-fill',
+                'type': 'fill',
+                'filter': ['==', '$type', 'Polygon'],
+                'paint': {
+                    'fill-color': '#f00',
+                    'fill-opacity': 0.4
+                }
+            },
+            {
+                'id': 'gl-draw-polygon-stroke',
+                'type': 'line',
+                'filter': ['==', '$type', 'Polygon'],
+                'paint': {
+                    'line-color': '#f00',
+                    'line-width': 2,
+                    'line-dasharray': ['literal', [2, 2]]
+                }
+            }
+        ]
+    });
+
+    map.addControl(draw);
+
+    map.on('draw.create', updateArea);
+    map.on('draw.delete', updateArea);
+    map.on('draw.update', updateArea);
+
+    function updateArea(e) {
+        const data = draw.getAll();
+        console.log("Data: " + JSON.stringify(data));
+
+        if (data.features.length > 0) {
+            const area = turf.area(data);
+
+            // restrict to area to 2 decimal points
+            const roundedArea = Math.round(area * 100) / 100;
+        }
+    }
+</script>

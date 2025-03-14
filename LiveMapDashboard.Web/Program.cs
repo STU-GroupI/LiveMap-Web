@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+
 namespace LiveMapDashboard.Web
 {
     public class Program
@@ -10,6 +12,7 @@ namespace LiveMapDashboard.Web
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+            app.UseCors("AllowAll");
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
