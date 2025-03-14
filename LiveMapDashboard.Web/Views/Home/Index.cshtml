@@ -40,6 +40,10 @@
 
 <div id="map"></div>
 
+<button id="saveMap">
+    Hello
+</button>
+
 <script type="module">
     import * as turf from 'https://esm.sh/@@turf/turf@7.1.0';
 
@@ -98,13 +102,14 @@
 
     map.addControl(draw);
 
-    map.on('draw.create', updateArea);
+    map.on('draw.create', onCreateArea);
     map.on('draw.delete', updateArea);
     map.on('draw.update', updateArea);
 
     function updateArea(e) {
         const data = draw.getAll();
         console.log("Data: " + JSON.stringify(data));
+        console.log('Meow!');
 
         if (data.features.length > 0) {
             const area = turf.area(data);
@@ -113,4 +118,24 @@
             const roundedArea = Math.round(area * 100) / 100;
         }
     }
+
+    function onCreateArea(e) {
+        const data = draw.getAll();
+
+        if (data.features.length > 1) {
+            draw.delete(data.features[data.features.length - 1].id);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#saveMap').addEventListener('click', () => {
+            const features = draw.getAll().features;
+            if (features.length == 0) {
+                return;
+            }
+
+            // Save Map
+            console.log(features[0]);
+        });
+    });
 </script>
