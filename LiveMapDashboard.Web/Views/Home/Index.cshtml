@@ -103,7 +103,7 @@
     map.addControl(draw);
 
     map.on('draw.create', onCreateArea);
-    map.on('draw.delete', updateArea);
+    map.on('draw.delete', onDeleteArea);
     map.on('draw.update', updateArea);
 
     function updateArea(e) {
@@ -117,6 +117,19 @@
         }
 
         onAreaChanged();
+    }
+
+    function onDeleteArea() {
+        fetch("http://localhost:3000/coords", {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Data deleted:", data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
     }
 
     function onCreateArea(e) {
@@ -139,7 +152,7 @@
             fetch("http://localhost:3000/coords", {
                 method: "GET",
             })
-            .then(response => response.json())  // Parse the JSON response
+            .then(response => response.json())
             .then(data => {
                 const newFeature = draw.add({
                     type: 'Feature',
