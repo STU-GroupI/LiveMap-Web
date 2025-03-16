@@ -17,16 +17,54 @@ public class PointOfInterestRepository : IPointOfInterestRepository
     {
         pointsOfInterestList = new List<PointOfInterest>
         {
-            new PointOfInterest(1, "Toilet", "TestToilet 1"),
-            new PointOfInterest(2, "Point of Interest 2", "Description 2"),
-            new PointOfInterest(3, "Point of Interest 3", "Description 3"),
-            new PointOfInterest(4, "Point of Interest 4", "Description 4"),
-            new PointOfInterest(5, "Point of Interest 5", "Description 5"),
-            new PointOfInterest(6, "Point of Interest 6", "Description 6"),
-            new PointOfInterest(7, "Point of Interest 7", "Description 7"),
-            new PointOfInterest(8, "Point of Interest 8", "Description 8"),
-            new PointOfInterest(9, "Point of Interest 9", "Description 9"),
-            new PointOfInterest(10, "Point of Interest 10", "Description 10"),
+            new PointOfInterest()
+            {
+                Id = 1,
+                Title = "Toilet",
+                Description = "TestToilet 1"
+            },
+            new PointOfInterest()
+            {
+                Id = 2,
+                Title = "Toilet",
+                Description = "TestToilet 2"
+            },
+            new PointOfInterest()
+            {
+                Id = 3,
+                Title = "Toilet",
+                Description = "TestToilet 3"
+            },
+            new PointOfInterest()
+            {
+                Id = 4,
+                Title = "Toilet",
+                Description = "TestToilet 4"
+            },
+            new PointOfInterest()
+            {
+                Id = 5,
+                Title = "Toilet",
+                Description = "TestToilet 5"
+            },
+            new PointOfInterest()
+            {
+                Id = 6,
+                Title = "Toilet",
+                Description = "TestToilet 6"
+            },
+            new PointOfInterest()
+            {
+                Id = 7,
+                Title = "Toilet",
+                Description = "TestToilet 7"
+            },
+            new PointOfInterest()
+            {
+                Id = 8,
+                Title = "Toilet",
+                Description = "TestToilet 8"
+            }
         };
     }
 

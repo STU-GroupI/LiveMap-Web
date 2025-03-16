@@ -15,13 +15,36 @@ namespace LiveMapDashboard.Web.Controllers
     public class PointOfInterestController : ControllerBase
     {
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(GetSingleRequest request)
+        public async Task<IActionResult> Get([FromRoute]GetSingleRequest request)
         {
             GetSingleHandler handler = new GetSingleHandler(new PointOfInterestRepository());
 
+            if(request == null || request.Id == 0)
+            {
+                return BadRequest();
+            }
+
             GetSingleResponse response = handler.GetFromRepo(request);
 
-            return Ok(response.PointOfInterest.Title);
+            if(response == null)
+            {
+                return NotFound();
+            }
+
+            if(response.PointOfInterest == null)
+            {
+                return NoContent();
+            }
+
+            var poi = response.PointOfInterest;
+
+            return Ok($"{poi.Title} {poi.Id}");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaged([FromQuery]int parkId, [FromQuery]int from, [FromQuery]int? amount)
+        {
+            return Ok("Test");
         }
     }
 }

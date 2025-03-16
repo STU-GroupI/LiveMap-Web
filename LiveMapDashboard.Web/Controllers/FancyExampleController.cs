@@ -3,52 +3,58 @@ using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace LiveMapDashboard.Web.Controllers
+namespace LiveMapDashboard.Web.Controllers;
+
+[ApiController]
+[Route("api/person")] // [Route("api/[controller]")] <- Would be what you'd put here
+public class FancyExampleController : ControllerBase
 {
-    /*public record Person(int Id, string FirstName, string LastName, DateOnly DateOfBirth);
+    public record GetSingleWebRequest([FromRoute(Name = "id")] int Id);
 
-    [ApiController]
-    [Route("api/person")] // [Route("api/[controller]")] <- Would be what you'd put here
-    public class FancyExampleController : ControllerBase
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get([FromRoute]GetSingleWebRequest request)
     {
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(GetSingleRequest request)
-        {
-            return Ok(new GetSingleResponse(new Person(
-                request.Id,
-                "",
-                "",
-                DateOnly.FromDateTime(DateTime.Now.Date)
-            )));
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetPaged(GetSingleRequest request)
-        {
-            return Ok(new GetSingleResponse(new Person(
-                request.Id,
-                "",
-                "",
-                DateOnly.FromDateTime(DateTime.Now.Date)
-            )));
-        }
+        return Ok(new Person(
+            request.Id,
+            "SomePerson",
+            "SomeLastName",
+            DateOnly.FromDateTime(DateTime.Now.Date)
+        ));
     }
-    public record GetSingleRequest([FromRoute] int Id);
-    public record GetSingleResponse(Person Data)
-    {
-        *//*private PointOfInterest pointOfInterest;
+    public record GetPagedWebRequest([FromQuery(Name = "from")] int From, [FromQuery(Name = "amount")] int Amount);
 
-        public GetSingleResponse(PointOfInterest pointOfInterest)
-        {
-            this.pointOfInterest = pointOfInterest;
-        }*//*
+    [HttpGet]
+    public async Task<IActionResult> GetPaged([FromRoute]GetPagedWebRequest request)
+    {
+        Person[] data = [new Person(
+            1,
+            "SomePerson",
+            "SomeLastName",
+            DateOnly.FromDateTime(DateTime.Now.Date)
+        ), new Person(
+            2,
+            "SomeOtherPerson",
+            "SomeOtherLastName",
+            DateOnly.FromDateTime(DateTime.Now.Date)
+        )];
+        return Ok(data);
     }
 
-    public record GetPagedRequest([FromQuery] int From, [FromQuery] int Amount);
-    public record GetPagedResponse(Person[] Data);
-
-    public record CreateSingleRequest(string FirstName, string LastName, DateOnly DateOfBirth);
-    public record CreateSingleResponse(Person Person);*/
+    public record CreateSingleWebRequest([FromBody]Person Data);
+    [HttpPost]
+    public async Task<IActionResult> Post(CreateSingleWebRequest request)
+    {
+        var newPerson = new Person(
+            1,
+            "",
+            "",
+            DateOnly.FromDateTime(DateTime.Now.Date)
+        );
+        return Created($"baseurl/api/person/{newPerson.Id}", newPerson);
+    }
 }
+
+public record Person(int Id, string FirstName, string LastName, DateOnly DateOfBirth);
 
 /*
     Request -> FluentValidation -> Endpoint -> /Logica/ -> StatusCode(Response)
