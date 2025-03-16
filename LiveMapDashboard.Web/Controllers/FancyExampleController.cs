@@ -1,10 +1,11 @@
-﻿using LiveMapDashboard.Web.Controllers;
+﻿using LiveMap.Domain.Models;
+using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace LiveMapDashboard.Web.Controllers
 {
-    public record Person(int Id, string FirstName, string LastName, DateOnly DateOfBirth);
+    /*public record Person(int Id, string FirstName, string LastName, DateOnly DateOfBirth);
 
     [ApiController]
     [Route("api/person")] // [Route("api/[controller]")] <- Would be what you'd put here
@@ -32,13 +33,21 @@ namespace LiveMapDashboard.Web.Controllers
         }
     }
     public record GetSingleRequest([FromRoute] int Id);
-    public record GetSingleResponse(Person Data);
+    public record GetSingleResponse(Person Data)
+    {
+        *//*private PointOfInterest pointOfInterest;
+
+        public GetSingleResponse(PointOfInterest pointOfInterest)
+        {
+            this.pointOfInterest = pointOfInterest;
+        }*//*
+    }
 
     public record GetPagedRequest([FromQuery] int From, [FromQuery] int Amount);
     public record GetPagedResponse(Person[] Data);
 
     public record CreateSingleRequest(string FirstName, string LastName, DateOnly DateOfBirth);
-    public record CreateSingleResponse(Person Person);
+    public record CreateSingleResponse(Person Person);*/
 }
 
 /*
