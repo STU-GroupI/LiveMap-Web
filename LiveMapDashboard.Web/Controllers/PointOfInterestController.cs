@@ -15,23 +15,19 @@ namespace LiveMapDashboard.Web.Controllers
     public class PointOfInterestController : ControllerBase
     {
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute]GetSingleRequest request)
+        public async Task<IActionResult> Get(
+            [FromRoute] GetSingleRequest request,
+            [FromServices] GetSingleHandler handler)
         {
-            GetSingleHandler handler = new GetSingleHandler(new PointOfInterestRepository());
-
-            if(request == null || request.Id == 0)
+            // Can be moved ones FluentValidation is in place
+            if(request is not { Id: > 0})
             {
                 return BadRequest();
             }
 
-            GetSingleResponse response = handler.GetFromRepo(request);
+            GetSingleResponse response = await handler.Handle(request);
 
-            if(response == null)
-            {
-                return NotFound();
-            }
-
-            if(response.PointOfInterest == null)
+            if(response.PointOfInterest is null)
             {
                 return NoContent();
             }

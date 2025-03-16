@@ -1,9 +1,8 @@
 ﻿using LiveMap.Domain.Models;
-using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace LiveMapDashboard.Web.Controllers;
+namespace LiveMapDashboard.Web.Controllers.Examples;
 
 [ApiController]
 [Route("api/person")] // [Route("api/[controller]")] <- Would be what you'd put here

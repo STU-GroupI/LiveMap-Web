@@ -10,79 +10,23 @@ namespace LiveMap.Persistence.Repositories;
 
 public class PointOfInterestRepository : IPointOfInterestRepository
 {
-    private List<PointOfInterest> pointsOfInterestList;
+    private readonly LiveMapContext _context;
 
-    // Temporary constructor for testing
-    public PointOfInterestRepository()
+    public PointOfInterestRepository(LiveMapContext context)
     {
-        pointsOfInterestList = new List<PointOfInterest>
-        {
-            new PointOfInterest()
-            {
-                Id = 1,
-                Title = "Toilet",
-                Description = "TestToilet 1"
-            },
-            new PointOfInterest()
-            {
-                Id = 2,
-                Title = "Toilet",
-                Description = "TestToilet 2"
-            },
-            new PointOfInterest()
-            {
-                Id = 3,
-                Title = "Toilet",
-                Description = "TestToilet 3"
-            },
-            new PointOfInterest()
-            {
-                Id = 4,
-                Title = "Toilet",
-                Description = "TestToilet 4"
-            },
-            new PointOfInterest()
-            {
-                Id = 5,
-                Title = "Toilet",
-                Description = "TestToilet 5"
-            },
-            new PointOfInterest()
-            {
-                Id = 6,
-                Title = "Toilet",
-                Description = "TestToilet 6"
-            },
-            new PointOfInterest()
-            {
-                Id = 7,
-                Title = "Toilet",
-                Description = "TestToilet 7"
-            },
-            new PointOfInterest()
-            {
-                Id = 8,
-                Title = "Toilet",
-                Description = "TestToilet 8"
-            }
-        };
+        _context = context;
     }
 
-    public Task<PointOfInterest> GetPaged(int from, int amount)
+    public Task<PointOfInterest> GetPaged(int parkId, int from, int amount)
     {
         throw new NotImplementedException();
     }
 
     public Task<PointOfInterest> GetSingle(int id)
     {
-        if (pointsOfInterestList == null)
-        {
-            return Task.FromException<PointOfInterest>(new ArgumentNullException(nameof(pointsOfInterestList)));
-        }
+        PointOfInterest? pointOfInterest = null;
 
-        PointOfInterest pointOfInterest = pointsOfInterestList.FirstOrDefault(p => p.Id == id);
-
-        if (pointOfInterest == null)
+        if (pointOfInterest is null)
         {
             return Task.FromException<PointOfInterest>(new ArgumentNullException(nameof(id)));
         }

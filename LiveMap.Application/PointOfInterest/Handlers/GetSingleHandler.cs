@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
-public class GetSingleHandler
+public class GetSingleHandler : IRequestHandler<GetSingleRequest, GetSingleResponse>
 {
     private readonly IPointOfInterestRepository _pointOfInterestRepository;
 
@@ -19,8 +19,8 @@ public class GetSingleHandler
         _pointOfInterestRepository = pointOfInterestRepository;
     }
 
-    public GetSingleResponse GetFromRepo(GetSingleRequest request)
+    public async Task<GetSingleResponse> Handle(GetSingleRequest request)
     {
-        return new GetSingleResponse(_pointOfInterestRepository.GetSingle(request.Id).Result);
+        return new GetSingleResponse(await _pointOfInterestRepository.GetSingle(request.Id));
     }
 }

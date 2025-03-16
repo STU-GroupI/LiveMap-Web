@@ -11,5 +11,5 @@ public interface IPointOfInterestRepository
 {
     public Task<Models.PointOfInterest> GetSingle(int id);
 
-    public Task<Models.PointOfInterest> GetPaged(int from, int amount);
+    public Task<Models.PointOfInterest> GetPaged(int parkId, int from, int amount);
 }

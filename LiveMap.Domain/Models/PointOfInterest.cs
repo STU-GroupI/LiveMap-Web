@@ -8,21 +8,18 @@ using System.Threading.Tasks;
 namespace LiveMap.Domain.Models;
 public class PointOfInterest
 {
-    [Required]
-    public int Id { get; set; }
-    
-    [Required]
-    public string Title { get; set; }
+    public required Guid Id { get; set; }
 
-    [Required]
-    public string Description { get; set; }
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required Coordinate Coordinate { get; set; }
 
-    // Enum yet to be declared
-    //public string Status { get; set; }
+    public string? CategoryName { get; set; }
+    public required Category Category { get; set; }
 
-    // Object yet to be declared
-    //public Location Location { get; set; }
+    public string? StatusName { get; set; }
+    public required PointOfInterestStatus Status { get; set; }
 
-    // Object yet to be declared
-    // public Category Category { get; set; }
+    public required Guid MapId { get; set; }
+    public required Map Map { get; set; }
 }

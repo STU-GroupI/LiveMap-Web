@@ -1,8 +1,18 @@
 
-var builder = WebApplication.CreateBuilder(args);
+using LiveMap.Persistence;
+using Microsoft.EntityFrameworkCore;
+using LiveMapDashboard.Web.Extensions;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<LiveMapContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.RegisterRepositories();
+builder.Services.RegisterRequestHandlers();
 
 var app = builder.Build();
 
