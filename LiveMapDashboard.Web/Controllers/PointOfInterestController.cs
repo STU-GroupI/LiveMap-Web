@@ -20,10 +20,10 @@ namespace LiveMapDashboard.Web.Controllers
             [FromServices] GetSingleHandler handler)
         {
             // Can be moved ones FluentValidation is in place
-            if(request is not { Id: > 0})
-            {
-                return BadRequest();
-            }
+            //if (request is not { Id: > 0 })
+            //{
+            //    return BadRequest();
+            //}
 
             GetSingleResponse response = await handler.Handle(request);
 

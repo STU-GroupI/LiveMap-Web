@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Persistence.DbModels;
+using LiveMap.Persistence.Extentions;
+using Microsoft.EntityFrameworkCore;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -17,20 +20,26 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         _context = context;
     }
 
-    public Task<PointOfInterest> GetPaged(int parkId, int from, int amount)
+    public Task<PointOfInterest> GetPaged(Guid mapId, int from, int amount)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PointOfInterest> GetSingle(int id)
+    public async Task<PointOfInterest?> GetSingle(Guid id)
     {
-        PointOfInterest? pointOfInterest = null;
+        SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
+            .Include(poi => poi.Category)
+            .Include(poi => poi.Status)
+            .Include(poi => poi.Map)
+            .Where(poi => poi.Id == id)
+            .FirstOrDefaultAsync();
 
-        if (pointOfInterest is null)
+        if(pointOfInterest is null)
         {
-            return Task.FromException<PointOfInterest>(new ArgumentNullException(nameof(id)));
+            return null;
         }
 
-        return Task.FromResult(pointOfInterest);
+
+        return pointOfInterest.ToPointOfInterest();
     }
 }

@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Requests;
 
-public sealed record GetSingleRequest(int Id);
+public sealed record GetSingleRequest(Guid Id);

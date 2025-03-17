@@ -20,7 +20,7 @@ public class GetPagedHandler : IRequestHandler<GetPagedRequest, GetPagedResponse
 
     public async Task<GetPagedResponse> Handle(GetPagedRequest request)
     {
-        var data = await _pointOfInterestRepository.GetPaged(1, 2, 3);
+        var data = await _pointOfInterestRepository.GetPaged(Guid.NewGuid(), 1, 100);
         return new GetPagedResponse();
     }
 }

@@ -1,10 +1,7 @@
 ﻿using LiveMap.Domain.Models;
+using LiveMap.Persistence.Extentions;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Coordinate = LiveMap.Domain.Models.Coordinate;
 
 namespace LiveMap.Persistence.DbModels;
 
@@ -14,7 +11,7 @@ public class SqlPointOfInterest
 
     public required string Title { get; set; }
     public required string Description { get; set; }
-    public required Point Coordinate { get; set; }
+    public required Point Position { get; set; }
 
     public string? CategoryName { get; set; }
     public required Category Category { get; set; }

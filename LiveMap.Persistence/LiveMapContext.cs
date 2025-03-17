@@ -16,7 +16,7 @@ public class LiveMapContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("defaultPlaceHolder",
+            optionsBuilder.UseSqlServer("PlaceHolder",
                 sqlOptions => sqlOptions.UseNetTopologySuite());
         }
 
@@ -39,18 +39,24 @@ public class LiveMapContext : DbContext
                 .WithMany()
                 .HasForeignKey(poi => poi.StatusName);
 
-            entityBuilder.Property(poi => poi.Coordinate);
+            entityBuilder.Property(e => e.Position).HasColumnType("geometry");
         });
 
-        modelBuilder.Entity<SqlMap>(entityBuilder =>
+        modelBuilder.Entity<SqlMap>(entity =>
         {
-            entityBuilder.HasMany(map => map.PointOfInterests)
-                .WithOne(poi => poi.Map);
-
-            entityBuilder.Property(map => map.Coordinate);
-            
-            entityBuilder.Property(map => map.Edge);
+            entity.Property(e => e.Border).HasColumnType("geometry");
+            entity.Property(e => e.Position).HasColumnType("geometry");
         });
+
+        modelBuilder.Entity<Category>(entityBuilder =>
+        {
+            entityBuilder.HasKey(cat => cat.Name);
+        });
+        modelBuilder.Entity<PointOfInterestStatus>(entityBuilder =>
+        {
+            entityBuilder.HasKey(status => status.Status);
+        });
+
         base.OnModelCreating(modelBuilder);
     }
 }
