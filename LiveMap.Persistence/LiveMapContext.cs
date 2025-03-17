@@ -1,12 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Persistence;
 public class LiveMapContext : DbContext
@@ -45,27 +39,17 @@ public class LiveMapContext : DbContext
                 .WithMany()
                 .HasForeignKey(poi => poi.StatusName);
 
-            entityBuilder.Property(poi => poi.Coordinate)
-                .HasColumnType("geometry");
+            entityBuilder.Property(poi => poi.Coordinate);
         });
 
         modelBuilder.Entity<SqlMap>(entityBuilder =>
         {
-            entityBuilder.Property(e => e.Border)
-                .HasColumnType("geometry") 
-                .HasConversion(
-                    v => v, 
-                    v => v 
-                );
-
             entityBuilder.HasMany(map => map.PointOfInterests)
                 .WithOne(poi => poi.Map);
 
-            entityBuilder.Property(map => map.Border)
-                .HasColumnType("geometry"); // Or "geometry" if needed
-
-            entityBuilder.Property(map => map.Coordinate)
-                .HasColumnType("geometry");
+            entityBuilder.Property(map => map.Coordinate);
+            
+            entityBuilder.Property(map => map.Edge);
         });
         base.OnModelCreating(modelBuilder);
     }

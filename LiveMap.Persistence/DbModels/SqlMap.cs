@@ -12,7 +12,7 @@ public class SqlMap
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public Polygon Border { get; set; }
+    public Polygon Edge { get; set; }
     public Point Coordinate { get; set; }
     public int WidthInMeters { get; set; }
     public int LengthInMeters { get; set; }
