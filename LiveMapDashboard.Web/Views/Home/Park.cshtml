@@ -185,10 +185,11 @@
         })
             .then(response => response.json())
             .then(data => {
+
                 console.log("Data deleted:", data);
             })
             .catch(error => {
-                console.error("Error:", error);
+                showAlert('error', 'Kan park grenzen niet verwijderen.');
             });
         onAreaChanged();
     }
@@ -204,12 +205,12 @@
     }
 
     function onAreaChanged() {
-             // Select the start drawing button (use the correct selector for your button)
-        const startDrawingBtn = document.querySelector('#drawMap');  // Or use a different selector
+        const startDrawingBtn = document.querySelector('#drawMap');
     
         if (startDrawingBtn) {
             console.log("disablin' time")
-        // Disable the start drawing button if there are features drawn
+
+            // Disable the start drawing button if there are features drawn
             startDrawingBtn.disabled = (draw.getAll().features.length > 0);
             startDrawingBtn.style.pointerEvents = startDrawingBtn.disabled ? 'none' : 'auto'
             startDrawingBtn.style.backgroundColor = startDrawingBtn.disabled ? '#D3D3D3': ''
@@ -254,7 +255,7 @@
                     onAreaChanged();
                 })
                 .catch(error => {
-                    console.error("Error:", error);
+                    showAlert('error', 'Kan parkgrenzen niet ophalen.');
                 });
         }
 
@@ -267,14 +268,16 @@
                 if (modal) {
                     modal.hide();
                 }
+                    onAreaChanged();
             } else {
-                // TODO: Jeroens alert method gebruiken
+                showAlert('error', 'Er zijn geen parkgrenzen om te verwijderen.');
             }
         });
 
         document.querySelector('#saveMap').addEventListener('click', () => {
             const features = draw.getAll().features;
             if (features.length == 0) {
+                showAlert('warning', 'Er zijn geen parkgrenzen om op te slaan.');
                 return;
             }
 
@@ -291,7 +294,9 @@
             })
                 .then(response => response.json())
                 .then(data => console.log("Success: ", data))
-                .catch(error => console.error("Error: ", error));
+                .catch(error => {
+                    showAlert('error', 'Kan park grenzen niet opslaan.');
+                });
         });
 
         document.querySelector('#drawMap').addEventListener('click', () => {
@@ -306,7 +311,7 @@
                 document.querySelector('#latitudeInput').value
             ]);
             } catch (error) {
-                // show alert or something
+                showAlert('warning', 'Coordinaten zijn niet geldig.');
                 console.log(error);
             }
         });
@@ -314,7 +319,7 @@
         document.querySelector('#searchPark').addEventListener('click', () => {
             const features = draw.getAll().features;
             if (features.length == 0) {
-                console.log('er is nog geen park');
+                showAlert('error', 'Er zijn geen parkgrenzen gezet.');
                 return;
             }
 
