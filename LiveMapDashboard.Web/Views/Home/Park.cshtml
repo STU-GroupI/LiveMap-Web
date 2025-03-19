@@ -185,8 +185,7 @@
         })
             .then(response => response.json())
             .then(data => {
-
-                console.log("Data deleted:", data);
+                
             })
             .catch(error => {
                 showAlert('error', 'Kan park grenzen niet verwijderen.');
@@ -208,8 +207,6 @@
         const startDrawingBtn = document.querySelector('#drawMap');
     
         if (startDrawingBtn) {
-            console.log("disablin' time")
-
             // Disable the start drawing button if there are features drawn
             startDrawingBtn.disabled = (draw.getAll().features.length > 0);
             startDrawingBtn.style.pointerEvents = startDrawingBtn.disabled ? 'none' : 'auto'
@@ -283,7 +280,6 @@
             }
 
             // Save Map
-            console.log(features[0]);
             const coordinates = features[0].geometry.coordinates;
 
             fetch("http://localhost:3000/coords", {
@@ -294,7 +290,9 @@
                 body: JSON.stringify(coordinates)
             })
                 .then(response => response.json())
-                .then(data => console.log("Success: ", data))
+                .then(data => { 
+
+                })
                 .catch(error => {
                     showAlert('error', 'Kan park grenzen niet opslaan.');
                 });
@@ -305,7 +303,6 @@
         });
 
         document.querySelector('#submitGo').addEventListener('click', () => {
-            console.log(map.getCenter());
             try {
                 map.setCenter([
                 document.querySelector('#longitudeInput').value,
@@ -313,7 +310,6 @@
             ]);
             } catch (error) {
                 showAlert('warning', 'Coordinaten zijn niet geldig.');
-                console.log(error);
             }
         });
 
