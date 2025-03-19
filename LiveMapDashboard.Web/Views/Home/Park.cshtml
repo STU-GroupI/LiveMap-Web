@@ -70,6 +70,7 @@
         <div class="pt-3">
             <a href="#" class="btn btn-primary" id="saveMap">Opslaan</a>
             <a href="#" class="btn btn-danger">Verwijderen</a>
+            <a href="#" class="btn btn-primary" id="drawMap">Tekenen</a>
         </div>
     </div>
 </div>
@@ -93,7 +94,7 @@
     const draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: {
-            polygon: true,
+            polygon: false,
             trash: true
         },
         styles: [
@@ -131,6 +132,10 @@
     });
 
     map.addControl(draw);
+
+        document.querySelector('#drawMap').addEventListener('click', () => {
+        draw.changeMode('draw_polygon');  // Enable drawing polygon mode
+    });
 
     map.on('draw.create', onCreateArea);
     map.on('draw.delete', onDeleteArea);
@@ -174,8 +179,14 @@
     }
 
     function onAreaChanged() {
-        document.querySelector('.mapbox-gl-draw_ctrl-draw-btn.mapbox-gl-draw_polygon').disabled
-            = (draw.getAll().features.length > 0);
+             // Select the start drawing button (use the correct selector for your button)
+        const startDrawingBtn = document.querySelector('#drawMap');  // Or use a different selector
+    
+        if (startDrawingBtn) {
+            console.log("disablin' time")
+        // Disable the start drawing button if there are features drawn
+            startDrawingBtn.disabled = (draw.getAll().features.length > 0);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
