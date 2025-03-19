@@ -32,6 +32,11 @@
         height: 50vh;
         width: 100%;
     }
+
+    a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -119,7 +124,7 @@
         displayControlsDefault: false,
         controls: {
             polygon: false,
-            trash: true
+            trash: false
         },
         styles: [
             {
@@ -156,10 +161,6 @@
     });
 
     map.addControl(draw);
-
-        document.querySelector('#drawMap').addEventListener('click', () => {
-        draw.changeMode('draw_polygon');  // Enable drawing polygon mode
-    });
 
     map.on('draw.create', onCreateArea);
     map.on('draw.delete', onDeleteArea);
@@ -210,6 +211,8 @@
             console.log("disablin' time")
         // Disable the start drawing button if there are features drawn
             startDrawingBtn.disabled = (draw.getAll().features.length > 0);
+            startDrawingBtn.style.pointerEvents = startDrawingBtn.disabled ? 'none' : 'auto'
+            startDrawingBtn.style.backgroundColor = startDrawingBtn.disabled ? '#D3D3D3': ''
         }
     }
 
@@ -259,6 +262,7 @@
             const data = draw.getAll()
 
             draw.delete(data.features[data.features.length - 1].id);
+            onAreaChanged();
 
             const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
             if (modal) {
@@ -286,6 +290,10 @@
                 .then(response => response.json())
                 .then(data => console.log("Success: ", data))
                 .catch(error => console.error("Error: ", error));
+        });
+
+        document.querySelector('#drawMap').addEventListener('click', () => {
+            draw.changeMode('draw_polygon');  // Enable drawing polygon mode
         });
 
         document.querySelector('#submitGo').addEventListener('click', () => {
