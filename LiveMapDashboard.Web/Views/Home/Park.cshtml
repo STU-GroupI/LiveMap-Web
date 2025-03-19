@@ -38,11 +38,41 @@
 <link rel="stylesheet"
       href="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css" />
 
-<div id="map"></div>
+<div class="card">
+    <div class="card-header">
+        ParkNaam
+    </div>
+    <div class="card-body">
+        <div class="card">
+            <div id="map"></div>
+        </div>
 
-<button id="saveMap">
-    Hello
-</button>
+        <div class="pt-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="longitudeInput">Longitude</label>
+                        <input type="text" class="form-control" id="longitudeInput" aria-describedby="longitude">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="latitudeInput">Latitude</label>
+                        <input type="text" class="form-control" id="latitudeInput" aria-describedby="latitude">
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary w-100" id="submitGo">Ga</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3">
+            <a href="#" class="btn btn-primary" id="saveMap">Opslaan</a>
+            <a href="#" class="btn btn-danger">Verwijderen</a>
+        </div>
+    </div>
+</div>
 
 <script type="module">
     import * as turf from 'https://esm.sh/@@turf/turf@7.1.0';
@@ -150,6 +180,9 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         {
+            document.querySelector('#latitudeInput').value = '51.6885178';
+            document.querySelector('#longitudeInput').value = '5.2866805';
+
             fetch("http://localhost:3000/coords", {
                 method: "GET",
             })
@@ -190,6 +223,18 @@
                 .then(response => response.json())
                 .then(data => console.log("Success: ", data))
                 .catch(error => console.error("Error: ", error));
+        });
+
+        document.querySelector('#submitGo').addEventListener('click', () => {
+            console.log(map.getCenter());
+            try {
+                map.setCenter([
+                document.querySelector('#longitudeInput').value,
+                document.querySelector('#latitudeInput').value
+            ]);
+            } catch (error) {
+                // show alert or something
+            }
         });
     });
 </script>
