@@ -49,20 +49,23 @@
 
         <div class="pt-3">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="longitudeInput">Longitude</label>
                         <input type="text" class="form-control" id="longitudeInput" aria-describedby="longitude">
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="latitudeInput">Latitude</label>
                         <input type="text" class="form-control" id="latitudeInput" aria-describedby="latitude">
                     </div>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="button" class="btn btn-primary w-100" id="submitGo">Ga</button>
+                    <button type="button" class="btn btn-primary w-100" id="submitGo">Zoek</button>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-primary w-100" id="searchPark">Naar Park</button>
                 </div>
             </div>
         </div>
@@ -189,6 +192,23 @@
         }
     }
 
+    function getCenterOfCoordinates(coordinates) {
+        let totalLatitude = 0;
+        let totalLongitude = 0;
+
+        // Loop through each coordinate and sum up latitudes and longitudes
+        coordinates.forEach(coord => {
+            totalLatitude += coord[1];
+            totalLongitude += coord[0];
+        });
+
+        // Calculate the average latitude and longitude
+        const centerLatitude = totalLatitude / coordinates.length;
+        const centerLongitude = totalLongitude / coordinates.length;
+
+        return [centerLongitude, centerLatitude];  // Return in [longitude, latitude] format
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         {
             document.querySelector('#latitudeInput').value = '51.6885178';
@@ -245,7 +265,20 @@
             ]);
             } catch (error) {
                 // show alert or something
+                console.log(error);
             }
+        });
+
+        document.querySelector('#searchPark').addEventListener('click', () => {
+            const features = draw.getAll().features;
+            if (features.length == 0) {
+                console.log('er is nog geen park');
+                return;
+            }
+
+            // Save Map
+            const coordinates = features[0].geometry.coordinates[0];
+            map.setCenter(getCenterOfCoordinates(coordinates));
         });
     });
 </script>
