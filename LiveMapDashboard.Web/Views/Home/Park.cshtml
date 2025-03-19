@@ -256,13 +256,16 @@
         }
 
         document.getElementById("confirmDelete").addEventListener("click", function () {
-            const data = draw.getAll()
-
-            draw.delete(data.features[data.features.length - 1].id);
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-            if (modal) {
-                modal.hide();
+            const data = draw.getAll();
+            if (data.features && data.features.length > 0) {
+                draw.delete(data.features[data.features.length - 1].id);
+                
+                const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+                if (modal) {
+                    modal.hide();
+                }
+            } else {
+                // TODO: Jeroens alert method gebruiken
             }
         });
 
