@@ -35,7 +35,7 @@ await app.SeedDatabase();
 app.UseSwagger();
 app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.SwaggerEndpoint("api/swagger/v1/swagger.json", "v1");
     options.RoutePrefix = "api/swagger";
 });
 
