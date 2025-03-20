@@ -1,5 +1,5 @@
 ﻿using LiveMap.Domain.Models;
-using LiveMap.Persistence.Extentions;
+using LiveMap.Persistence.Extensions;
 using NetTopologySuite.Geometries;
 
 namespace LiveMap.Persistence.DbModels;

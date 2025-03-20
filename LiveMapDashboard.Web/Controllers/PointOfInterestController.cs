@@ -40,6 +40,7 @@ public class PointOfInterestController : ControllerBase
         }
 
         var poi = response.PointOfInterest;
+        poi.Map = null!;
         return Ok(poi);
     }
     /// <summary>

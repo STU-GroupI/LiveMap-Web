@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
-using LiveMap.Persistence.Extentions;
+using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace LiveMap.Persistence.Repositories;

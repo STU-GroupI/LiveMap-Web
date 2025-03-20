@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
-namespace LiveMap.Persistence.Extentions;
-public static class MapperExtentions
+namespace LiveMap.Persistence.Extensions;
+public static class MapperExtensions
 {
     public static Map ToMap(this SqlMap map)
     {

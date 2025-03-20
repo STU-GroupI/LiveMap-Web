@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiveMap.Persistence.Extentions;
-public static class NetTopologyExtentions
+namespace LiveMap.Persistence.Extensions;
+public static class NetTopologyExtensions
 {
     public static Domain.Models.Coordinate ToDomainCoordinate(this Point coordinate) => new(coordinate.X, coordinate.Y);
 
