@@ -11,8 +11,6 @@ public class Map
     public string Name { get; set; }
     public Coordinate[] Area { get; set; }
     public Coordinate Coordinate { get; set; }
-    public int WidthInMeters { get; set; }
-    public int LengthInMeters { get; set; }
 
     public virtual ICollection<PointOfInterest> PointOfInterests { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using LiveMap.Domain.Models;
+using LiveMap.Persistence.DataSeeder;
 using LiveMap.Persistence.DbModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,10 +26,14 @@ public class LiveMapContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<SqlPointOfInterest>(entityBuilder =>
         {
             entityBuilder.ToTable("PointOfInterest")
-                .HasOne(poi => poi.Map)
+                .HasKey(e => e.Id);
+
+            entityBuilder.HasOne(poi => poi.Map)
                 .WithMany(map => map.PointOfInterests);
 
             entityBuilder.HasOne(poi => poi.Category)
@@ -42,21 +47,26 @@ public class LiveMapContext : DbContext
             entityBuilder.Property(e => e.Position).HasColumnType("geometry");
         });
 
-        modelBuilder.Entity<SqlMap>(entity =>
+        modelBuilder.Entity<SqlMap>(entityBuilder =>
         {
-            entity.Property(e => e.Border).HasColumnType("geometry");
-            entity.Property(e => e.Position).HasColumnType("geometry");
+            entityBuilder.ToTable("Map")
+                .HasKey(e => e.Id);
+            entityBuilder.Property(e => e.Border).HasColumnType("geometry");
+            entityBuilder.Property(e => e.Position).HasColumnType("geometry");
         });
 
         modelBuilder.Entity<Category>(entityBuilder =>
         {
-            entityBuilder.HasKey(cat => cat.Name);
-        });
-        modelBuilder.Entity<PointOfInterestStatus>(entityBuilder =>
-        {
-            entityBuilder.HasKey(status => status.Status);
+            entityBuilder.ToTable("Category")
+                .HasKey(cat => cat.CategoryName);
+            entityBuilder.Property(cat => cat.CategoryName)
+                .HasColumnName("Category");
         });
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<PointOfInterestStatus>(entityBuilder =>
+        {
+            entityBuilder.ToTable("Status")
+                .HasKey(status => status.Status);
+        });
     }
 }

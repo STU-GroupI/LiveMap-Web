@@ -20,9 +20,30 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         _context = context;
     }
 
-    public Task<PointOfInterest> GetPaged(Guid mapId, int from, int amount)
+    public async Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
-        throw new NotImplementedException();
+        var query = _context.PointsOfInterest
+            .Where(poi => poi.MapId == mapId);
+
+        if (skip is int fromValue)
+        {
+            query = query.Skip(fromValue);
+        }
+
+        if(take is int amountValue)
+        {
+            query = query.Take(amountValue);
+        }
+        
+        var result = await query.ToListAsync();
+
+        if (result is not { Count: > 0 }) 
+        {
+            return [];
+        }
+
+        return result.Select(poi => poi.ToPointOfInterest())
+            .ToList();
     }
 
     public async Task<PointOfInterest?> GetSingle(Guid id)

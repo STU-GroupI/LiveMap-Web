@@ -5,4 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Responses;
-public sealed record GetSingleResponse(LiveMap.Domain.Models.PointOfInterest PointOfInterest);
+public sealed record GetSingleResponse(LiveMap.Domain.Models.PointOfInterest? PointOfInterest);

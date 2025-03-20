@@ -17,8 +17,6 @@ public static class MapperExtentions
             Id = map.Id,
             Name = map.Name,
             Coordinate = map.Position.ToDomainCoordinate(),
-            LengthInMeters = map.LengthInMeters,
-            WidthInMeters = map.WidthInMeters,
             PointOfInterests = new List<PointOfInterest>(),
             Area = map.Border.ToDomainCoordinates(),
         };
@@ -34,7 +32,7 @@ public static class MapperExtentions
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
             MapId = poi.MapId,
-            Map = poi.Map.ToMap(),
+            Map = poi.Map?.ToMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName

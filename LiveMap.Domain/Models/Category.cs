@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace LiveMap.Domain.Models;
 public class Category
 {
-    public required string Name { get; set; }
+    public required string CategoryName { get; set; }
 }

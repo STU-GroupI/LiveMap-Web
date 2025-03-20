@@ -5,4 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Requests;
-public sealed record GetPagedRequest(int ParkId, int From, int? Amount);
+public sealed record GetMultipleRequest(Guid MapId, int? Skip, int? Take);

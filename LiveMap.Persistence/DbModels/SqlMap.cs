@@ -10,8 +10,6 @@ public class SqlMap
     public string Name { get; set; }
     public Polygon Border { get; set; }
     public Point Position { get; set; }
-    public int WidthInMeters { get; set; }
-    public int LengthInMeters { get; set; }
 
     public virtual ICollection<SqlPointOfInterest> PointOfInterests { get; set; }
 }

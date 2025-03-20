@@ -12,9 +12,9 @@ public static class RequestHandlerDI
             PointOfInterest.Handlers.GetSingleHandler>();
 
         services.AddTransient<IRequestHandler<
-            PointOfInterest.Requests.GetPagedRequest,
-            PointOfInterest.Responses.GetPagedResponse>,
-            PointOfInterest.Handlers.GetPagedHandler>();
+            PointOfInterest.Requests.GetMultipleRequest,
+            PointOfInterest.Responses.GetMultipleResponse>,
+            PointOfInterest.Handlers.GetMultipleHandler>();
 
         return services;
     }

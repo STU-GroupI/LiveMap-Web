@@ -5,13 +5,12 @@ using LiveMapDashboard.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<LiveMapContext>(options =>
-{
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        options => options.UseNetTopologySuite());
-});
+// Make sure that the connectionstring is automagically picked based on the selected env...
+builder.Services.RegisterLiveMapContext(
+    builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.RegisterRepositories();
 builder.Services.RegisterRequestHandlers();
@@ -30,6 +29,16 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 app.MapStaticAssets();
+
+// Does not have to be awaited as far as we are concerned. It can just run seperately as a job.
+await app.SeedDatabase();
+
+//app.UseSwagger();
+//app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
+//{
+//    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+//    options.RoutePrefix = "api/swagger";
+//});
 
 app.MapControllerRoute(
     name: "default",

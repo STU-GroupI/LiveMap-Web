@@ -5,4 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Responses;
-public sealed record GetPagedResponse();
+public sealed record GetMultipleResponse(ICollection<Domain.Models.PointOfInterest> PointsOfInterests);

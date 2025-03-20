@@ -7,47 +7,45 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Geography : Migration
+    public partial class AddSpacialData_feature5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Category = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Name);
+                    table.PrimaryKey("PK_Category", x => x.Category);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Maps",
+                name: "Map",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Border = table.Column<Polygon>(type: "geometry", nullable: false),
-                    Position = table.Column<Point>(type: "geometry", nullable: false),
-                    WidthInMeters = table.Column<int>(type: "int", nullable: false),
-                    LengthInMeters = table.Column<int>(type: "int", nullable: false)
+                    Position = table.Column<Point>(type: "geometry", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Maps", x => x.Id);
+                    table.PrimaryKey("PK_Map", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PoIStatusses",
+                name: "Status",
                 columns: table => new
                 {
                     Status = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PoIStatusses", x => x.Status);
+                    table.PrimaryKey("PK_Status", x => x.Status);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,20 +64,20 @@ namespace LiveMap.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_PointOfInterest", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PointOfInterest_Categories_CategoryName",
+                        name: "FK_PointOfInterest_Category_CategoryName",
                         column: x => x.CategoryName,
-                        principalTable: "Categories",
-                        principalColumn: "Name");
+                        principalTable: "Category",
+                        principalColumn: "Category");
                     table.ForeignKey(
-                        name: "FK_PointOfInterest_Maps_MapId",
+                        name: "FK_PointOfInterest_Map_MapId",
                         column: x => x.MapId,
-                        principalTable: "Maps",
+                        principalTable: "Map",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PointOfInterest_PoIStatusses_StatusName",
+                        name: "FK_PointOfInterest_Status_StatusName",
                         column: x => x.StatusName,
-                        principalTable: "PoIStatusses",
+                        principalTable: "Status",
                         principalColumn: "Status");
                 });
 
@@ -106,13 +104,13 @@ namespace LiveMap.Persistence.Migrations
                 name: "PointOfInterest");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Maps");
+                name: "Map");
 
             migrationBuilder.DropTable(
-                name: "PoIStatusses");
+                name: "Status");
         }
     }
 }

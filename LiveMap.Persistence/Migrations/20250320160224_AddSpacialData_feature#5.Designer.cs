@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    [Migration("20250317224735_Geography")]
-    partial class Geography
+    [Migration("20250320160224_AddSpacialData_feature#5")]
+    partial class AddSpacialData_feature5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,12 +28,13 @@ namespace LiveMap.Persistence.Migrations
 
             modelBuilder.Entity("LiveMap.Domain.Models.Category", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("Category");
 
-                    b.HasKey("Name");
+                    b.HasKey("CategoryName");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("LiveMap.Domain.Models.PointOfInterestStatus", b =>
@@ -43,7 +44,7 @@ namespace LiveMap.Persistence.Migrations
 
                     b.HasKey("Status");
 
-                    b.ToTable("PoIStatusses");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlMap", b =>
@@ -56,9 +57,6 @@ namespace LiveMap.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("geometry");
 
-                    b.Property<int>("LengthInMeters")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -67,12 +65,9 @@ namespace LiveMap.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("geometry");
 
-                    b.Property<int>("WidthInMeters")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Maps");
+                    b.ToTable("Map", (string)null);
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>

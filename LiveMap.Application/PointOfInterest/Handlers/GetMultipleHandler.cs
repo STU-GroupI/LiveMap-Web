@@ -9,18 +9,21 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
-public class GetPagedHandler : IRequestHandler<GetPagedRequest, GetPagedResponse>
+public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipleResponse>
 {
     private readonly IPointOfInterestRepository _pointOfInterestRepository;
 
-    public GetPagedHandler(IPointOfInterestRepository pointOfInterestRepository)
+    public GetMultipleHandler(IPointOfInterestRepository pointOfInterestRepository)
     {
         _pointOfInterestRepository = pointOfInterestRepository;
     }
 
-    public async Task<GetPagedResponse> Handle(GetPagedRequest request)
+    public async Task<GetMultipleResponse> Handle(GetMultipleRequest request)
     {
-        var data = await _pointOfInterestRepository.GetPaged(Guid.NewGuid(), 1, 100);
-        return new GetPagedResponse();
+        return new GetMultipleResponse(
+            await _pointOfInterestRepository.GetMultiple(
+                request.MapId, 
+                request.Skip, 
+                request.Take));
     }
 }
