@@ -14,21 +14,20 @@ namespace LiveMapDashboard.Tests.PoiTests;
 public class GetPoiTests
 {
     [Theory]
-    [MemberData(nameof(GetValidPointOfInterestIds))]
+    [MemberData(nameof(GetValidPointOfInterest))]
     public async Task ReadSingle_WithValidId_WhenPoIExists_ShouldReturnResponseWithPoI(
-    Guid id,
+    PointOfInterest poi,
     StubPointOfInterestRepository repository)
     {
         // Arrange
-        var expectedPoi = repository.pois[0];
-        var request = new GetSingleRequest(expectedPoi.Id);
+        var request = new GetSingleRequest(poi.Id);
         var handler = new GetSingleHandler(repository);
 
         // Act
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointOfInterest.ShouldBe(expectedPoi);
+        actualResult.PointOfInterest.ShouldBe(poi);
     }
 
     [Theory]
@@ -47,13 +46,12 @@ public class GetPoiTests
     }
 
     [Theory]
-    [MemberData(nameof(GetValidMapIds))]
+    [MemberData(nameof(GetValidMap))]
     public async Task ReadMultiple_WithValidMapId_WhenMapExistsAndHasPois_ShouldReturnExpectedPoisForMap(
-        Guid id,
+        Map map,
         StubPointOfInterestRepository repository)
     {
         // Arrange
-        var map = repository.maps[0];
         var request = new GetMultipleRequest(map.Id, null, null);
         var handler = new GetMultipleHandler(repository);
 
@@ -135,24 +133,24 @@ public class GetPoiTests
         actualResult.PointsOfInterests.ShouldBeEmpty();
     }
 
-    public static IEnumerable<object[]> GetValidPointOfInterestIds()
+    public static IEnumerable<object[]> GetValidPointOfInterest()
     {
         var repository = new StubPointOfInterestRepository(
             TestDataGenerator.GenerateMultipleMaps(3));
 
         foreach (var poi in repository.pois)
         {
-            yield return new object[] { poi.Id, repository };
+            yield return new object[] { poi, repository };
         }
     }
-    public static IEnumerable<object[]> GetValidMapIds()
+    public static IEnumerable<object[]> GetValidMap()
     {
         var repository = new StubPointOfInterestRepository(
             TestDataGenerator.GenerateMultipleMaps(3));
 
         foreach (var map in repository.maps)
         {
-            yield return new object[] { map.Id, repository };
+            yield return new object[] { map, repository };
         }
     }
     public static IEnumerable<object[]> GetValidMapsWithoutPois()
