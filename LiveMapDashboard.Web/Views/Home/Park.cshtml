@@ -88,13 +88,13 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Bevestiging</h5>
                         </div>
                         <div class="modal-body">
-                            <h2>Verwijderen van area</h2>
+                            <h2>Weet u zeker dat u de parkgrens wilt verwijderen?</u></h2>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" id="confirmDelete">Verwijderen</button>
                         </div>
                     </div>
@@ -304,6 +304,7 @@
 
         document.querySelector('#submitGo').addEventListener('click', () => {
             try {
+                map.setZoom(15)
                 map.setCenter([
                 document.querySelector('#longitudeInput').value,
                 document.querySelector('#latitudeInput').value
@@ -314,6 +315,7 @@
         });
 
         document.querySelector('#searchPark').addEventListener('click', () => {
+            map.setZoom(15)
             const features = draw.getAll().features;
             if (features.length == 0) {
                 showAlert('error', 'Er zijn geen parkgrenzen gezet.');
