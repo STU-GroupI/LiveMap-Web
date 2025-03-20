@@ -12,19 +12,11 @@ using System.Threading.Tasks;
 namespace LiveMapDashboard.Tests.PoiTests;
 public class GetPoiTests
 {
-    public readonly StubPointOfInterestRepository repository;
-
-    public GetPoiTests()
-    {
-        var repo = new StubPointOfInterestRepository(
-            TestDataGenerator.GenerateMultipleMaps(3));
-
-        repository = repo;
-    }
-
     [Theory]
     [MemberData(nameof(GetValidPointOfInterestIds))]
-    public async Task Doing_ReadSingle_Given_ValidId_When_PoIExists_ResultsTo_ResponseWithPoI()
+    public async Task Doing_ReadSingle_Given_ValidId_When_PoIExists_ResultsTo_ResponseWithPoI(
+        Guid id,
+        StubPointOfInterestRepository repository)
     {
         // Arrange
         var expectedPoi = repository.points[0];
@@ -41,27 +33,19 @@ public class GetPoiTests
         Assert.Same(actualResult.PointOfInterest, expectedPoi);
     }
 
-    public static IEnumerable<object[]> GetValidPointOfInterestIds()
-    {
-        var repository = new StubPointOfInterestRepository(
-            TestDataGenerator.GenerateMultipleMaps(3));
-
-        foreach (var poi in repository.points)
-        {
-            yield return new object[] { poi.Id };
-        }
-    }
-
-    [Fact]
-    public async Task Doing_ReadSingle_Given_ValidId_When_PoINotExists_ResultsTo_ResponseWithoutPoI()
+    [Theory]
+    [InlineData("00000000-0000-0000-0000-000000000001")]
+    public async Task Doing_ReadSingle_Given_ValidId_When_PoINotExists_ResultsTo_ResponseWithoutPoI(Guid nonExistentId)
     {
         // Arrange
         PointOfInterest? expectedPoi = null;
         var expectedResponse = new GetSingleResponse(expectedPoi);
 
-        var guid = Guid.NewGuid();
-        var request = new GetSingleRequest(guid);
-        var handler = new GetSingleHandler(repository);
+        var request = new GetSingleRequest(nonExistentId);
+        
+        var handler = new GetSingleHandler(
+            new StubPointOfInterestRepository(
+                new List<Map>()));
 
         // Act
         var actualResult = await handler.Handle(request);
@@ -70,8 +54,11 @@ public class GetPoiTests
         Assert.Null(actualResult.PointOfInterest);
     }
 
-    [Fact]
-    public async Task Doing_ReadMultiple_Given_ValidMapId_When_MapExists_And_MapHasPois_ResultsTo_ExpectedPoisForMap()
+    [Theory]
+    [MemberData(nameof(GetValidMapIds))]
+    public async Task Doing_ReadMultiple_Given_ValidMapId_When_MapExists_And_MapHasPois_ResultsTo_ExpectedPoisForMap(
+        Guid id,
+        StubPointOfInterestRepository repository)
     {
         // Arrange
         var map = repository.maps[0];
@@ -88,12 +75,15 @@ public class GetPoiTests
         Assert.Equal(expectedResponse.PointsOfInterests.Count(), actualResult.PointsOfInterests.Count());
     }
 
-    [Fact]
-    public async Task Doing_ReadMultiple_Given_ValidMapId_With_ValidSkip_When_MapExists_And_MapHasPois_ResultsTo_ExpectedPoisFromMap()
+
+    [Theory]
+    [MemberData(nameof(GetValidMapIdsWithSkipAndTake))]
+    public async Task Doing_ReadMultiple_Given_ValidMapId_With_ValidSkip_When_MapExists_And_MapHasPois_ResultsTo_ExpectedPoisFromMap(
+        Map map, 
+        int skip,
+        StubPointOfInterestRepository repository)
     {
         // Arrange
-        var map = repository.maps[0];
-        int skip = 10;
         var expectedResponse = new GetMultipleResponse(map.PointOfInterests
             .Skip(skip)
             .ToList());
@@ -163,5 +153,38 @@ public class GetPoiTests
 
         // Assert
         Assert.Equal(expectedResponse.PointsOfInterests.Count(), actualResult.PointsOfInterests.Count());
+    }
+
+    public static IEnumerable<object[]> GetValidPointOfInterestIds()
+    {
+        var repository = new StubPointOfInterestRepository(
+            TestDataGenerator.GenerateMultipleMaps(3));
+
+        foreach (var poi in repository.points)
+        {
+            yield return new object[] { poi.Id, repository };
+        }
+    }
+    public static IEnumerable<object[]> GetValidMapIds()
+    {
+        var repository = new StubPointOfInterestRepository(
+            TestDataGenerator.GenerateMultipleMaps(3));
+
+        foreach (var map in repository.maps)
+        {
+            yield return new object[] { map.Id, repository };
+        }
+    }
+    public static IEnumerable<object[]> GetValidMapIdsWithSkipAndTake()
+    {
+        var repository = new StubPointOfInterestRepository(
+            TestDataGenerator.GenerateMultipleMaps(3));
+
+        foreach (var map in repository.maps)
+        {
+            yield return new object[] { map.Id, 5, 10, repository };
+            yield return new object[] { map.Id, 10, 5, repository };
+            yield return new object[] { map.Id, 0, 10, repository };
+        }
     }
 }
