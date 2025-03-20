@@ -3,11 +3,6 @@ using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace LiveMap.Persistence.DataSeeder; 

@@ -30,8 +30,6 @@ public static class LiveMapContextDI
             {
                 // Apply migrations first
                 await context.Database.MigrateAsync();
-
-
                 await DevelopmentSeeder.SeedDatabase(context);
             }
         }
