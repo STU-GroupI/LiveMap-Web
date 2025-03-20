@@ -5,17 +5,17 @@ namespace LiveMapDashboard.Tests.PoiTests;
 
 public class StubPointOfInterestRepository : IPointOfInterestRepository
 {
-    public readonly List<PointOfInterest> points;
+    public readonly List<PointOfInterest> pois;
     public readonly List<Map> maps;
 
-    public StubPointOfInterestRepository(List<PointOfInterest> points)
+    public StubPointOfInterestRepository(List<PointOfInterest> pois)
     {
-        this.points = points;
+        this.pois = pois;
         maps = new List<Map>();
     }
     public StubPointOfInterestRepository(List<Map> maps)
     {
-        this.points = maps
+        this.pois = maps
             .SelectMany(m => m.PointOfInterests ?? [])
             .ToList();
         
@@ -48,7 +48,7 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
 
     public Task<PointOfInterest?> GetSingle(Guid id)
     {
-        PointOfInterest? poi = points.FirstOrDefault(p => p.Id == id);
+        PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
         return Task.FromResult(poi);
     }
 }

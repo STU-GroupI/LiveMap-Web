@@ -44,6 +44,7 @@ public static class TestDataGenerator
             .RuleFor(m => m.Coordinate, f => new(
                 f.Address.Latitude(),
                 f.Address.Longitude()))
+            .RuleFor(m => m.PointOfInterests, () => new List<PointOfInterest>())
             .RuleFor(m => m.Area, (f, m) => [
                 new(f.Address.Latitude(),
                     f.Address.Longitude()),
@@ -58,10 +59,15 @@ public static class TestDataGenerator
                 ]);
     }
 
-    public static List<Map> GenerateMultipleMaps(int count = 10)
+    public static List<Map> GenerateMultipleMaps(int count = 10, bool withPois = true)
     {
         var mapFaker = GetMapFaker();
         var maps = new List<Map>(mapFaker.Generate(count));
+        
+        if(!withPois)
+        {
+            return maps;
+        }
 
         foreach (var map in maps)
         {
