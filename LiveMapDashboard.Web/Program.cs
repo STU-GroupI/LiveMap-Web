@@ -1,6 +1,6 @@
 
-using Microsoft.EntityFrameworkCore;
 using LiveMapDashboard.Web.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -9,7 +9,7 @@ builder.Services.AddSwaggerGen();
 
 // Make sure that the connectionstring is automagically picked based on the selected env...
 builder.Services.RegisterLiveMapContext(
-    builder.Configuration.GetConnectionString("DefaultConnection"));
+    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException("Connectionstring not set"));
 
 builder.Services.RegisterRepositories();
 builder.Services.RegisterRequestHandlers();
@@ -33,9 +33,9 @@ app.MapStaticAssets();
 await app.SeedDatabase();
 
 app.UseSwagger();
-app.UseSwaggerUI(options => // UseSwaggerUI is called only in Development.
+app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("api/swagger/v1/swagger.json", "v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"); // Note the leading "/"
     options.RoutePrefix = "api/swagger";
 });
 
