@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMapDashboard.Web", "LiveMapDashboard.Web\LiveMapDashboard.Web.csproj", "{43E04334-4D92-47B8-8FF3-08B21A97A737}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMapDashboard.Tests", "LiveMapDashboard.Tests\LiveMapDashboard.Tests.csproj", "{3ABE31B7-AB9E-432B-8128-C07FD642D8A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.Application", "LiveMap.Application\LiveMap.Application.csproj", "{F372BFC9-1B54-4592-AD42-48F2DA877F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.Domain", "LiveMap.Domain\LiveMap.Domain.csproj", "{F75F9404-B5F9-4CDB-9976-305867517BD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.Persistence", "LiveMap.Persistence\LiveMap.Persistence.csproj", "{2FA97B96-7137-4DA2-8CFD-012788166EBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{3ABE31B7-AB9E-432B-8128-C07FD642D8A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ABE31B7-AB9E-432B-8128-C07FD642D8A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ABE31B7-AB9E-432B-8128-C07FD642D8A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F372BFC9-1B54-4592-AD42-48F2DA877F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F372BFC9-1B54-4592-AD42-48F2DA877F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F372BFC9-1B54-4592-AD42-48F2DA877F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F372BFC9-1B54-4592-AD42-48F2DA877F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F75F9404-B5F9-4CDB-9976-305867517BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F75F9404-B5F9-4CDB-9976-305867517BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F75F9404-B5F9-4CDB-9976-305867517BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F75F9404-B5F9-4CDB-9976-305867517BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA97B96-7137-4DA2-8CFD-012788166EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA97B96-7137-4DA2-8CFD-012788166EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA97B96-7137-4DA2-8CFD-012788166EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA97B96-7137-4DA2-8CFD-012788166EBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
