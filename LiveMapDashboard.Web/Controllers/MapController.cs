@@ -41,6 +41,7 @@ public class MapController : ControllerBase
         var map = response.Map;
         return Ok(map);
     }
+
     /// <summary>
     /// Gets the POI's for a specified map.
     /// </summary>
@@ -63,5 +64,23 @@ public class MapController : ControllerBase
         var response = await handler.Handle(request);
 
         return Ok(response.Maps);
+    }
+
+    [HttpPost("{id}")]
+    public async Task<IActionResult> PostForPark(
+        [FromRoute] string id,
+        [FromBody] Coordinate[] coordinates,
+        [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler
+        )
+        
+    {
+        var response = false;
+
+        if (!response)
+        {
+            return NotFound(id);
+        }
+
+        return this.Ok(id);
     }
 }

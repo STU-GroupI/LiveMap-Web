@@ -60,4 +60,18 @@ public class MapRepository : IMapRepository
 
         return map.ToMap();
     }
+
+    public async Task<bool> UpdateMapBounds(Guid id, Coordinate[] coords)
+    {
+        SqlMap? map = await _context.Maps.FindAsync(id);
+        
+        if(map is null)
+        {
+            return false;
+        }
+
+        map.Border = null;
+
+        return true;
+    }
 }

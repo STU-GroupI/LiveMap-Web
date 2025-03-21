@@ -34,9 +34,9 @@
     }
 
     a.disabled {
-  pointer-events: none;
-  cursor: default;
-}
+        pointer-events: none;
+        cursor: default;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -171,8 +171,7 @@
     map.on('draw.delete', onDeleteArea);
     map.on('draw.update', updateArea);
 
-    const parkId = '84573694-6cf8-e934-d914-b117e5934c22';
-    const poiApi = `http://localhost:7211/api/poi/${parkId}`;
+    const poiApi = 'http://localhost:3000';
 
     function updateArea(e) {
         const data = draw.getAll();
@@ -193,7 +192,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                
+
             })
             .catch(error => {
                 showAlert('error', 'Kan park grenzen niet verwijderen.');
@@ -236,14 +235,19 @@
         return [centerLongitude, centerLatitude];  // Return in [longitude, latitude] format
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        {
-            document.querySelector('#latitudeInput').value = '51.6885178';
-            document.querySelector('#longitudeInput').value = '5.2866805';
-
-            fetch(`${poiApi}`, {
-                method: "GET",
+    // CRUD
+    function getMap() {
+        try {
+            const allMaps = `https://localhost:7211/api/map`;
+            fetch(`${allMaps}`, {
+                method: 'GET',
             })
+            .then(response => response.json())
+            .then(data => {
+                mapId = data[0].id;
+                fetch(`https://localhost:7211/api/map/${data[0].id}`, {
+                    method: 'GET',
+                })
                 .then(response => response.json())
                 .then(data => {
                     const newFeature = draw.add({
@@ -251,7 +255,7 @@
                         properties: [],
                         geometry: {
                             type: 'Polygon',
-                            coordinates: data.coordinates
+                            coordinates: [ translateArea(data.area), ],
                         }
                     });
                     onAreaChanged();
@@ -259,13 +263,41 @@
                 .catch(error => {
                     showAlert('error', 'Kan parkgrenzen niet ophalen.');
                 });
+            })
+            .catch(error => {
+                showAlert('error', 'Kan parkgrenzen niet ophalen.');
+            });
+        } catch (error) {
+            showAlert('error', 'Kan parkgrenzen niet ophalen.');
+        }
+    }
+
+    function translateArea(apiArea) {
+        return apiArea.map(p => [
+          p.latitude,
+          p.longitude
+        ]);
+    }
+
+    function translateCoordinates(coordinates) {
+        return coordinates.map(p => new Object({ "Longitude": p[0], "Latitude": p[1] }));
+    }
+
+    let mapId = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        {
+            document.querySelector('#latitudeInput').value = '51.6885178';
+            document.querySelector('#longitudeInput').value = '5.2866805';
+
+            getMap();
         }
 
         document.getElementById("confirmDelete").addEventListener("click", function () {
             const data = draw.getAll();
             if (data.features && data.features.length > 0) {
                 draw.delete(data.features[data.features.length - 1].id);
-                
+
                 document.activeElement.blur();
                 const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
                 if (modal) {
@@ -285,17 +317,17 @@
             }
 
             // Save Map
-            const coordinates = features[0].geometry.coordinates;
+            const coordinates = features[0].geometry.coordinates[0];
 
-            fetch(`${poiApi}`, {
+            fetch(`https://localhost:7211/api/map/${mapId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(coordinates)
+                body: JSON.stringify(translateCoordinates(coordinates))
             })
                 .then(response => response.json())
-                .then(data => { 
+                .then(data => {
 
                 })
                 .catch(error => {
@@ -325,7 +357,7 @@
 
         document.querySelector('#searchPark').addEventListener('click', () => {
             map.setZoom(15);
-            console.log(map);
+            console.log(draw.getAll().features);
             const features = draw.getAll().features;
             if (features.length == 0) {
                 showAlert('error', 'Er zijn geen parkgrenzen gezet.');
