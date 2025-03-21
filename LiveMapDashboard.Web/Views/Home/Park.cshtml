@@ -55,6 +55,10 @@
         </div>
 
         <div class="pt-3">
+            <a href="#" class="btn btn-primary" id="drawMap">Tekenen</a>
+        </div>
+
+        <div class="pt-3">
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -79,7 +83,6 @@
 
         <div class="pt-3">
             <a href="#" class="btn btn-primary" id="saveMap">Opslaan</a>
-            <a href="#" class="btn btn-primary" id="drawMap">Tekenen</a>
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
                 Verwijderen
             </button>
@@ -117,7 +120,9 @@
         container: 'map',
         style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
         center: [4.729, 52.045],
-        zoom: 15
+        zoom: 15,
+        dragRotate: false,
+        pitchWithRotate: false,
     });
 
     const draw = new MapboxDraw({
@@ -205,13 +210,10 @@
 
     function onAreaChanged() {
         const startDrawingBtn = document.querySelector('#drawMap');
-    
-        if (startDrawingBtn) {
-            // Disable the start drawing button if there are features drawn
-            startDrawingBtn.disabled = (draw.getAll().features.length > 0);
-            startDrawingBtn.style.pointerEvents = startDrawingBtn.disabled ? 'none' : 'auto'
-            startDrawingBtn.style.backgroundColor = startDrawingBtn.disabled ? '#D3D3D3': ''
-        }
+    }
+
+    function hasDrawing() {
+        return draw.getAll().features.length > 0;
     }
 
     function getCenterOfCoordinates(coordinates) {
@@ -299,23 +301,28 @@
         });
 
         document.querySelector('#drawMap').addEventListener('click', () => {
-            draw.changeMode('draw_polygon');  // Enable drawing polygon mode
+            if (hasDrawing() === false) {
+                draw.changeMode('draw_polygon');  // Enable drawing polygon mode
+            } else {
+                showAlert('info', 'Er is al een park grens op de kaart.');
+            }
         });
 
         document.querySelector('#submitGo').addEventListener('click', () => {
             try {
                 map.setZoom(15)
                 map.setCenter([
-                document.querySelector('#longitudeInput').value,
-                document.querySelector('#latitudeInput').value
-            ]);
+                    document.querySelector('#longitudeInput').value,
+                    document.querySelector('#latitudeInput').value
+                ]);
             } catch (error) {
                 showAlert('warning', 'Coordinaten zijn niet geldig.');
             }
         });
 
         document.querySelector('#searchPark').addEventListener('click', () => {
-            map.setZoom(15)
+            map.setZoom(15);
+            console.log(map);
             const features = draw.getAll().features;
             if (features.length == 0) {
                 showAlert('error', 'Er zijn geen parkgrenzen gezet.');
