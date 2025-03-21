@@ -1,0 +1,55 @@
+@baseUrl = https://localhost:7211/api
+
+@basePath = pointofinterest
+@basePoiId = 1
+
+### GET Request
+GET {{baseUrl}}/{{basePath}}/{{basePoiId}}  
+Accept: application/json
+
+### GET Request for park
+GET {{baseUrl}}/{{basePath}}?parkId=e312d71b-445f-403d-8399-22e46d011a00
+Accept: application/json
+
+### GET Request for park with paging
+GET {{baseUrl}}/{{basePath}}?parkId=e312d71b-445f-403d-8399-22e46d011a00&skip=0&take=10
+Accept: application/json
+
+### POST Request with JSON Body
+POST {{baseUrl}}/{{basePath}}
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "age": 25
+}
+
+### PUT Request
+PUT {{baseUrl}}/{{basePath}}/{{basePoiId}}  
+Content-Type: application/json
+
+{
+    "name": "Updated Name",
+    "age": 30
+}
+
+### PATCH Request
+PATCH {{baseUrl}}/{{basePath}}/{{basePoiId}}  
+Content-Type: application/json
+
+{
+    "name": "Updated Name",
+    "age": 30
+}
+
+### DELETE Request
+DELETE {{baseUrl}}/{{basePath}}/{{basePoiId}}  
+Content-Type: application/json
+
+{
+    "name": "Updated Name",
+    "age": 30
+}
+
+### DELETE Request
+DELETE https://localhost:5001/api/values/1

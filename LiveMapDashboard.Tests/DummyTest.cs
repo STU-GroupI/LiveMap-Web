@@ -1,18 +1,17 @@
-﻿namespace LiveMapDashboard.Tests
+﻿namespace LiveMapDashboard.Tests;
+
+public class DummyTest
 {
-    public class DummyTest
+    [Fact]
+    public void IndexTest()
     {
-        [Fact]
-        public void IndexTest()
-        {
-            // Arrange
-            int index = 0;
+        // Arrange
+        int index = 0;
 
-            // Act
-            index += 2;
+        // Act
+        index += 2;
 
-            // Assert
-            Assert.Equal(2, index);
-        }
+        // Assert
+        Assert.Equal(2, index);
     }
 }
