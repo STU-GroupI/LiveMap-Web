@@ -66,21 +66,19 @@ public class MapController : ControllerBase
         return Ok(response.Maps);
     }
 
-    [HttpPost("{id}")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> PostForPark(
         [FromRoute] string id,
         [FromBody] Coordinate[] coordinates,
-        [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler
-        )
-        
+        [FromServices] IRequestHandler<UpdateBorderRequest, UpdateBorderResponse> handler)
     {
-        var response = false;
+        var response = await handler.Handle(new(Guid.Parse(id), coordinates));
 
-        if (!response)
+        if (!response.Succeeded)
         {
             return NotFound(id);
         }
 
-        return this.Ok(id);
+        return NoContent();
     }
 }

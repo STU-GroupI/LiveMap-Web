@@ -164,7 +164,6 @@
             }
         ]
     });
-
     map.addControl(draw);
 
     map.on('draw.create', onCreateArea);
@@ -280,7 +279,10 @@
     }
 
     function translateCoordinates(coordinates) {
-        return coordinates.map(p => new Object({ "Longitude": p[0], "Latitude": p[1] }));
+        // return coordinates.map(p => new Object({ "Longitude": p[0], "Latitude": p[1] }));
+        // Javascript maps expect them then other way around. 
+        // But real coordinates area formally longitude then latitude
+        return coordinates.map(p => new Object({ "Longitude": p[1], "Latitude": p[0] }));
     }
 
     let mapId = '';
@@ -320,7 +322,7 @@
             const coordinates = features[0].geometry.coordinates[0];
 
             fetch(`https://localhost:7211/api/map/${mapId}`, {
-                method: "POST",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
