@@ -172,6 +172,7 @@
 
     const poiApi = 'http://localhost:3000';
 
+    // <Map API methods>
     function updateArea(e) {
         const data = draw.getAll();
 
@@ -212,6 +213,7 @@
     function onAreaChanged() {
         const startDrawingBtn = document.querySelector('#drawMap');
     }
+    // </Map API methods>
 
     function hasDrawing() {
         return draw.getAll().features.length > 0;
@@ -285,6 +287,45 @@
         }
     }
 
+    function deleteMap() {
+        const data = draw.getAll();
+            if (data.features && data.features.length > 0) {
+                draw.delete(data.features[data.features.length - 1].id);
+
+                document.activeElement.blur();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                onAreaChanged();
+            } else {
+                showAlert('error', 'Er zijn geen parkgrenzen om te verwijderen.');
+            }
+    }
+
+    function saveMap() {
+        const features = draw.getAll().features;
+            if (features.length == 0) {
+                showAlert('warning', 'Er zijn geen parkgrenzen om op te slaan.');
+                return;
+            }
+
+            // Save Map
+            const coordinates = features[0].geometry.coordinates[0];
+
+            fetch(`https://localhost:7211/api/map/${mapId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(translateCoordinates(coordinates))
+            })
+            .catch(error => {
+                console.log(error);
+                showAlert('error', 'Kan park grenzen niet opslaan.');
+            });
+    }
+
     function translateArea(apiArea) {
         return apiArea.map(p => [
           p.latitude,
@@ -310,45 +351,11 @@
         }
 
         document.getElementById("confirmDelete").addEventListener("click", function () {
-            const data = draw.getAll();
-            if (data.features && data.features.length > 0) {
-                draw.delete(data.features[data.features.length - 1].id);
-
-                document.activeElement.blur();
-                const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-                if (modal) {
-                    modal.hide();
-                }
-                onAreaChanged();
-            } else {
-                showAlert('error', 'Er zijn geen parkgrenzen om te verwijderen.');
-            }
+            deleteMap();
         });
 
         document.querySelector('#saveMap').addEventListener('click', () => {
-            const features = draw.getAll().features;
-            if (features.length == 0) {
-                showAlert('warning', 'Er zijn geen parkgrenzen om op te slaan.');
-                return;
-            }
-
-            // Save Map
-            const coordinates = features[0].geometry.coordinates[0];
-
-            fetch(`https://localhost:7211/api/map/${mapId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(translateCoordinates(coordinates))
-            })
-                .then(response => response.json())
-                .then(data => {
-
-                })
-                .catch(error => {
-                    showAlert('error', 'Kan park grenzen niet opslaan.');
-                });
+            saveMap();
         });
 
         document.querySelector('#drawMap').addEventListener('click', () => {
