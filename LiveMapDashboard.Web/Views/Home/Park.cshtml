@@ -217,6 +217,19 @@
         return draw.getAll().features.length > 0;
     }
 
+    function centerOnMap() {
+        map.setZoom(15);
+        console.log(draw.getAll().features);
+        const features = draw.getAll().features;
+        if (features.length == 0) {
+            showAlert('error', 'Er zijn geen parkgrenzen gezet.');
+            return;
+        }
+
+        const coordinates = features[0].geometry.coordinates[0];
+        map.setCenter(getCenterOfCoordinates(coordinates));
+    }
+
     function getCenterOfCoordinates(coordinates) {
         let totalLatitude = 0;
         let totalLongitude = 0;
@@ -257,6 +270,7 @@
                             coordinates: [ translateArea(data.area), ],
                         }
                     });
+                    centerOnMap();
                     onAreaChanged();
                 })
                 .catch(error => {
@@ -358,17 +372,7 @@
         });
 
         document.querySelector('#searchPark').addEventListener('click', () => {
-            map.setZoom(15);
-            console.log(draw.getAll().features);
-            const features = draw.getAll().features;
-            if (features.length == 0) {
-                showAlert('error', 'Er zijn geen parkgrenzen gezet.');
-                return;
-            }
-
-            // Save Map
-            const coordinates = features[0].geometry.coordinates[0];
-            map.setCenter(getCenterOfCoordinates(coordinates));
+            centerOnMap();
         });
     });
 </script>
