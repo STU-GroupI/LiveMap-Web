@@ -186,16 +186,6 @@
     }
 
     function onDeleteArea() {
-        fetch(`${poiApi}`, {
-            method: "DELETE",
-        })
-            .then(response => response.json())
-            .then(data => {
-
-            })
-            .catch(error => {
-                showAlert('error', 'Kan park grenzen niet verwijderen.');
-            });
         onAreaChanged();
     }
 
