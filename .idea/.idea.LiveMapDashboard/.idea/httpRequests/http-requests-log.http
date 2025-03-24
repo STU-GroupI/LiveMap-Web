@@ -1,0 +1,8 @@
+GET https://localhost:7211/api/pointofinterest?parkId=e312d71b-445f-403d-8399-22e46d011a00
+Accept: application/json
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+content-length: 0
+
+###
+
