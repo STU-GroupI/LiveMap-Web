@@ -14,6 +14,18 @@ builder.Services.RegisterLiveMapContext(
 builder.Services.RegisterRepositories();
 builder.Services.RegisterRequestHandlers();
 
+// Allow all cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +36,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
