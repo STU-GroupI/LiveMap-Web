@@ -3,7 +3,6 @@ using LiveMap.Application.PointOfInterest.Handlers;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
-using LiveMap.Persistence.Repositories;
 using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

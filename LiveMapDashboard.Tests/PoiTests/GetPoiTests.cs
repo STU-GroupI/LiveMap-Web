@@ -2,7 +2,6 @@
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
-using Microsoft.OpenApi.Models;
 using Shouldly;
 using System;
 using System.Collections.Generic;

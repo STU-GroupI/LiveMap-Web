@@ -1,7 +1,7 @@
 import * as turf from 'https://esm.sh/@turf/turf@7.1.0';
 
-const BASE_PORT = 7211
-const BASE_URL = `https://localhost:${BASE_PORT}`;
+const BASE_PORT = 5006
+const BASE_URL = `http://localhost:${BASE_PORT}`;
 const API_PATH = "/api/map"
 
 const MAPBOX_RASTER_URL = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
