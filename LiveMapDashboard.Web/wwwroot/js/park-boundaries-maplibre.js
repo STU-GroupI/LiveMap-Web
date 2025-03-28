@@ -1,7 +1,5 @@
 import * as turf from 'https://esm.sh/@turf/turf@7.1.0';
 
-const BASE_PORT = 7211
-const BASE_URL = `https://localhost:${BASE_PORT}`;
 const API_PATH = "/api/map"
 
 const MAPBOX_RASTER_URL = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
@@ -135,14 +133,14 @@ function getCenterOfCoordinates(coordinates) {
 // CRUD
 function getMap() {
     try {
-        const allMaps = `${BASE_URL}${API_PATH}`;
+        const allMaps = `${BACKEND_URL}${API_PATH}`;
         fetch(`${allMaps}`, {
             method: 'GET',
         })
             .then(response => response.json())
             .then(data => {
                 mapId = data[0].id;
-                fetch(`${BASE_URL}${API_PATH}/${data[0].id}`, {
+                fetch(`${BACKEND_URL}${API_PATH}/${data[0].id}`, {
                     method: 'GET',
                 })
                     .then(response => response.json())
@@ -196,7 +194,7 @@ function saveMap() {
     // Save Map
     const coordinates = features[0].geometry.coordinates[0];
 
-    fetch(`${BASE_URL}${API_PATH}/${mapId}`, {
+    fetch(`${BACKEND_URL}${API_PATH}/${mapId}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"

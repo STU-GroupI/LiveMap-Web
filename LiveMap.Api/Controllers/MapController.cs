@@ -2,11 +2,7 @@
 using LiveMap.Application.Map.Requests;
 using LiveMap.Application.Map.Responses;
 using LiveMap.Domain.Models;
-using LiveMap.Persistence.Repositories;
-using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Net.Mime;
 
 namespace LiveMapDashboard.Web.Controllers;
