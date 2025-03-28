@@ -17,7 +17,6 @@ namespace LiveMap.Api
             builder.Services.RegisterRepositories();
             builder.Services.RegisterRequestHandlers();
 
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

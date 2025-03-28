@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IOptions<BackendConfigurationOptions> backendConfiguration
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,6 +13,9 @@
 
     <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.2.0/dist/maplibre-gl.css' />
     <script src='https://unpkg.com/maplibre-gl@5.2.0/dist/maplibre-gl.js'></script>
+    <script>
+        const BACKEND_URL = "@(backendConfiguration.Value?.Url ?? throw new ArgumentNullException("The given configuration was null"))";
+    </script>
 </head>
 <body>
     <header>
