@@ -15,5 +15,6 @@ public class RequestForChange
     public PointOfInterest? Poi { get; set; }
     public SuggestedPointOfInterest? SuggestedPoi { get; set; }
 
+    public string ApprovalStatus => Status.Status;
     public required ApprovalStatus Status { get; set; }
 }
