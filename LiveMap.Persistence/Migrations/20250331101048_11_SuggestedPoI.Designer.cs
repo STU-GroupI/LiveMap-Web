@@ -4,6 +4,7 @@ using LiveMap.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    partial class LiveMapContextModelSnapshot : ModelSnapshot
+    [Migration("20250331101048_11_SuggestedPoI")]
+    partial class _11_SuggestedPoI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
