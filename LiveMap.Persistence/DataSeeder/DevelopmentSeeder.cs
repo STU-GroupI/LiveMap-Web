@@ -5,7 +5,7 @@ using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
-namespace LiveMap.Persistence.DataSeeder; 
+namespace LiveMap.Persistence.DataSeeder;
 
 // TODO: Make seeder configurable via file. Create a config Options object for the seeder, and use that.
 public static class DevelopmentSeeder
@@ -62,8 +62,8 @@ public static class DevelopmentSeeder
     }
 
     private static Faker<SqlPointOfInterest> GetPointOfInterestFaker(
-        List<SqlMap> maps, 
-        List<PointOfInterestStatus> statusses, 
+        List<SqlMap> maps,
+        List<PointOfInterestStatus> statusses,
         List<Category> categories)
     {
         return new Faker<SqlPointOfInterest>()
@@ -85,35 +85,154 @@ public static class DevelopmentSeeder
             .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First());
     }
 
+    private static Faker<SqlRequestForChange> GetRequestForChangeFaker(
+        List<ApprovalStatus> approvalStatuses,
+        List<SqlPointOfInterest> pois,
+        List<SqlSuggestedPointOfInterest>? suggestedPois = null)
+    {
+        List<SqlSuggestedPointOfInterest>? trackedSuggestedPois = suggestedPois is not null
+            ? new(suggestedPois)
+            : null;
+
+        var pickRandomPoi = (Faker f) => f.Random.Int(1, 100) % 2 != 0 ? f.PickRandom(pois) : null;
+        var pickRandomSuggestedPoI = (Faker f, SqlRequestForChange e) =>
+        {
+            if (trackedSuggestedPois is null || e.PoiId is not null)
+            {
+                return null;
+            }
+
+            var value = f.PickRandom(suggestedPois);
+
+            if (value is null)
+            {
+                return null;
+            }
+
+            trackedSuggestedPois.Remove(value);
+            return value;
+        };
+
+        return new Faker<SqlRequestForChange>()
+            .RuleFor(e => e.Id, f => f.Random.Guid())
+
+            .RuleFor(e => e.Poi, f => pickRandomPoi(f))
+            .RuleFor(e => e.PoiId, (f, e) => e.Poi?.Id)
+
+            .RuleFor(e => e.SuggestedPoi, (f, e) => pickRandomSuggestedPoI(f, e))
+            .RuleFor(e => e.SuggestedPoiId, (f, e) => e.SuggestedPoi?.Id)
+
+            .RuleFor(e => e.SubmittedOn, f => f.Date.Future())
+            .RuleFor(e => e.ApprovedOn, (f, e) => f.Date.Future(refDate: e.SubmittedOn))
+
+            .RuleFor(e => e.StatusProp, f => f.PickRandom(approvalStatuses))
+            .RuleFor(e => e.ApprovalStatus, (f, e) => e.StatusProp.Status)
+
+            .RuleFor(e => e.Message, f => f.Lorem.Paragraphs(3));
+    }
+
+    private static Faker<SqlSuggestedPointOfInterest> GetSuggestedPointOfInterestFaker(
+        List<SqlMap> maps,
+        List<PointOfInterestStatus> statusses,
+        List<Category> categories,
+        List<SqlRequestForChange>? requestsForChange = null)
+    {
+        // You IDE may tell you that new is not needed here. It is.
+        // We want to explicitly use the constructor to soft-copy the rfc array to the tracked one.
+        List<SqlRequestForChange>? trackedRFCs = requestsForChange is not null 
+            ? new(requestsForChange) 
+            : null;
+
+        var pickRfc = (Faker f) =>
+        {
+            if (trackedRFCs is null)
+            {
+                return null;
+            }
+
+            SqlRequestForChange rfc = f.PickRandom(trackedRFCs);
+            trackedRFCs.Remove(rfc);
+
+            if(rfc.PoiId is not null)
+            {
+                return null;
+            }
+
+            return rfc;
+        };
+
+        return new Faker<SqlSuggestedPointOfInterest>()
+            .RuleFor(p => p.Id, f => f.Random.Guid())
+            .RuleFor(p => p.Title, f => f.Lorem.Sentence(3))
+            .RuleFor(p => p.Description, f => f.Lorem.Paragraph())
+            .RuleFor(p => p.Position, f => new(f.Address.Latitude(), f.Address.Longitude())
+            {
+                SRID = 4326
+            })
+
+            .RuleFor(p => p.CategoryName, f => f.PickRandom(categories.Select(c => c.CategoryName)))
+            .RuleFor(p => p.Category, (f, p) => categories.Where(c => c.CategoryName == p.CategoryName).First())
+
+            .RuleFor(p => p.StatusName, f => f.PickRandom(statusses.Select(s => s.Status)))
+            .RuleFor(p => p.Status, (f, p) => statusses.Where(poi => poi.Status == p.StatusName).First())
+
+            .RuleFor(p => p.MapId, f => maps[f.Random.Int(0, maps.Count - 1)].Id)
+            .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First())
+
+            .RuleFor(p => p.RFC, f => pickRfc(f))
+            .RuleFor(p => p.RFCId, (f, e) => e.RFC?.Id);
+    }
+
     public static async Task SeedDatabase(LiveMapContext context)
     {
         List<Category> categories = [
-            new() { CategoryName = "Store" }, 
-            new() { CategoryName = "Information" }, 
+            new() { CategoryName = "Store" },
+            new() { CategoryName = "Information" },
             new() { CategoryName = "First-aid & Medical" },
             new() { CategoryName = "Trash bin" },
             new() { CategoryName = "Parking" },
             new() { CategoryName = "Entertainment" },
         ];
 
-        List<PointOfInterestStatus> statusses = [
+        List<PointOfInterestStatus> poiStatusses = [
             new() { Status = "Active" },
             new() { Status = "Inactive" },
             new() { Status = "Pending" },
         ];
 
-        List<SqlMap> maps = GetMapFaker().Generate(1);
+        List<ApprovalStatus> approvalStatuses = [
+            new() { Status = "Approved" },
+            new() { Status = "Pending"},
+            new() { Status = "Rejected"}
+        ];
 
-        List<SqlPointOfInterest> sqlPointOfInterests = GetPointOfInterestFaker(
+        List<SqlMap> maps = GetMapFaker().Generate(3);
+
+        List<SqlPointOfInterest> pointsOfInterest = GetPointOfInterestFaker(
             maps: maps,
-            statusses: statusses,
+            statusses: poiStatusses,
             categories: categories
         ).Generate(50);
 
+        List<SqlRequestForChange> requestsForChange = GetRequestForChangeFaker(
+            approvalStatuses: approvalStatuses,
+            pois: pointsOfInterest).Generate(100);
+
+        var rfcsWithoutSuggestedPois = requestsForChange.Where(rfc => rfc.PoiId is null).ToList();
+
+        List<SqlSuggestedPointOfInterest> suggestedPointsOfInterest = GetSuggestedPointOfInterestFaker(
+            maps: maps,
+            statusses: poiStatusses,
+            categories: categories,
+            requestsForChange: rfcsWithoutSuggestedPois).Generate(rfcsWithoutSuggestedPois.Count());
+
         await context.Categories.AddRangeAsync(categories);
-        await context.PoIStatusses.AddRangeAsync(statusses);
+        await context.PoIStatusses.AddRangeAsync(poiStatusses);
         await context.Maps.AddRangeAsync(maps);
-        await context.AddRangeAsync(sqlPointOfInterests);
+        await context.PointsOfInterest.AddRangeAsync(pointsOfInterest);
+        await context.RequestsForChange.AddRangeAsync(requestsForChange);
+        await context.SuggestedPointsOfInterest.AddRangeAsync(suggestedPointsOfInterest);
+
         await context.SaveChangesAsync();
     }
 }

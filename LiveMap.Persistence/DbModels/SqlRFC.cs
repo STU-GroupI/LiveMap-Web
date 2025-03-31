@@ -19,4 +19,6 @@ public class SqlRequestForChange
 
     public required DateTime SubmittedOn { get; set; }
     public DateTime? ApprovedOn { get; set; }
+
+    public required string Message { get; set; }
 }

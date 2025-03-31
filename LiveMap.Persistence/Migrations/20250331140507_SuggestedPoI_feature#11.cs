@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class _11_SuggestedPoI : Migration
+    public partial class SuggestedPoI_feature11 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,34 +21,6 @@ namespace LiveMap.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApprovalStatuses", x => x.Status);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RequestForChange",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PoiId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SuggestedPoiId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ApprovalStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusPropStatus = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SubmittedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApprovedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RequestForChange", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RequestForChange_ApprovalStatuses_StatusPropStatus",
-                        column: x => x.StatusPropStatus,
-                        principalTable: "ApprovalStatuses",
-                        principalColumn: "Status",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RequestForChange_PointOfInterest_PoiId",
-                        column: x => x.PoiId,
-                        principalTable: "PointOfInterest",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -79,26 +51,54 @@ namespace LiveMap.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SuggestedPointOfInterest_RequestForChange_RFCId",
-                        column: x => x.RFCId,
-                        principalTable: "RequestForChange",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_SuggestedPointOfInterest_Status_StatusName",
                         column: x => x.StatusName,
                         principalTable: "Status",
                         principalColumn: "Status");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RequestForChange",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PoiId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SuggestedPoiId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ApprovalStatus = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubmittedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApprovedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestForChange", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequestForChange_ApprovalStatuses_ApprovalStatus",
+                        column: x => x.ApprovalStatus,
+                        principalTable: "ApprovalStatuses",
+                        principalColumn: "Status",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RequestForChange_PointOfInterest_PoiId",
+                        column: x => x.PoiId,
+                        principalTable: "PointOfInterest",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RequestForChange_SuggestedPointOfInterest_SuggestedPoiId",
+                        column: x => x.SuggestedPoiId,
+                        principalTable: "SuggestedPointOfInterest",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestForChange_ApprovalStatus",
+                table: "RequestForChange",
+                column: "ApprovalStatus");
+
             migrationBuilder.CreateIndex(
                 name: "IX_RequestForChange_PoiId",
                 table: "RequestForChange",
                 column: "PoiId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RequestForChange_StatusPropStatus",
-                table: "RequestForChange",
-                column: "StatusPropStatus");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequestForChange_SuggestedPoiId",
@@ -118,44 +118,22 @@ namespace LiveMap.Persistence.Migrations
                 column: "MapId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SuggestedPointOfInterest_RFCId",
-                table: "SuggestedPointOfInterest",
-                column: "RFCId",
-                unique: true,
-                filter: "[RFCId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SuggestedPointOfInterest_StatusName",
                 table: "SuggestedPointOfInterest",
                 column: "StatusName");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RequestForChange_SuggestedPointOfInterest_SuggestedPoiId",
-                table: "RequestForChange",
-                column: "SuggestedPoiId",
-                principalTable: "SuggestedPointOfInterest",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RequestForChange_ApprovalStatuses_StatusPropStatus",
-                table: "RequestForChange");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_RequestForChange_SuggestedPointOfInterest_SuggestedPoiId",
-                table: "RequestForChange");
+            migrationBuilder.DropTable(
+                name: "RequestForChange");
 
             migrationBuilder.DropTable(
                 name: "ApprovalStatuses");
 
             migrationBuilder.DropTable(
                 name: "SuggestedPointOfInterest");
-
-            migrationBuilder.DropTable(
-                name: "RequestForChange");
         }
     }
 }

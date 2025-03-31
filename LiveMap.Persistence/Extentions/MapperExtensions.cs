@@ -86,6 +86,7 @@ public static class MapperExtensions
             PoiId = requestForChange.PoiId,
             Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
             SuggestedPoiId = requestForChange.SuggestedPoiId,
+            Message = requestForChange.Message
         };
 
         // If the suggested poi is not given, then we know it does not have its RFC yet. When converting it to its domain format, we must

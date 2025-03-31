@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    [Migration("20250331101048_11_SuggestedPoI")]
-    partial class _11_SuggestedPoI
+    [Migration("20250331140507_SuggestedPoI_feature#11")]
+    partial class SuggestedPoI_feature11
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,17 +126,17 @@ namespace LiveMap.Persistence.Migrations
 
                     b.Property<string>("ApprovalStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ApprovedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("PoiId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("StatusPropStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("SubmittedOn")
                         .HasColumnType("datetime2");
@@ -146,9 +146,9 @@ namespace LiveMap.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PoiId");
+                    b.HasIndex("ApprovalStatus");
 
-                    b.HasIndex("StatusPropStatus");
+                    b.HasIndex("PoiId");
 
                     b.HasIndex("SuggestedPoiId")
                         .IsUnique()
@@ -193,10 +193,6 @@ namespace LiveMap.Persistence.Migrations
 
                     b.HasIndex("MapId");
 
-                    b.HasIndex("RFCId")
-                        .IsUnique()
-                        .HasFilter("[RFCId] IS NOT NULL");
-
                     b.HasIndex("StatusName");
 
                     b.ToTable("SuggestedPointOfInterest", (string)null);
@@ -227,18 +223,18 @@ namespace LiveMap.Persistence.Migrations
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlRequestForChange", b =>
                 {
+                    b.HasOne("LiveMap.Domain.Models.ApprovalStatus", "StatusProp")
+                        .WithMany()
+                        .HasForeignKey("ApprovalStatus")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
                         .WithMany()
                         .HasForeignKey("PoiId");
 
-                    b.HasOne("LiveMap.Domain.Models.ApprovalStatus", "StatusProp")
-                        .WithMany()
-                        .HasForeignKey("StatusPropStatus")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", "SuggestedPoi")
-                        .WithOne()
+                        .WithOne("RFC")
                         .HasForeignKey("LiveMap.Persistence.DbModels.SqlRequestForChange", "SuggestedPoiId");
 
                     b.Navigation("Poi");
@@ -260,10 +256,6 @@ namespace LiveMap.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlRequestForChange", "RFC")
-                        .WithOne()
-                        .HasForeignKey("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", "RFCId");
-
                     b.HasOne("LiveMap.Domain.Models.PointOfInterestStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusName");
@@ -272,14 +264,18 @@ namespace LiveMap.Persistence.Migrations
 
                     b.Navigation("Map");
 
-                    b.Navigation("RFC");
-
                     b.Navigation("Status");
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlMap", b =>
                 {
                     b.Navigation("PointOfInterests");
+                });
+
+            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
+                {
+                    b.Navigation("RFC")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
