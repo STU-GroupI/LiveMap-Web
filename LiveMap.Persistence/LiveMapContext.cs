@@ -10,6 +10,7 @@ public class LiveMapContext : DbContext
     public DbSet<PointOfInterestStatus> PoIStatusses { get; set; }
     public DbSet<SqlMap> Maps { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<OpeningHours> OpeningHours { get; set; }
 
     public LiveMapContext(DbContextOptions<LiveMapContext> options) : base(options) { }
 
@@ -68,5 +69,19 @@ public class LiveMapContext : DbContext
             entityBuilder.ToTable("Status")
                 .HasKey(status => status.Status);
         });
+
+        // OpeningHours
+        modelBuilder.Entity<OpeningHours>(entityBuilder =>
+        {
+            entityBuilder.ToTable("OpeningHours")
+                .HasKey(oh => oh.Id);
+
+
+        });
+
+        //modelBuilder.Entity<OpeningHours>()
+        //    .HasOne(o => o.Poi)
+        //    .WithMany(p => p.OpeningHours)
+        //    .HasForeignKey(o => o.PoiId);
     }
 }
