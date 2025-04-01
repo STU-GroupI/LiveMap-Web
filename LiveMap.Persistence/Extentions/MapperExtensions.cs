@@ -50,7 +50,6 @@ public static class MapperExtensions
             DayOfWeek = oh.DayOfWeek,
             Start = oh.Start,
             End = oh.End,
-            Poi = poi ?? oh.Poi.ToPointOfInterest(),
             PoiId = oh.PoiId
         };
     }
