@@ -64,7 +64,8 @@ public static class DevelopmentSeeder
     private static Faker<SqlPointOfInterest> GetPointOfInterestFaker(
         List<SqlMap> maps, 
         List<PointOfInterestStatus> statusses, 
-        List<Category> categories)
+        List<Category> categories,
+        List<SqlOpeningHours> openingHours)
     {
         return new Faker<SqlPointOfInterest>()
             .RuleFor(p => p.Id, f => f.Random.Guid())
@@ -82,7 +83,16 @@ public static class DevelopmentSeeder
             .RuleFor(p => p.Status, (f, p) => statusses.Where(poi => poi.Status == p.StatusName).First())
 
             .RuleFor(p => p.MapId, f => maps[f.Random.Int(0, maps.Count - 1)].Id)
-            .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First());
+            .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First())
+            .RuleFor(p => p.OpeningHours, openingHours);
+    }
+
+    private static Faker<SqlOpeningHours> GetOpeningHoursFaker()
+    {
+        return new Faker<SqlOpeningHours>()
+            .RuleFor(oh => oh.Start, f => f.Date.Between(DateTime.Today.AddHours(8), DateTime.Today.AddHours(13)).TimeOfDay)
+            .RuleFor(oh => oh.End, f => f.Date.Between(DateTime.Today.AddHours(13), DateTime.Today.AddHours(22)).TimeOfDay)
+            .RuleFor(oh => oh.DayOfWeek, f => f.PickRandom<DayOfWeek>());
     }
 
     public static async Task SeedDatabase(LiveMapContext context)
@@ -102,12 +112,15 @@ public static class DevelopmentSeeder
             new() { Status = "Pending" },
         ];
 
+        List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7);
+
         List<SqlMap> maps = GetMapFaker().Generate(1);
 
         List<SqlPointOfInterest> sqlPointOfInterests = GetPointOfInterestFaker(
             maps: maps,
             statusses: statusses,
-            categories: categories
+            categories: categories,
+            openingHours: openingHours
         ).Generate(50);
 
         await context.Categories.AddRangeAsync(categories);

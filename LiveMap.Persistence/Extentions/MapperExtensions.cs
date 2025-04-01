@@ -1,5 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ public static class MapperExtensions
 
     public static PointOfInterest ToPointOfInterest(this SqlPointOfInterest poi)
     {
-        return new()
+        PointOfInterest data = new()
         {
             Id = poi.Id,
             Category = poi.Category,
@@ -36,6 +37,21 @@ public static class MapperExtensions
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName
+        };
+        data.OpeningHours = poi.OpeningHours?.Select(oh => oh.ToOpeningHours(data)).ToList() ?? [];
+        return data;
+    }
+
+    public static OpeningHours ToOpeningHours(this SqlOpeningHours oh, PointOfInterest? poi)
+    {
+        return new()
+        {
+            Id = oh.Id,
+            DayOfWeek = oh.DayOfWeek,
+            Start = oh.Start,
+            End = oh.End,
+            Poi = poi ?? oh.Poi.ToPointOfInterest(),
+            PoiId = oh.PoiId
         };
     }
 }

@@ -22,5 +22,5 @@ public class SqlPointOfInterest
     public required Guid MapId { get; set; }
     public required SqlMap Map { get; set; }
 
-    public List<SqlOpeningHours> OpeningHours { get; set; } = new();
+    public virtual ICollection<SqlOpeningHours> OpeningHours { get; set; }
 }
