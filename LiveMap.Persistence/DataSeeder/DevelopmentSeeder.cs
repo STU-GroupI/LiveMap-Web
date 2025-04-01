@@ -60,13 +60,20 @@ public static class DevelopmentSeeder
         var linearRing = new LinearRing(coordinates);
         return geometryFactory.CreatePolygon(linearRing);
     }
-
     private static Faker<SqlPointOfInterest> GetPointOfInterestFaker(
         List<SqlMap> maps, 
         List<PointOfInterestStatus> statusses, 
         List<Category> categories,
         List<SqlOpeningHours> openingHours)
     {
+        var openingHoursTracked = new List<SqlOpeningHours>(openingHours);
+        var getOpeningHours = (Faker f) =>
+        {
+            var hours = openingHoursTracked.Take(7).ToList();
+            openingHoursTracked.RemoveAll(oh => hours.Contains(oh));
+            return hours;
+        };
+
         return new Faker<SqlPointOfInterest>()
             .RuleFor(p => p.Id, f => f.Random.Guid())
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(3))
@@ -84,12 +91,14 @@ public static class DevelopmentSeeder
 
             .RuleFor(p => p.MapId, f => maps[f.Random.Int(0, maps.Count - 1)].Id)
             .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First())
-            .RuleFor(p => p.OpeningHours, openingHours);
+
+            .RuleFor(p => p.OpeningHours, f => getOpeningHours(f));
     }
 
     private static Faker<SqlOpeningHours> GetOpeningHoursFaker()
     {
         return new Faker<SqlOpeningHours>()
+            .RuleFor(oh => oh.Id, f => f.Random.Guid())
             .RuleFor(oh => oh.Start, f => f.Date.Between(DateTime.Today.AddHours(8), DateTime.Today.AddHours(13)).TimeOfDay)
             .RuleFor(oh => oh.End, f => f.Date.Between(DateTime.Today.AddHours(13), DateTime.Today.AddHours(22)).TimeOfDay)
             .RuleFor(oh => oh.DayOfWeek, f => f.PickRandom<DayOfWeek>());
@@ -112,7 +121,7 @@ public static class DevelopmentSeeder
             new() { Status = "Pending" },
         ];
 
-        List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7);
+        List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7 * 50);
 
         List<SqlMap> maps = GetMapFaker().Generate(1);
 
