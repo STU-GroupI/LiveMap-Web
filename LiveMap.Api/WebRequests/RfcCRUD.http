@@ -1,0 +1,11 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+POST http://localhost:5006/api/rfc
+Content-Type: application/json
+{
+    "PoiId": "2464ca93-b73b-ee0d-715c-064fc27582aa",
+    "Status" : "",
+    "Message": "Its fucked, make it better"
+}
+
+###

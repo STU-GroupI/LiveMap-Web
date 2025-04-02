@@ -44,6 +44,11 @@ public static class RequestHandlerDI
             RequestForChange.Responses.GetMultipleResponse>,
             RequestForChange.Handlers.GetMultipleHandler>();
 
+        services.AddTransient<IRequestHandler<
+            RequestForChange.Requests.CreateSingleRequest,
+            RequestForChange.Responses.CreateSingleResponse>,
+            RequestForChange.Handlers.CreateRequestHandler>();
+
         return services;
     }
 }

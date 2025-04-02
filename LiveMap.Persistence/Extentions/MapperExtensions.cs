@@ -108,4 +108,19 @@ public static class MapperExtensions
 
         return value;
     }
+
+    public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
+    {
+        return new SqlRequestForChange()
+        {
+            Id = requestForChange.Id,
+            ApprovalStatus = requestForChange.ApprovalStatus,
+            ApprovedOn = requestForChange.ApprovedOn,
+            StatusProp = requestForChange.Status,
+            SuggestedPoiId = requestForChange.SuggestedPoiId,
+            SubmittedOn = requestForChange.SubmittedOn,
+            PoiId = requestForChange.PoiId,
+            Message = requestForChange.Message,
+        };
+    }
 }

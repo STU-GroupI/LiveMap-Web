@@ -48,10 +48,8 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     public async Task<RequestForChange?> GetSingle(Guid id)
     {
         SqlRequestForChange? requestForChange = await _context.RequestsForChange
-            .Include(rfc => rfc.Id)
-            .Include(rfc => rfc.ApprovalStatus)
-            .Include(rfc => rfc.SubmittedOn)
-            .Include(rfc => rfc.Message)
+            .Include(rfc => rfc.Poi)
+            .Include(rfc => rfc.SuggestedPoi)
             .Include(rfc => rfc.StatusProp)
             .Where(rfc => rfc.Id == id)
             .FirstOrDefaultAsync();
@@ -62,5 +60,23 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         }
 
         return requestForChange.ToDomainRequestForChange();
+    }
+
+    public async Task<RequestForChange> CreateAsync(RequestForChange requestForChange)
+    {
+        var rfc = requestForChange.ToSqlRequestForChange();
+
+        rfc.SubmittedOn = DateTime.UtcNow;
+        rfc.StatusProp = new ApprovalStatus()
+        {
+            Status = "Pending"
+        };
+        rfc.ApprovalStatus = rfc.StatusProp.Status;
+
+        _context.Entry(rfc.StatusProp).State = EntityState.Unchanged;
+        var result = await _context.RequestsForChange.AddAsync(rfc);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainRequestForChange();
     }
 }
