@@ -16,12 +16,12 @@ namespace LiveMapDashboard.Web.Controllers;
 public class PointOfInterestController : ControllerBase
 {
     /// <summary>
-    /// Gets the POI's for a specified map.
+    /// Gets a specified POI.
     /// </summary>
     /// <param name="id">The id of the specified POI.</param>
-    /// <returns>Returns the specified poi. </returns>
-    /// <response code="200">Successfully get the poi's.</response>
-    /// <response code="404">Poi not found.</response>
+    /// <returns>Returns the specified POI. </returns>
+    /// <response code="200">Successfully get the POI.</response>
+    /// <response code="404">POI not found.</response>
     [HttpGet("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
@@ -48,8 +48,8 @@ public class PointOfInterestController : ControllerBase
     /// <param name="mapId">The map to get the POI's from.</param>
     /// <param name="skip">The amount of items to skip. The base is 0.</param>
     /// <param name="take">The amount of items to take. The base is all.</param>
-    /// <returns>Returns the poi's from the given map.</returns>
-    /// <response code="200">Successfully get the poi's.</response>
+    /// <returns>Returns the POI's from the given map.</returns>
+    /// <response code="200">Successfully get the POI's.</response>
     /// <response code="404">Map not found.</response>
     [HttpGet("")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -64,6 +64,6 @@ public class PointOfInterestController : ControllerBase
         var request = new GetMultipleRequest(Guid.Parse(mapId), skip, take);
         var response = await handler.Handle(request);
 
-        return Ok(response.PointsOfInterests);
+        return Ok(response.PointsOfInterest);
     }
 }

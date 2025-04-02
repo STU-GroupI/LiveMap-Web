@@ -1,26 +1,26 @@
-﻿using LiveMap.Application;
-using LiveMap.Application.Map.Requests;
-using LiveMap.Application.Map.Responses;
+﻿using LiveMap.Application.RequestForChange.Requests;
+using LiveMap.Application.RequestForChange.Responses;
+using LiveMap.Application;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace LiveMapDashboard.Web.Controllers;
+namespace LiveMap.Api.Controllers;
 
 [ApiController]
-[Route("api/map")]
-public class MapController : ControllerBase
+[Route("api/rfc")]
+public class RequestForChangeController : ControllerBase
 {
     /// <summary>
-    /// Gets the specified Map.
+    /// Gets the specified RFC.
     /// </summary>
-    /// <param name="id">The id of the specified Map.</param>
-    /// <returns>Returns the specified Map. </returns>
-    /// <response code="200">Successfully get the Map.</response>
-    /// <response code="404">Map not found.</response>
+    /// <param name="id">The id of the specified RFC.</param>
+    /// <returns>Returns the specified RFC. </returns>
+    /// <response code="200">Successfully get the RFC.</response>
+    /// <response code="404">RFC not found.</response>
     [HttpGet("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType<RequestForChange>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(
         [FromRoute] string id,
@@ -29,28 +29,28 @@ public class MapController : ControllerBase
         var request = new GetSingleRequest(Guid.Parse(id));
         GetSingleResponse response = await handler.Handle(request);
 
-        if (response.Map is null)
+        if (response.RequestForChange is null)
         {
             return NotFound();
         }
 
-        var map = response.Map;
-        return Ok(map);
+        var rfc = response.RequestForChange;
+        return Ok(rfc);
     }
 
     /// <summary>
-    /// Gets the given amount of Maps from the given points.
+    /// Gets the given amount of RFC's from the given points.
     /// </summary>
     /// <param name="skip">The amount of items to skip. The base is 0.</param>
     /// <param name="take">The amount of items to take. The base is all.</param>
-    /// <returns>Returns the amount of maps from a given point.</returns>
-    /// <response code="200">Successfully get the Maps.</response>
-    /// <response code="404">Maps not found.</response>
+    /// <returns>Returns the amount of RFC's from a given point.</returns>
+    /// <response code="200">Successfully get the RFC's.</response>
+    /// <response code="404">RFC's not found.</response>
     [HttpGet("")]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<Map[]>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PointOfInterest[]>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetMultipleForPark(
+    public async Task<IActionResult> GetMultipleFromPark(
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
@@ -58,11 +58,11 @@ public class MapController : ControllerBase
         var request = new GetMultipleRequest(skip, take);
         var response = await handler.Handle(request);
 
-        return Ok(response.Maps);
+        return Ok(response.RequestsForChange);
     }
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> PostForPark(
+    [HttpPost("{id}")]
+    public async Task<IActionResult> PostRequestForChange(
         [FromRoute] string id,
         [FromBody] Coordinate[] coordinates,
         [FromServices] IRequestHandler<UpdateBorderRequest, UpdateBorderResponse> handler)
@@ -77,3 +77,4 @@ public class MapController : ControllerBase
         return NoContent();
     }
 }
+

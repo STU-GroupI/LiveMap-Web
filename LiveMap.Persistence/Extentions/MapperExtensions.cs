@@ -73,25 +73,38 @@ public static class MapperExtensions
         return value;
     }
 
-    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange requestForChange)
+    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange rfc)
     {
-        return requestForChange.ToDomainRequestForChange(null);
+        return new()
+        {
+            Id = rfc.Id,
+            Status = rfc.StatusProp,
+            PoiId = rfc.PoiId,
+            Poi = rfc.Poi?.ToDomainPointOfInterest() ?? null,
+            SuggestedPoiId = rfc.SuggestedPoiId,
+            SuggestedPoi = rfc.SuggestedPoi?.ToDomainSuggestedPointOfInterest() ?? null,
+            ApprovedOn = rfc.ApprovedOn,
+            SubmittedOn = rfc.SubmittedOn,
+            Message = rfc.Message
+        };
     }
-    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange requestForChange, SuggestedPointOfInterest? suggestedPoi)
+    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange rfc, SuggestedPointOfInterest? suggestedPoi)
     {
         RequestForChange value = new()
         {
-            Id = requestForChange.Id,
-            Status = requestForChange.StatusProp,
-            PoiId = requestForChange.PoiId,
-            Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
-            SuggestedPoiId = requestForChange.SuggestedPoiId,
-            Message = requestForChange.Message
+            Id = rfc.Id,
+            Status = rfc.StatusProp,
+            PoiId = rfc.PoiId,
+            Poi = rfc.Poi?.ToDomainPointOfInterest(),
+            SuggestedPoiId = rfc.SuggestedPoiId,
+            ApprovedOn = rfc.ApprovedOn,
+            SubmittedOn = rfc.SubmittedOn,
+            Message = rfc.Message
         };
 
         // If the suggested poi is not given, then we know it does not have its RFC yet. When converting it to its domain format, we must
         // explicitly tell it to use our RFC value instead of the one that it will generate, or we will get a loop.
-        value.SuggestedPoi = suggestedPoi is null ? requestForChange.SuggestedPoi?.ToDomainSuggestedPointOfInterest(value) : suggestedPoi;
+        value.SuggestedPoi = suggestedPoi is null ? rfc.SuggestedPoi?.ToDomainSuggestedPointOfInterest(value) : suggestedPoi;
 
         return value;
     }

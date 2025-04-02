@@ -58,7 +58,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.Count().ShouldBe(map.PointOfInterests.Count());
+        actualResult.PointsOfInterest.Count().ShouldBe(map.PointOfInterests.Count());
     }
 
     [Theory]
@@ -77,7 +77,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.ShouldBe(expectedPois);
+        actualResult.PointsOfInterest.ShouldBe(expectedPois);
     }
 
     [Theory]
@@ -97,7 +97,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.ShouldBe(expectedPois);
+        actualResult.PointsOfInterest.ShouldBe(expectedPois);
     }
 
     [Theory]
@@ -112,7 +112,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.ShouldBeEmpty();
+        actualResult.PointsOfInterest.ShouldBeEmpty();
     }
 
     [Theory]
@@ -129,7 +129,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.ShouldBeEmpty();
+        actualResult.PointsOfInterest.ShouldBeEmpty();
     }
 
     public static IEnumerable<object[]> GetValidPointOfInterest()
