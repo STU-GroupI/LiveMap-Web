@@ -17,6 +17,9 @@ public class RequestForChange
 
     public string ApprovalStatus => Status.Status;
     public required ApprovalStatus Status { get; set; }
+    
+    public DateTime ApprovedOn { get; set; }
 
+    public DateTime SubmittedOn { get; set; }
     public required string Message { get; set; }
 }
