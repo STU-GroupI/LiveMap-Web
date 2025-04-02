@@ -2,6 +2,7 @@ using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -15,21 +16,18 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     }
     public async Task<RequestForChange> CreateAsync(RequestForChange requestForChange)
     {
-        var data = new SqlRequestForChange()
+        var rfc = requestForChange.ToSqlRequestForChange();
+
+        rfc.SubmittedOn = DateTime.UtcNow;
+        rfc.StatusProp = new ApprovalStatus()
         {
-            Id = requestForChange.Id,
-            ApprovalStatus = requestForChange.ApprovalStatus,
-            ApprovedOn = requestForChange.ApprovedOn,
-            StatusProp = new ApprovalStatus()
-            {
-                Status = "Pending"
-            },
-            SubmittedOn = requestForChange.SubmittedOn,
-            PoiId = requestForChange.PoiId,
-            Message = requestForChange.Message,
+            Status = "Pending"
         };
-        var result = _context.RequestsForChange.Add(data);
+
+        _context.Entry(rfc.StatusProp).State = EntityState.Unchanged;
+        var result = await _context.RequestsForChange.AddAsync(rfc);
         await _context.SaveChangesAsync();
+        
         return result.Entity.ToDomainRequestForChange();
     }
 }

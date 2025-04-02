@@ -1,37 +1,42 @@
 using Microsoft.AspNetCore.Mvc;
 using LiveMap.Domain.Models;
 using LiveMap.Application;
-using LiveMapDashboard.Web.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Net.Mime;
-using LiveMap.Application.RequestForChange.Handlers;
 using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
+using LiveMap.Api.Models;
 
-namespace LiveMapDashboard.Web.Controllers;
+namespace LiveMap.Api.Controllers;
 
 [ApiController]
 [Route("api/rfc")]
 public class RequestForChangeController : ControllerBase
 {
+
     /// <summary>
-    /// Gets the POI's for a specified map.
+    /// Creates an RFC for the given request data
     /// </summary>
     /// <param name="request">The given request.</param>
-    /// <returns>Returns the specified poi. </returns>
-    /// <response code="200">Successfully get the poi's.</response>
-    /// <response code="404">Poi not found.</response>
+    /// <returns> The RFC with callback URL </returns>
+    /// <response code="201">Response with the created </response>
+    /// <response code="500">Something went very wrong</response>
     [HttpPost()]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
-        [FromBody] RequestForChange webRequest,
+        [FromBody] CreateSingleWebRequest webRequest,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
-        var request = new CreateSingleRequest(webRequest);
+        var rfc = new RequestForChange()
+        {
+            Message = webRequest.Message,
+            PoiId = webRequest.PoiId,
+            SuggestedPoiId = webRequest.SuggestedPoiId,
+            Status = new() { Status = string.Empty }
+        };
+
+        var request = new CreateSingleRequest(rfc);
 
         try
         {
@@ -40,7 +45,7 @@ public class RequestForChangeController : ControllerBase
         }
         catch (Exception ex)
         {
-            return this.StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 }
