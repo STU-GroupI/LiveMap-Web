@@ -41,7 +41,7 @@ public class MapRepository : IMapRepository
             return [];
         }
 
-        return result.Select(map => map.ToMap())
+        return result.Select(map => map.ToDomainMap())
             .ToList();
     }
 
@@ -57,7 +57,7 @@ public class MapRepository : IMapRepository
             return null;
         }
 
-        return map.ToMap();
+        return map.ToDomainMap();
     }
 
     public async Task<bool> UpdateMapBorder(Guid id, Coordinate[] coords)
