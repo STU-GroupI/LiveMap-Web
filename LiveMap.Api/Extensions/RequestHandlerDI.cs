@@ -42,7 +42,7 @@ public static class RequestHandlerDI
             IRequestHandler<
                 Rfc.Requests.CreateSingleRequest,
                 Rfc.Responses.CreateSingleResponse>,
-            Rfc.Handlers.CreateRequestHandler>();
+            Rfc.Handlers.CreateSingleHandler>();
 
         return services;
     }

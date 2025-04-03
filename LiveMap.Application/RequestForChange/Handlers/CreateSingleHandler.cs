@@ -4,11 +4,11 @@ namespace LiveMap.Application.RequestForChange.Handlers;
 using Application.RequestForChange.Responses;
 using Application.RequestForChange.Requests;
 
-public class CreateRequestHandler : IRequestHandler<CreateSingleRequest, CreateSingleResponse>
+public class CreateSingleHandler : IRequestHandler<CreateSingleRequest, CreateSingleResponse>
 {
     private readonly IRequestForChangeRepository _requestForChangeRepository;
 
-    public CreateRequestHandler(IRequestForChangeRepository requestForChangeRepository)
+    public CreateSingleHandler(IRequestForChangeRepository requestForChangeRepository)
     {
         _requestForChangeRepository = requestForChangeRepository;
     }

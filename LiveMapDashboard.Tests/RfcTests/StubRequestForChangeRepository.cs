@@ -21,15 +21,10 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
     }
     public Task<RequestForChange> CreateAsync(RequestForChange requestForChange)
     {
-        if(!KnownPois.Contains(requestForChange.Id))
-        {
-            throw new DbUpdateException();
-        }
-
         return Task.FromResult(new RequestForChange()
         {
             Id = requestForChange.Id,
-            Message = requestForChange.Message ?? throw new DbUpdateException(),
+            Message = requestForChange.Message,
             Status = ApprovalStatus.PENDING,
             PoiId = requestForChange.PoiId,
             SuggestedPoiId = requestForChange.SuggestedPoiId,
