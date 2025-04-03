@@ -32,7 +32,7 @@ public static class MapperExtensions
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
             MapId = poi.MapId,
-            Map = poi.Map.ToDomainMap() ?? null,
+            Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName
