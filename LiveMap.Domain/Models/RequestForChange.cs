@@ -15,8 +15,11 @@ public class RequestForChange
     public PointOfInterest? Poi { get; set; }
     public SuggestedPointOfInterest? SuggestedPoi { get; set; }
 
-    public string ApprovalStatus => Status.Status;
+    public string ApprovalStatus => Status?.Status ?? string.Empty;
     public required ApprovalStatus Status { get; set; }
+    
+    public DateTime ApprovedOn { get; set; }
 
+    public DateTime SubmittedOn { get; set; }
     public required string Message { get; set; }
 }

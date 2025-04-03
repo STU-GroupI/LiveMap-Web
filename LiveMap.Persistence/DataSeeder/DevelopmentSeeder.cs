@@ -201,9 +201,9 @@ public static class DevelopmentSeeder
         ];
 
         List<ApprovalStatus> approvalStatuses = [
-            new() { Status = "Approved" },
-            new() { Status = "Pending"},
-            new() { Status = "Rejected"}
+            ApprovalStatus.APPROVED,
+            ApprovalStatus.PENDING,
+            ApprovalStatus.REJECTED,
         ];
 
         List<SqlMap> maps = GetMapFaker().Generate(3);

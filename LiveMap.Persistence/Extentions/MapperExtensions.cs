@@ -32,7 +32,7 @@ public static class MapperExtensions
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
             MapId = poi.MapId,
-            Map = poi.Map.ToDomainMap() ?? null,
+            Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName
@@ -85,6 +85,8 @@ public static class MapperExtensions
             Status = requestForChange.StatusProp,
             PoiId = requestForChange.PoiId,
             Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
+            SubmittedOn = requestForChange.SubmittedOn,
+            ApprovedOn = requestForChange.ApprovedOn ?? default,
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             Message = requestForChange.Message
         };
@@ -94,5 +96,20 @@ public static class MapperExtensions
         value.SuggestedPoi = suggestedPoi is null ? requestForChange.SuggestedPoi?.ToDomainSuggestedPointOfInterest(value) : suggestedPoi;
 
         return value;
+    }
+
+    public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
+    {
+        return new SqlRequestForChange()
+        {
+            Id = requestForChange.Id,
+            ApprovalStatus = requestForChange.ApprovalStatus,
+            ApprovedOn = requestForChange.ApprovedOn,
+            StatusProp = requestForChange.Status,
+            SuggestedPoiId = requestForChange.SuggestedPoiId,
+            SubmittedOn = requestForChange.SubmittedOn,
+            PoiId = requestForChange.PoiId,
+            Message = requestForChange.Message,
+        };
     }
 }
