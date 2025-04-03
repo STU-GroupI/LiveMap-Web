@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 ﻿using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
 using LiveMap.Application;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+=======
+using Microsoft.AspNetCore.Mvc;
+using LiveMap.Domain.Models;
+using LiveMap.Application;
+using System.Net.Mime;
+using LiveMap.Application.RequestForChange.Requests;
+using LiveMap.Application.RequestForChange.Responses;
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
 using LiveMap.Api.Models;
 
 namespace LiveMap.Api.Controllers;
@@ -12,6 +21,7 @@ namespace LiveMap.Api.Controllers;
 [Route("api/rfc")]
 public class RequestForChangeController : ControllerBase
 {
+<<<<<<< HEAD
     /// <summary>
     /// Gets the specified RFC.
     /// </summary>
@@ -61,11 +71,17 @@ public class RequestForChangeController : ControllerBase
 
         return Ok(response.RequestsForChange);
     }
+=======
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
 
     /// <summary>
     /// Creates an RFC for the given request data
     /// </summary>
+<<<<<<< HEAD
     /// <param name="webRequest">The given request.</param>
+=======
+    /// <param name="request">The given request.</param>
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
     /// <returns> The RFC with callback URL </returns>
     /// <response code="201">Response with the created </response>
     /// <response code="500">Something went very wrong</response>
@@ -80,10 +96,16 @@ public class RequestForChangeController : ControllerBase
         var rfc = new RequestForChange()
         {
             Message = webRequest.Message,
+<<<<<<< HEAD
             PoiId = new Guid(),
             SuggestedPoiId = new Guid(),
             Status = new() { Status = string.Empty },
             SubmittedOn = DateTime.Now
+=======
+            PoiId = webRequest.PoiId,
+            SuggestedPoiId = webRequest.SuggestedPoiId,
+            Status = new() { Status = string.Empty }
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
         };
 
         var request = new CreateSingleRequest(rfc);
@@ -95,8 +117,15 @@ public class RequestForChangeController : ControllerBase
         }
         catch (Exception ex)
         {
+<<<<<<< HEAD
             return StatusCode(StatusCodes.Status500InternalServerError, $"Something went wrong: {ex}");
         }
     }
 }
 
+=======
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
+}
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956

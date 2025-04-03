@@ -5,7 +5,7 @@ using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace LiveMapDashboard.Web.Controllers;
+namespace LiveMap.Api.Controllers;
 
 [ApiController]
 [Route("api/map")]

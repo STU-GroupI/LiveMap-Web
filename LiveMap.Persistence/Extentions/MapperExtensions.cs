@@ -32,7 +32,7 @@ public static class MapperExtensions
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
             MapId = poi.MapId,
-            Map = poi.Map.ToDomainMap() ?? null,
+            Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName
@@ -92,6 +92,7 @@ public static class MapperExtensions
     {
         RequestForChange value = new()
         {
+<<<<<<< HEAD
             Id = rfc.Id,
             Status = rfc.StatusProp,
             PoiId = rfc.PoiId,
@@ -100,6 +101,16 @@ public static class MapperExtensions
             ApprovedOn = rfc.ApprovedOn,
             SubmittedOn = rfc.SubmittedOn,
             Message = rfc.Message
+=======
+            Id = requestForChange.Id,
+            Status = requestForChange.StatusProp,
+            PoiId = requestForChange.PoiId,
+            Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
+            SubmittedOn = requestForChange.SubmittedOn,
+            ApprovedOn = requestForChange.ApprovedOn ?? default,
+            SuggestedPoiId = requestForChange.SuggestedPoiId,
+            Message = requestForChange.Message
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
         };
 
         // If the suggested poi is not given, then we know it does not have its RFC yet. When converting it to its domain format, we must

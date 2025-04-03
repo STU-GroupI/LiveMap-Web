@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+=======
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
 using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
@@ -19,6 +22,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     {
         _context = context;
     }
+<<<<<<< HEAD
 
     public async Task<ICollection<RequestForChange>> GetMultiple(int? skip, int? take)
     {
@@ -62,6 +66,8 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return requestForChange.ToDomainRequestForChange();
     }
 
+=======
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
     public async Task<RequestForChange> CreateAsync(RequestForChange requestForChange)
     {
         var rfc = requestForChange.ToSqlRequestForChange();
@@ -75,7 +81,11 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         _context.Entry(rfc.StatusProp).State = EntityState.Unchanged;
         var result = await _context.RequestsForChange.AddAsync(rfc);
         await _context.SaveChangesAsync();
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 5cacfa20cb2c0d6944e341269a199509cfdcc956
         return result.Entity.ToDomainRequestForChange();
     }
 }
