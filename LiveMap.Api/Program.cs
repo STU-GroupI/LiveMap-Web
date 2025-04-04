@@ -1,53 +1,43 @@
+using LiveMap.Api.Extensions;
 
-using LiveMapDashboard.Web.Extensions;
-using System.Threading.Tasks;
+var builder = WebApplication.CreateBuilder(args);
 
-namespace LiveMap.Api
+// Make sure that the connectionstring is automagically picked based on the selected env...
+builder.Services.RegisterLiveMapContext(
+    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException("Connectionstring not set"));
+
+builder.Services.RegisterRepositories();
+builder.Services.RegisterRequestHandlers();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
 {
-    public class Program
-    {
-        public static async Task Main(string[] args)
+    options.AddPolicy(name: "CorsPolicy",
+        policy =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
-            // Make sure that the connectionstring is automagically picked based on the selected env...
-            builder.Services.RegisterLiveMapContext(
-                builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException("Connectionstring not set"));
+var app = builder.Build();
 
-            builder.Services.RegisterRepositories();
-            builder.Services.RegisterRequestHandlers();
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: "CorsPolicy",
-                    policy =>
-                    {
-                        policy.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-            app.UseCors("CorsPolicy");
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
-
-            await app.SeedDatabaseAsync();
-
-            app.Run();
-        }
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+app.UseCors("CorsPolicy");
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+await app.SeedDatabaseAsync();
+
+app.Run();
+        

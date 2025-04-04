@@ -4,6 +4,7 @@ using LiveMap.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    partial class LiveMapContextModelSnapshot : ModelSnapshot
+    [Migration("20250331140507_SuggestedPoI_feature#11")]
+    partial class SuggestedPoI_feature11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,31 +78,6 @@ namespace LiveMap.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Map", (string)null);
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlOpeningHours", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("End")
-                        .HasColumnType("time");
-
-                    b.Property<Guid>("PoiId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<TimeSpan>("Start")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PoiId");
-
-                    b.ToTable("OpeningHours", (string)null);
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
@@ -220,17 +198,6 @@ namespace LiveMap.Persistence.Migrations
                     b.ToTable("SuggestedPointOfInterest", (string)null);
                 });
 
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlOpeningHours", b =>
-                {
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
-                        .WithMany("OpeningHours")
-                        .HasForeignKey("PoiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Poi");
-                });
-
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
                 {
                     b.HasOne("LiveMap.Domain.Models.Category", "Category")
@@ -309,11 +276,6 @@ namespace LiveMap.Persistence.Migrations
                 {
                     b.Navigation("RFC")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
-                {
-                    b.Navigation("OpeningHours");
                 });
 #pragma warning restore 612, 618
         }

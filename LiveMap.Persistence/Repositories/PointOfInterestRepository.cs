@@ -43,7 +43,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             return [];
         }
 
-        return result.Select(poi => poi.ToPointOfInterest())
+        return result.Select(poi => poi.ToDomainPointOfInterest())
             .ToList();
     }
 
@@ -63,6 +63,6 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         }
 
 
-        return pointOfInterest.ToPointOfInterest();
+        return pointOfInterest.ToDomainPointOfInterest();
     }
 }

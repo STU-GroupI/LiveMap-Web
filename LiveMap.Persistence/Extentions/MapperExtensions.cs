@@ -11,7 +11,7 @@ using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 namespace LiveMap.Persistence.Extensions;
 public static class MapperExtensions
 {
-    public static Map ToMap(this SqlMap map)
+    public static Map ToDomainMap(this SqlMap map)
     {
         return new()
         {
@@ -23,7 +23,7 @@ public static class MapperExtensions
         };
     }
 
-    public static PointOfInterest ToPointOfInterest(this SqlPointOfInterest poi)
+    public static PointOfInterest ToDomainPointOfInterest(this SqlPointOfInterest poi)
     {
         PointOfInterest data = new()
         {
@@ -33,7 +33,7 @@ public static class MapperExtensions
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
             MapId = poi.MapId,
-            Map = poi.Map?.ToMap() ?? null,
+            Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
             StatusName = poi.StatusName
@@ -51,6 +51,80 @@ public static class MapperExtensions
             Start = oh.Start,
             End = oh.End,
             PoiId = oh.PoiId
+        };
+    }
+    
+    public static SuggestedPointOfInterest ToDomainSuggestedPointOfInterest(this SqlSuggestedPointOfInterest suggestedPoi)
+    {
+        return suggestedPoi.ToDomainSuggestedPointOfInterest(null);
+    }
+    public static SuggestedPointOfInterest ToDomainSuggestedPointOfInterest(this SqlSuggestedPointOfInterest suggestedPoi, RequestForChange? rfc)
+    {
+        SuggestedPointOfInterest value = new()
+        {
+            Id = suggestedPoi.Id,
+            Title = suggestedPoi.Title,
+
+            CategoryName = suggestedPoi.CategoryName,
+            Category = suggestedPoi.Category,
+
+            MapId = suggestedPoi.MapId,
+            Map = suggestedPoi.Map.ToDomainMap(),
+
+            StatusName = suggestedPoi.StatusName,
+            Status = suggestedPoi.Status,
+
+            Coordinate = suggestedPoi.Position.ToDomainCoordinate(),
+            Description = suggestedPoi.Description,
+
+            RFCId = suggestedPoi.RFCId,
+            RFC = null!
+        };
+
+        // If the rfc is not given, then we know it does not have its suggested PoI yet. When converting it to its domain format, we must
+        // explicitly tell it to use our PoI value instead of the one that it will generate, or we will get a loop.
+        value.RFC = rfc is null ? suggestedPoi.RFC.ToDomainRequestForChange(value) : rfc;
+
+        return value;
+    }
+
+    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange requestForChange)
+    {
+        return requestForChange.ToDomainRequestForChange(null);
+    }
+    public static RequestForChange ToDomainRequestForChange(this SqlRequestForChange requestForChange, SuggestedPointOfInterest? suggestedPoi)
+    {
+        RequestForChange value = new()
+        {
+            Id = requestForChange.Id,
+            Status = requestForChange.StatusProp,
+            PoiId = requestForChange.PoiId,
+            Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
+            SubmittedOn = requestForChange.SubmittedOn,
+            ApprovedOn = requestForChange.ApprovedOn ?? default,
+            SuggestedPoiId = requestForChange.SuggestedPoiId,
+            Message = requestForChange.Message
+        };
+
+        // If the suggested poi is not given, then we know it does not have its RFC yet. When converting it to its domain format, we must
+        // explicitly tell it to use our RFC value instead of the one that it will generate, or we will get a loop.
+        value.SuggestedPoi = suggestedPoi is null ? requestForChange.SuggestedPoi?.ToDomainSuggestedPointOfInterest(value) : suggestedPoi;
+
+        return value;
+    }
+
+    public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
+    {
+        return new SqlRequestForChange()
+        {
+            Id = requestForChange.Id,
+            ApprovalStatus = requestForChange.ApprovalStatus,
+            ApprovedOn = requestForChange.ApprovedOn,
+            StatusProp = requestForChange.Status,
+            SuggestedPoiId = requestForChange.SuggestedPoiId,
+            SubmittedOn = requestForChange.SubmittedOn,
+            PoiId = requestForChange.PoiId,
+            Message = requestForChange.Message,
         };
     }
 }

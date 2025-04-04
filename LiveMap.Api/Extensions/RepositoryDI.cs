@@ -1,8 +1,10 @@
 ﻿using LiveMap.Persistence.Repositories;
 using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
+using Rfc = LiveMap.Application.RequestForChange;
+using LiveMap.Domain.Models;
 
-namespace LiveMapDashboard.Web.Extensions;
+namespace LiveMap.Api.Extensions;
 public static class RepositoryDI
 {
     public static IServiceCollection RegisterRepositories(this IServiceCollection services)
@@ -14,6 +16,10 @@ public static class RepositoryDI
         services.AddTransient<
             Map.Persistance.IMapRepository,
             MapRepository>();
+
+        services.AddTransient<
+            Rfc.Persistance.IRequestForChangeRepository,
+            RequestForChangeRepository>();
 
         return services;
     }
