@@ -26,7 +26,7 @@ public class CreateRfcTests
 
         Assert.NotNull(response.Rfc);
         Assert.NotEqual(data.SubmittedOn, default);
-        Assert.Equal(data.Status, ApprovalStatus.PENDING);
+        Assert.Equal(data.ApprovalStatus, ApprovalStatus.PENDING);
     }
 
     public static IEnumerable<object[]> GetValidRFCs()

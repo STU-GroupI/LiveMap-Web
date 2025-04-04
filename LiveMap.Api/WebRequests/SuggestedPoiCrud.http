@@ -1,0 +1,14 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+POST http://localhost:5006/api/rfc/poisuggestion
+Content-Type: application/json
+{
+    "title": "Mogelijk",
+    "description" : "SomeDescr",
+    "category": "Information",
+    "mapId" : "bcf3d553-ec00-0f78-42f0-04871b2959b3",
+    "Coordinate" : {
+        "longitude": 79.59008994140041,
+        "latitude": 29.322206145361264
+    },
+    "isWheelchairAccessible" : true
+}

@@ -19,12 +19,8 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         var rfc = requestForChange.ToSqlRequestForChange();
 
         rfc.SubmittedOn = DateTime.UtcNow;
-        rfc.StatusProp = new ApprovalStatus()
-        {
-            Status = "Pending"
-        };
+        rfc.ApprovalStatus = ApprovalStatus.PENDING;
 
-        _context.Entry(rfc.StatusProp).State = EntityState.Unchanged;
         var result = await _context.RequestsForChange.AddAsync(rfc);
         await _context.SaveChangesAsync();
         

@@ -11,6 +11,7 @@ public class RequestForChange
     public SuggestedPointOfInterest? SuggestedPoi { get; set; }
 
     public string ApprovalStatus { get; set; } = string.Empty;
-
+    public required DateTime SubmittedOn { get; set; }
+    public DateTime? ApprovedOn { get; set; }
     public string? Message { get; set; }
 }

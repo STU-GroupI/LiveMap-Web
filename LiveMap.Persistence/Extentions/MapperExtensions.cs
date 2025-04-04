@@ -52,10 +52,10 @@ public static class MapperExtensions
             IsWheelchairAccessible = suggestedPoi.IsWheelchairAccessible,
 
             CategoryName = suggestedPoi.CategoryName,
-            Category = suggestedPoi.Category,
+            Category = suggestedPoi?.Category,
 
             MapId = suggestedPoi.MapId,
-            Map = suggestedPoi.Map.ToDomainMap(),
+            Map = suggestedPoi.Map?.ToDomainMap(),
 
             Coordinate = suggestedPoi.Position.ToDomainCoordinate(),
             Description = suggestedPoi.Description,
@@ -103,11 +103,28 @@ public static class MapperExtensions
             Id = requestForChange.Id,
             ApprovalStatus = requestForChange.ApprovalStatus,
             ApprovedOn = requestForChange.ApprovedOn,
-            StatusProp = requestForChange.Status,
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             SubmittedOn = requestForChange.SubmittedOn,
             PoiId = requestForChange.PoiId,
             Message = requestForChange.Message,
+        };
+    }
+
+
+    public static SqlSuggestedPointOfInterest ToSqlSuggestedPointOfInterest(this SuggestedPointOfInterest suggestedPoi)
+    {
+        return new SqlSuggestedPointOfInterest
+        {
+            Id = default,
+            Title = suggestedPoi.Title,
+            Description = suggestedPoi.Description,
+            CategoryName = suggestedPoi.CategoryName,
+            IsWheelchairAccessible = suggestedPoi.IsWheelchairAccessible,
+            Position = suggestedPoi.Coordinate.ToSqlPoint(),
+            MapId = suggestedPoi.MapId,
+            RFC = null,
+            Category = null!,
+            Map = null!
         };
     }
 }

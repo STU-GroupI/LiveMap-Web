@@ -25,7 +25,7 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
         {
             Id = requestForChange.Id,
             Message = requestForChange.Message,
-            Status = ApprovalStatus.PENDING,
+            ApprovalStatus = ApprovalStatus.PENDING,
             PoiId = requestForChange.PoiId,
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             SubmittedOn = DateTime.UtcNow,

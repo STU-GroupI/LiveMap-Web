@@ -2,7 +2,7 @@
 using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
 using Rfc = LiveMap.Application.RequestForChange;
-using LiveMap.Domain.Models;
+using SuggestedPoi = LiveMap.Application.SuggestedPoi;
 
 namespace LiveMap.Api.Extensions;
 public static class RepositoryDI
@@ -20,6 +20,10 @@ public static class RepositoryDI
         services.AddTransient<
             Rfc.Persistance.IRequestForChangeRepository,
             RequestForChangeRepository>();
+
+        services.AddTransient<
+            SuggestedPoi.Persistanc.ISuggestedPointOfInterestRepository,
+            SuggestedPointOfInterestRepository>();
 
         return services;
     }

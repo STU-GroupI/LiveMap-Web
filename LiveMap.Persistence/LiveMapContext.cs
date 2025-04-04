@@ -83,7 +83,8 @@ public class LiveMapContext : DbContext
             entityBuilder.ToTable("SuggestedPointOfInterest")
                 .HasKey(e => e.Id);
 
-            entityBuilder.HasOne(poi => poi.Map);
+            // TODO: This needs to be added...
+            // entityBuilder.HasOne(poi => poi.Map).WithMany().HasForeignKey(poi => new { poi.MapId });
 
             entityBuilder.HasOne(poi => poi.Category)
                 .WithMany()

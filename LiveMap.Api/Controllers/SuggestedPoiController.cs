@@ -2,17 +2,16 @@ using Microsoft.AspNetCore.Mvc;
 using LiveMap.Domain.Models;
 using LiveMap.Application;
 using System.Net.Mime;
-using LiveMap.Application.RequestForChange.Requests;
-using LiveMap.Application.RequestForChange.Responses;
-using LiveMap.Api.Models;
+using LiveMap.Application.SuggestedPoi.Requests;
+using LiveMap.Application.SuggestedPoi.Responses;
+using LiveMap.Api.Models.SuggestedPoi;
 
 namespace LiveMap.Api.Controllers;
 
 [ApiController]
-[Route("api/rfc")]
-public class RequestForChangeController : ControllerBase
+[Route("api/rfc/poisuggestion")]
+public class SuggestedPoiController : ControllerBase
 {
-
     /// <summary>
     /// Creates an RFC for the given request data
     /// </summary>
@@ -25,24 +24,26 @@ public class RequestForChangeController : ControllerBase
     [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
-        [FromBody] CreateSingleRfcWebRequest webRequest,
+        [FromBody] CreateSinglePoiSuggestionWebRequest webRequest,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
-        var rfc = new RequestForChange()
+        var poi = new SuggestedPointOfInterest()
         {
-            Message = webRequest.Message,
-            PoiId = webRequest.PoiId,
-            SuggestedPoiId = webRequest.SuggestedPoiId,
-            SubmittedOn = default,
-            ApprovalStatus = string.Empty
+            Title = webRequest.Title,
+            Description = webRequest.Description,
+            CategoryName = webRequest.Category,
+            Coordinate = webRequest.Coordinate,
+            IsWheelchairAccessible = webRequest.isWheelchairAccessible,
+            MapId = webRequest.MapId,
+            Id = default
         };
 
-        var request = new CreateSingleRequest(rfc);
+        var request = new CreateSingleRequest(poi);
 
         try
         {
             CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Rfc);
+            return Created("", response.SuggestedPoi);
         }
         catch (Exception ex)
         {
