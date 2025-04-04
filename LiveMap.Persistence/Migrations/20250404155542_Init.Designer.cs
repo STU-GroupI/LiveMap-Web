@@ -13,8 +13,8 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    [Migration("20250404103312_FIX_PoiSuggestion_#Feature13")]
-    partial class FIX_PoiSuggestion_Feature13
+    [Migration("20250404155542_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,6 +78,31 @@ namespace LiveMap.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Map", (string)null);
+                });
+
+            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlOpeningHours", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("End")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("PoiId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("Start")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PoiId");
+
+                    b.ToTable("OpeningHours", (string)null);
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
@@ -195,6 +220,17 @@ namespace LiveMap.Persistence.Migrations
                     b.ToTable("SuggestedPointOfInterest", (string)null);
                 });
 
+            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlOpeningHours", b =>
+                {
+                    b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
+                        .WithMany("OpeningHours")
+                        .HasForeignKey("PoiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Poi");
+                });
+
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
                 {
                     b.HasOne("LiveMap.Domain.Models.Category", "Category")
@@ -261,6 +297,11 @@ namespace LiveMap.Persistence.Migrations
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlMap", b =>
                 {
                     b.Navigation("PointOfInterests");
+                });
+
+            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
+                {
+                    b.Navigation("OpeningHours");
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>

@@ -10,11 +10,11 @@ public class LiveMapContext : DbContext
     public DbSet<SqlMap> Maps { get; set; }
     public DbSet<SqlSuggestedPointOfInterest> SuggestedPointsOfInterest { get; set; }
     public DbSet<SqlRequestForChange> RequestsForChange { get; set; }
+    public DbSet<SqlOpeningHours> OpeningHours { get; set; }
 
     public DbSet<PointOfInterestStatus> PoIStatusses { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ApprovalStatus> ApprovalStatuses { get; set; }
-    public DbSet<SqlOpeningHours> OpeningHours { get; set; }
 
     public LiveMapContext(DbContextOptions<LiveMapContext> options) : base(options) { }
 
