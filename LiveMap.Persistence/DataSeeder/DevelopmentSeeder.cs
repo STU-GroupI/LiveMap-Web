@@ -222,11 +222,6 @@ public static class DevelopmentSeeder
 
         List<SqlMap> maps = GetMapFaker().Generate(3);
         List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7 * 50);
-        List<ApprovalStatus> approvalStatuses = [
-            ApprovalStatus.APPROVED,
-            ApprovalStatus.PENDING,
-            ApprovalStatus.REJECTED,
-        ];
 
         List<SqlPointOfInterest> pointsOfInterest = GetPointOfInterestFaker(
             maps: maps,

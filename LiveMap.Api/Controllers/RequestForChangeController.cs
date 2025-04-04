@@ -32,7 +32,8 @@ public class RequestForChangeController : ControllerBase
         {
             Message = webRequest.Message,
             PoiId = webRequest.PoiId,
-            Status = new() { Status = string.Empty }
+            ApprovalStatus = string.Empty,
+            SubmittedOn = default
         };
 
         var request = new CreateSingleRequest(rfc);
