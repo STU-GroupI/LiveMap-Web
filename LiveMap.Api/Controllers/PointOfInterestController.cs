@@ -3,13 +3,12 @@ using LiveMap.Application.PointOfInterest.Handlers;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
-using LiveMapDashboard.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Net.Mime;
 
-namespace LiveMapDashboard.Web.Controllers;
+namespace LiveMap.Api.Controllers;
 
 [ApiController]
 [Route("api/poi")]

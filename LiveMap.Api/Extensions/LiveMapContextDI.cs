@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using static Bogus.DataSets.Name;
 
-namespace LiveMapDashboard.Web.Extensions; 
+namespace LiveMap.Api.Extensions; 
 public static class LiveMapContextDI
 {
     public static IServiceCollection RegisterLiveMapContext(this IServiceCollection services, string connectionString)
