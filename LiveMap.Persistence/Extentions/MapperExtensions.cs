@@ -49,15 +49,13 @@ public static class MapperExtensions
         {
             Id = suggestedPoi.Id,
             Title = suggestedPoi.Title,
+            IsWheelchairAccessible = suggestedPoi.IsWheelchairAccessible,
 
             CategoryName = suggestedPoi.CategoryName,
             Category = suggestedPoi.Category,
 
             MapId = suggestedPoi.MapId,
             Map = suggestedPoi.Map.ToDomainMap(),
-
-            StatusName = suggestedPoi.StatusName,
-            Status = suggestedPoi.Status,
 
             Coordinate = suggestedPoi.Position.ToDomainCoordinate(),
             Description = suggestedPoi.Description,
@@ -82,7 +80,7 @@ public static class MapperExtensions
         RequestForChange value = new()
         {
             Id = requestForChange.Id,
-            Status = requestForChange.StatusProp,
+            ApprovalStatus = requestForChange.ApprovalStatus,
             PoiId = requestForChange.PoiId,
             Poi = requestForChange.Poi?.ToDomainPointOfInterest(),
             SuggestedPoiId = requestForChange.SuggestedPoiId,

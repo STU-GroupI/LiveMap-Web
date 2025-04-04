@@ -89,10 +89,6 @@ public class LiveMapContext : DbContext
                 .WithMany()
                 .HasForeignKey(poi => poi.CategoryName);
 
-            entityBuilder.HasOne(poi => poi.Status)
-                .WithMany()
-                .HasForeignKey(poi => poi.StatusName);
-
             entityBuilder.Property(e => e.Position).HasColumnType("geometry");
 
             entityBuilder.HasOne(e => e.RFC)
@@ -111,7 +107,7 @@ public class LiveMapContext : DbContext
                 .WithOne(e => e.RFC)
                 .HasForeignKey<SqlRequestForChange>(e => new { e.SuggestedPoiId });
 
-            entityBuilder.HasOne(e => e.StatusProp)
+            entityBuilder.HasOne(e => e.ApprovalStatusProp)
                 .WithMany()
                 .HasForeignKey(e => new { e.ApprovalStatus });
         });
