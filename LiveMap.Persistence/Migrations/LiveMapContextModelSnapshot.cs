@@ -291,66 +291,20 @@ namespace LiveMap.Persistence.Migrations
                     b.Navigation("Map");
                 });
 
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlRequestForChange", b =>
-                {
-                    b.HasOne("LiveMap.Domain.Models.ApprovalStatus", "StatusProp")
-                        .WithMany()
-                        .HasForeignKey("ApprovalStatus")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
-                        .WithMany()
-                        .HasForeignKey("PoiId");
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", "SuggestedPoi")
-                        .WithOne("RFC")
-                        .HasForeignKey("LiveMap.Persistence.DbModels.SqlRequestForChange", "SuggestedPoiId");
-
-                    b.Navigation("Poi");
-
-                    b.Navigation("StatusProp");
-
-                    b.Navigation("SuggestedPoi");
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
-                {
-                    b.HasOne("LiveMap.Domain.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryName");
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlMap", "Map")
-                        .WithMany()
-                        .HasForeignKey("MapId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LiveMap.Domain.Models.PointOfInterestStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusName");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Map");
-
-                    b.Navigation("Status");
-                });
-
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlMap", b =>
                 {
                     b.Navigation("PointOfInterests");
+                });
+
+            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
+                {
+                    b.Navigation("OpeningHours");
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
                 {
                     b.Navigation("RFC")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
-                {
-                    b.Navigation("OpeningHours");
                 });
 #pragma warning restore 612, 618
         }
