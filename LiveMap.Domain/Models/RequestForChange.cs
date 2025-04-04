@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace LiveMap.Domain.Models;
 
 public class RequestForChange
@@ -15,8 +10,7 @@ public class RequestForChange
     public PointOfInterest? Poi { get; set; }
     public SuggestedPointOfInterest? SuggestedPoi { get; set; }
 
-    public string ApprovalStatus => Status.Status;
-    public required ApprovalStatus Status { get; set; }
+    public string ApprovalStatus { get; set; } = string.Empty;
 
     public required string Message { get; set; }
 }
