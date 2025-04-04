@@ -32,7 +32,6 @@ public class RequestForChangeController : ControllerBase
         {
             Message = webRequest.Message,
             PoiId = webRequest.PoiId,
-            SuggestedPoiId = webRequest.SuggestedPoiId,
             Status = new() { Status = string.Empty }
         };
 

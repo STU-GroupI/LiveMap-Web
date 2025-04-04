@@ -23,6 +23,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
     public async Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var query = _context.PointsOfInterest
+            .Include(poi => poi.OpeningHours)
             .Where(poi => poi.MapId == mapId);
 
         if (skip is int fromValue)
@@ -52,6 +53,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             .Include(poi => poi.Category)
             .Include(poi => poi.Status)
             .Include(poi => poi.Map)
+            .Include(poi => poi.OpeningHours)
             .Where(poi => poi.Id == id)
             .FirstOrDefaultAsync();
 
