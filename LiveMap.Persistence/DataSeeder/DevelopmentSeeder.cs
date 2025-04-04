@@ -223,6 +223,7 @@ public static class DevelopmentSeeder
 
         await context.Categories.AddRangeAsync(categories);
         await context.PoIStatusses.AddRangeAsync(poiStatusses);
+        await context.ApprovalStatuses.AddRangeAsync(approvalStatuses);
         await context.Maps.AddRangeAsync(maps);
         await context.PointsOfInterest.AddRangeAsync(pointsOfInterest);
         await context.RequestsForChange.AddRangeAsync(requestsForChange);
