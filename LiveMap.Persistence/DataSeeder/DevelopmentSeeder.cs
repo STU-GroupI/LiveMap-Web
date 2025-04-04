@@ -144,9 +144,7 @@ public static class DevelopmentSeeder
             .RuleFor(e => e.SubmittedOn, f => f.Date.Future())
             .RuleFor(e => e.ApprovedOn, (f, e) => f.Date.Future(refDate: e.SubmittedOn))
 
-            .RuleFor(e => e.StatusProp, f => f.PickRandom(approvalStatuses))
-            .RuleFor(e => e.ApprovalStatus, (f, e) => e.StatusProp.Status)
-
+            .RuleFor(e => e.ApprovalStatus, f => f.PickRandom(approvalStatuses.Select(s => s.Status)))
             .RuleFor(e => e.Message, f => f.Lorem.Paragraphs(3));
     }
 
@@ -192,9 +190,6 @@ public static class DevelopmentSeeder
             .RuleFor(p => p.CategoryName, f => f.PickRandom(categories.Select(c => c.CategoryName)))
             .RuleFor(p => p.Category, (f, p) => categories.Where(c => c.CategoryName == p.CategoryName).First())
 
-            .RuleFor(p => p.StatusName, f => f.PickRandom(statusses.Select(s => s.Status)))
-            .RuleFor(p => p.Status, (f, p) => statusses.Where(poi => poi.Status == p.StatusName).First())
-
             .RuleFor(p => p.MapId, f => maps[f.Random.Int(0, maps.Count - 1)].Id)
             .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First())
 
@@ -219,14 +214,14 @@ public static class DevelopmentSeeder
             new() { Status = "Pending" },
         ];
 
-        List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7 * 50);
         List<ApprovalStatus> approvalStatuses = [
-            ApprovalStatus.APPROVED,
-            ApprovalStatus.PENDING,
-            ApprovalStatus.REJECTED,
+            new() { Status = ApprovalStatus.APPROVED },
+            new() { Status = ApprovalStatus.PENDING },
+            new() { Status = ApprovalStatus.REJECTED }
         ];
 
         List<SqlMap> maps = GetMapFaker().Generate(3);
+        List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7 * 50);
 
         List<SqlPointOfInterest> pointsOfInterest = GetPointOfInterestFaker(
             maps: maps,
@@ -249,6 +244,7 @@ public static class DevelopmentSeeder
 
         await context.Categories.AddRangeAsync(categories);
         await context.PoIStatusses.AddRangeAsync(poiStatusses);
+        await context.ApprovalStatuses.AddRangeAsync(approvalStatuses);
         await context.Maps.AddRangeAsync(maps);
         await context.PointsOfInterest.AddRangeAsync(pointsOfInterest);
         await context.RequestsForChange.AddRangeAsync(requestsForChange);

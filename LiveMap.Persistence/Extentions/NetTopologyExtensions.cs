@@ -17,6 +17,14 @@ public static class NetTopologyExtensions
         .Select(x => x.ToDomainCoordinate())
         .ToArray();
 
+    public static Point ToSqlPoint(this Domain.Models.Coordinate coordinate)
+    {
+        return new Point(new Coordinate(coordinate.Longitude, coordinate.Latitude))
+        {
+            SRID = 4326
+        };
+    }
+
     public static Polygon ToPolygon(this Domain.Models.Coordinate[] domainCoordinates)
     {
         if (domainCoordinates == null || domainCoordinates.Length < 3)

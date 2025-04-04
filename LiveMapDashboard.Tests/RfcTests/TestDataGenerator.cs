@@ -11,7 +11,12 @@ namespace LiveMapDashboard.Tests.RfcTests;
 public static class TestDataGenerator
 {
     public static readonly DateTime START_DATE = new DateTime(year: 2025, month: 4, day: 1, hour: 14, minute: 08, second: 0);
-    public static readonly List<ApprovalStatus> APPROVAL_STATUSSES = new List<ApprovalStatus>([ApprovalStatus.REJECTED, ApprovalStatus.PENDING, ApprovalStatus.APPROVED]);
+    public static readonly List<ApprovalStatus> APPROVAL_STATUSSES = new List<ApprovalStatus>([
+        new() { Status = ApprovalStatus.REJECTED },
+        new() { Status = ApprovalStatus.PENDING },
+        new() { Status = ApprovalStatus.APPROVED }
+    ]);
+
     public static Faker<RequestForChange> GetRequestForChangeFaker(
         List<ApprovalStatus> approvalStatuses,
         DateTime startDateTime,
@@ -30,7 +35,7 @@ public static class TestDataGenerator
             .RuleFor(e => e.Id, f => f.Random.Guid())
             .RuleFor(e => e.PoiId, f => pickRandomGuid(f))
             .RuleFor(e => e.SubmittedOn, f => f.Date.Future(yearsToGoForward: 1, startDateTime))
-            .RuleFor(e => e.ApprovalStatus, ApprovalStatus.PENDING.Status)
+            .RuleFor(e => e.ApprovalStatus, ApprovalStatus.PENDING)
             .RuleFor(e => e.Message, f => f.Lorem.Paragraphs(3));
     }
 
@@ -77,7 +82,7 @@ public static class TestDataGenerator
             .RuleFor(e => e.Id, f => f.Random.Guid())
             .RuleFor(e => e.PoiId, f => pickRandomGuid(f))
             .RuleFor(e => e.SubmittedOn, f => f.Date.Future(yearsToGoForward: 1, startDateTime))
-            .RuleFor(e => e.ApprovalStatus, ApprovalStatus.PENDING.Status)
+            .RuleFor(e => e.ApprovalStatus, ApprovalStatus.PENDING)
             .RuleFor(e => e.Message, f => generateMessage(f));
     }
 
