@@ -3,8 +3,7 @@
 POST http://localhost:5006/api/rfc
 Content-Type: application/json
 {
-    "PoiId": "2464ca93-b73b-ee0d-715c-064fc27582aa",
-    "Status" : "",
+    "PoiId": "89d97ffa-4a0e-4fd2-a203-4300087c4015",
     "Message": "Its fucked, make it better"
 }
 
