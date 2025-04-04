@@ -14,6 +14,7 @@ public class LiveMapContext : DbContext
     public DbSet<PointOfInterestStatus> PoIStatusses { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ApprovalStatus> ApprovalStatuses { get; set; }
+    public DbSet<SqlOpeningHours> OpeningHours { get; set; }
 
     public LiveMapContext(DbContextOptions<LiveMapContext> options) : base(options) { }
 
@@ -47,6 +48,10 @@ public class LiveMapContext : DbContext
             entityBuilder.HasOne(poi => poi.Status)
                 .WithMany()
                 .HasForeignKey(poi => poi.StatusName);
+
+            entityBuilder.HasMany(poi => poi.OpeningHours)
+                .WithOne(oh => oh.Poi)
+                .HasForeignKey(oh => oh.PoiId);
 
             entityBuilder.Property(e => e.Position).HasColumnType("geometry");
         });
@@ -111,6 +116,18 @@ public class LiveMapContext : DbContext
             entityBuilder.HasOne(e => e.ApprovalStatusProp)
                 .WithMany()
                 .HasForeignKey(e => new { e.ApprovalStatus });
+        });
+
+        // OpeningHours
+        modelBuilder.Entity<SqlOpeningHours>(entityBuilder =>
+        {
+            entityBuilder.ToTable("OpeningHours")
+                .HasKey(oh => oh.Id);
+
+            entityBuilder       
+                .HasOne(o => o.Poi)
+                .WithMany(p => p.OpeningHours)
+                .HasForeignKey(o => o.PoiId);
         });
     }
 }

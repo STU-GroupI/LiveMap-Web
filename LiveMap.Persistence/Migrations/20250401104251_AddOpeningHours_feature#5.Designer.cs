@@ -4,6 +4,7 @@ using LiveMap.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    partial class LiveMapContextModelSnapshot : ModelSnapshot
+    [Migration("20250401104251_AddOpeningHours_feature#5")]
+    partial class AddOpeningHours_feature5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,16 +25,6 @@ namespace LiveMap.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("LiveMap.Domain.Models.ApprovalStatus", b =>
-                {
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Status");
-
-                    b.ToTable("ApprovalStatuses");
-                });
 
             modelBuilder.Entity("LiveMap.Domain.Models.Category", b =>
                 {
@@ -140,83 +133,6 @@ namespace LiveMap.Persistence.Migrations
                     b.ToTable("PointOfInterest", (string)null);
                 });
 
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlRequestForChange", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ApprovalStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ApprovedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PoiId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("SubmittedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("SuggestedPoiId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApprovalStatus");
-
-                    b.HasIndex("PoiId");
-
-                    b.HasIndex("SuggestedPoiId")
-                        .IsUnique()
-                        .HasFilter("[SuggestedPoiId] IS NOT NULL");
-
-                    b.ToTable("RequestForChange", (string)null);
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CategoryName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsWheelchairAccessible")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MapId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Point>("Position")
-                        .IsRequired()
-                        .HasColumnType("geometry");
-
-                    b.Property<Guid?>("RFCId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryName");
-
-                    b.HasIndex("MapId");
-
-                    b.ToTable("SuggestedPointOfInterest", (string)null);
-                });
-
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlOpeningHours", b =>
                 {
                     b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
@@ -251,55 +167,9 @@ namespace LiveMap.Persistence.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlRequestForChange", b =>
-                {
-                    b.HasOne("LiveMap.Domain.Models.ApprovalStatus", "ApprovalStatusProp")
-                        .WithMany()
-                        .HasForeignKey("ApprovalStatus")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlPointOfInterest", "Poi")
-                        .WithMany()
-                        .HasForeignKey("PoiId");
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", "SuggestedPoi")
-                        .WithOne("RFC")
-                        .HasForeignKey("LiveMap.Persistence.DbModels.SqlRequestForChange", "SuggestedPoiId");
-
-                    b.Navigation("ApprovalStatusProp");
-
-                    b.Navigation("Poi");
-
-                    b.Navigation("SuggestedPoi");
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
-                {
-                    b.HasOne("LiveMap.Domain.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryName");
-
-                    b.HasOne("LiveMap.Persistence.DbModels.SqlMap", "Map")
-                        .WithMany()
-                        .HasForeignKey("MapId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Map");
-                });
-
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlMap", b =>
                 {
                     b.Navigation("PointOfInterests");
-                });
-
-            modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlSuggestedPointOfInterest", b =>
-                {
-                    b.Navigation("RFC")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("LiveMap.Persistence.DbModels.SqlPointOfInterest", b =>
