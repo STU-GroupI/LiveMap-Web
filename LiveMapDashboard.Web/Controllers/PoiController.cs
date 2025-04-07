@@ -1,19 +1,21 @@
-﻿using LiveMap.Application.Infrastructure.Services;
-using LiveMapDashboard.Web.Extensions.Mappers;
+﻿using LiveMap.Domain.Models;
+using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Models.Poi;
-using LiveMapDashboard.Web.Models.Providers;
+using LiveMapDashboard.Web.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Net;
+using System.Runtime.Intrinsics.X86;
+using System.Text.Json;
 
 namespace LiveMapDashboard.Web.Controllers
 {
     [Route("[controller]")]
     public class PoiController : Controller
     {
-        public async Task<IActionResult> Index(
-            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+        public IActionResult Index()
         {
-            var viewModel = await provider.Provide();
+            var viewModel = PoiCrudformViewModel.Empty;
             return View(viewModel);
         }
 
@@ -21,35 +23,92 @@ namespace LiveMapDashboard.Web.Controllers
         [Route("")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(
-            [FromServices] IPointOfInterestService service,
-            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
+            [FromServices] IHttpClientFactory httpClientFactory,
             PoiCrudformViewModel viewModel,
             string action)
         {
-            if (!ModelState.IsValid)
+            var client = httpClientFactory.CreateBackendClient();
+
+            if (client is null)
             {
-                return View("index", provider.Hydrate(viewModel));
+                ModelState.AddModelError(
+                    "InternalError",
+                    "The backend service is currently unavailable. Please try again later.");
+                return View(viewModel);
             }
 
-            var poi = viewModel.ToDomainPointOfInterest();
-            var result = await service.CreateSingle(poi);
-
-            if (result.IsSuccess)
+            try
             {
-                ViewData["SuccessMessage"] = "Your request was successfully processed!";
-            }
-            else
-            {
-                ViewData["ErrorMessage"] = result.StatusCode switch
+                var result = await client.SendAsync(new HttpRequestMessage
                 {
-                    HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
-                    HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                    HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
-                    _ => "Something went wrong while trying to contact the application. Please try again later"
-                };
+                    Method = HttpMethod.Post,
+                    Content = new StringContent(action),
+                });
+
+                if (result.IsSuccessStatusCode)
+                {
+                    /*
+                        var responseContent = await result.Content.ReadAsStreamAsync();
+                    
+                        if (responseContent is null)
+                        {
+                            TempData["Success"] = new
+                            {
+                                Message = "Your request was successfully processed!"
+                            };
+                            return View(viewModel);
+                        }
+
+                        PointOfInterest? data = await JsonSerializer.DeserializeAsync<PointOfInterest>(responseContent);
+
+                        // The following could work but would require the use of the
+                        // dynamic type. Dynamics are scary, and we will avoid using them...
+                        TempData["Success"] = new
+                        {
+                            Message = "Your request was successfully processed!"
+                        };
+                    */
+
+                    TempData["Success"] = "Your request was successfully processed!";
+                }
+                switch (result.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        ModelState.AddModelError(
+                            "BadRequest",
+                            "The request was invalid. Please check the data you submitted.");
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        ModelState.AddModelError(
+                            "Unauthorized",
+                            "You are not authorized to perform this action.");
+                        break;
+                    case HttpStatusCode.ServiceUnavailable:
+                        ModelState.AddModelError(
+                            "ServiceUnavailable",
+                            "The service is currently unavailable. Please try again later.");
+                        break;
+                    default:
+                        ModelState.AddModelError(
+                            "GeneralError",
+                            "An unexpected error occurred. Please try again.");
+                        break;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError(
+                    "RequestError",
+                    "An error occurred while contacting the backend service. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "UnexpectedError",
+                    "An unexpected error occurred. Please try again later.");
             }
 
-            return View("index", await provider.Hydrate(viewModel));
+            return View(viewModel);
         }
     }
 }
