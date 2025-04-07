@@ -30,4 +30,7 @@
     <ProjectReference Include="..\LiveMap.Persistence\LiveMap.Persistence.csproj" />
   </ItemGroup>
 
+  <Target Name="BuildTailwind" BeforeTargets="Build">
+    <Exec Command="npm run build:css" />
+  </Target>
 </Project>
