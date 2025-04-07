@@ -1,0 +1,21 @@
+{
+  "name": "livemapdashboard.web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "copy:preline": "copy \"node_modules\\preline\\dist\\preline.js\" \"wwwroot\\js\\preline.js\"",
+    "dev:css": "npx tailwindcss -i ./wwwroot/css/site.css -o wwwroot/css/output.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./wwwroot/css/site.css -o ./wwwroot/css/styles.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.3",
+    "tailwindcss": "^4.1.3"
+  },
+  "dependencies": {
+    "preline": "^3.0.1"
+  }
+}

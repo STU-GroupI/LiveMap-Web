@@ -1,3 +1,12 @@
+/**
+ * Tailwindcss & Preline
+ */
+@import "tailwindcss";
+@import "../../node_modules/preline/variants.css";
+
+/**
+ * Custom code and changes
+ */
 html {
   font-size: 14px;
 }
