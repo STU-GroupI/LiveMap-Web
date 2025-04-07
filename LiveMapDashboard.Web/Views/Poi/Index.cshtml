@@ -1,0 +1,221 @@
+﻿@using LiveMapDashboard.Web.Models.Poi
+@model PoiCrudformViewModel
+
+<div class="max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="bg-white rounded-xl shadow-xs p-4 sm:p-7">
+        <form method="post" asp-controller="poi">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+            <input hidden
+                   type="number"
+                   value="@Model.Coordinate.Latitude"
+                   asp-for="Coordinate.Latitude" />
+            <input hidden
+                   type="number"
+                   value="@Model.Coordinate.Longitude"
+                   asp-for="Coordinate.Longitude" />
+
+            <input hidden
+                   type="text"
+                   value="@Model.ParkId"
+                   asp-for="ParkId" />
+
+            <div class="max-w-sm">
+                <label for="title" class="block text-sm font-medium mb-2">Title</label>
+                <input type="text"
+                       asp-for="@Model.Title"
+                       name="title"
+                       id="title"
+                       class="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                       placeholder="Title"
+                       value="@Model.Title">
+            </div>
+
+            <select asp-for="Category"
+                    name="category"
+                    class="py-3 px-4 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                <option selected="">Open this select menu</option>
+                @foreach (var category in Model.Categories)
+                {
+                    if (Model.Category == category.CategoryName)
+                    {
+                        <option value="@category.CategoryName"
+                                selected>
+
+                            @(category.CategoryName)
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@category.CategoryName">
+                            @(category.CategoryName)
+                        </option>
+                    }
+                }
+            </select>
+
+            <div class="max-w-sm">
+                <label for="description" class="block text-sm font-medium mb-2">Description</label>
+                <textarea asp-for="Description"
+                          id="description"
+                          class="py-2 px-3 sm:py-3 sm:px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                          rows="3"
+                          placeholder="Description">
+
+                </textarea>
+            </div>
+
+            <div class="flex gap-5">
+                <div class="min-w-32">
+                    <label for="hs-default-checkbox" class="text-md text-gray-500 ms-3">Wheelchair accessible</label>
+                </div>
+                <div>
+                    <input asp-for="IsWheelchairAccessible"
+                           name="isWheelchairAccessible"
+                           type="checkbox"
+                           class="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500 checked:border-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                           id="hs-default-checkbox">
+                </div>
+            </div>
+
+            <div class="flex gap-5">
+                <div class="min-w-32">
+                    <label for="hs-default-checkbox" class="text-md text-gray-500 ms-3 my-2">Opening times</label>
+                </div>
+                <div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="monday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[0].IsActive"
+                                       type="checkbox"
+                                       id="monday"
+                                       class="peer sr-only">
+
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="monday" class="text-sm min-w-24 text-gray-500">Monday</label>
+                        </div>
+                        <input asp-for="OpeningHours[0].From" type="text" id="monday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[0].To" type="text" id="monday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="tuesday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[1].IsActive" type="checkbox" id="tuesday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="tuesday" class="text-sm min-w-24 text-sm text-gray-500">Tuesday</label>
+                        </div>
+                        <input asp-for="OpeningHours[1].From" type="text" id="tuesday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[1].To" type="text" id="tuesday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="wednesday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[2].IsActive" type="checkbox" id="wednesday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="wednesday" class="text-sm min-w-24 text-sm text-gray-500">Wednesday</label>
+                        </div>
+                        <input asp-for="OpeningHours[2].From" type="text" id="wednesday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[2].To" type="text" id="wednesday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="thursday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[3].IsActive" type="checkbox" id="thursday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="thursday" class="text-sm min-w-24 text-sm text-gray-500">Thursday</label>
+                        </div>
+                        <input asp-for="OpeningHours[3].From" type="text" id="thursday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[3].To" type="text" id="thursday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="friday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[4].IsActive" type="checkbox" id="friday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="friday" class="text-sm min-w-24 text-sm text-gray-500">Friday</label>
+                        </div>
+                        <input asp-for="OpeningHours[4].From" type="text" id="friday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[4].To" type="text" id="friday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label asp-for="OpeningHours[5].IsActive" for="saturday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input type="checkbox" id="saturday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="saturday" class="text-sm min-w-24 text-sm text-gray-500">Saturday</label>
+                        </div>
+                        <input asp-for="OpeningHours[5].From" type="text" id="saturday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[5].To" type="text" id="saturday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                    <div class="max-w-sm flex align-items-center">
+                        <div class="flex items-center gap-x-3">
+                            <label for="sunday" class="relative inline-block w-11 h-6 cursor-pointer">
+                                <input asp-for="OpeningHours[6].IsActive" type="checkbox" id="sunday" class="peer sr-only">
+                                <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                                <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full"></span>
+                            </label>
+                            <label for="sunday" class="text-sm min-w-24 text-sm text-gray-500">Sunday</label>
+                        </div>
+                        <input asp-for="OpeningHours[6].From" type="text" id="sunday-from" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                        <span class="text-gray-500 font-semibold">
+                            to
+                        </span>
+                        <input asp-for="OpeningHours[6].To" type="text" id="sunday-to" class="py-2.5 sm:py-3 px-4 block w-25 border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="00:00">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex">
+                <button name="action" value="delete" type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                    Delete
+                </button>
+                <button name="action" value="save" type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
