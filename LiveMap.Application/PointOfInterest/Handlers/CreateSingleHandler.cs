@@ -1,20 +1,12 @@
-﻿using LiveMap.Application.PointOfInterest.Persistance;
-using LiveMap.Application.PointOfInterest.Requests;
-using LiveMap.Application.PointOfInterest.Responses;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LiveMap.Application.PointOfInterest.Handlers;
-public class CreateSingleHandler : IRequestHandler<CreateSingleRequest, CreateSingleResponse>
+namespace LiveMap.Application.PointOfInterest.Handlers
 {
-
-    private readonly IPointOfInterestRepository _repo;
-
-    public CreateSingleHandler(IPointOfInterestRepository repo)
+    class CreateSingleHandler
     {
-        _repo = repo;
-    }
-
-    public async Task<CreateSingleResponse> Handle(CreateSingleRequest request)
-    {
-        return new(await _repo.CreatePointOfInterest(request.Poi));
     }
 }

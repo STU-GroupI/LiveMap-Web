@@ -1,4 +1,12 @@
-﻿namespace LiveMap.Application.PointOfInterest.Requests;
-using Domain.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public sealed record CreateSingleRequest(PointOfInterest Poi);
+namespace LiveMap.Application.PointOfInterest.Requests
+{
+    class CreateSingleRequest
+    {
+    }
+}
