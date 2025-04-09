@@ -1,4 +1,10 @@
 /**
+ * Tailwindcss & Preline
+ */
+@import "tailwindcss";
+
+
+/**
  * Custom code and changes
  */
 html {
