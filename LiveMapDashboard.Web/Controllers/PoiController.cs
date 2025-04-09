@@ -1,12 +1,7 @@
-﻿using LiveMap.Domain.Models;
-using LiveMapDashboard.Web.Extensions;
+﻿using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Models.Poi;
-using LiveMapDashboard.Web.Options;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Net;
-using System.Runtime.Intrinsics.X86;
-using System.Text.Json;
 
 namespace LiveMapDashboard.Web.Controllers
 {
@@ -31,9 +26,7 @@ namespace LiveMapDashboard.Web.Controllers
 
             if (client is null)
             {
-                ModelState.AddModelError(
-                    "InternalError",
-                    "The backend service is currently unavailable. Please try again later.");
+                ViewData["ErrorMessage"] = "The backend service is currently unavailable. Please try again later.";
                 return View(viewModel);
             }
 
@@ -47,46 +40,40 @@ namespace LiveMapDashboard.Web.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
-                    TempData["Success"] = "Your request was successfully processed!";
+                    ViewData["Success"] = "Your request was successfully processed!";
                 }
-                switch (result.StatusCode)
+
+                ViewData["ErrorMessage"] = result.StatusCode switch
                 {
-                    case HttpStatusCode.BadRequest:
-                        ModelState.AddModelError(
-                            "BadRequest",
-                            "The request was invalid. Please check the data you submitted.");
-                        break;
-                    case HttpStatusCode.Unauthorized:
-                        ModelState.AddModelError(
-                            "Unauthorized",
-                            "You are not authorized to perform this action.");
-                        break;
-                    case HttpStatusCode.ServiceUnavailable:
-                        ModelState.AddModelError(
-                            "ServiceUnavailable",
-                            "The service is currently unavailable. Please try again later.");
-                        break;
-                    default:
-                        ModelState.AddModelError(
-                            "GeneralError",
-                            "An unexpected error occurred. Please try again.");
-                        break;
-                }
+                    HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
+                    HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
+                    HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
+                    _ => "An unexpected error occurred. Please try again."
+                };
             }
             catch (HttpRequestException ex)
             {
-                ModelState.AddModelError(
-                    "RequestError",
-                    "An error occurred while contacting the backend service. Please try again later.");
+                ViewData["ErrorMessage"] = "An error occurred while contacting the application. Please try again later.";
+
+                return View("index", viewModel with
+                {
+                    Categories = []
+                });
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(
-                    "UnexpectedError",
-                    "An unexpected error occurred. Please try again later.");
+                ViewData["ErrorMessage"] = "An unexpected error occurred. Please try again later.";
+
+                return View("index", viewModel with
+                {
+                    Categories = []
+                });
             }
 
-            return View(viewModel);
+            return View("index", viewModel with
+            {
+                Categories = []
+            });
         }
     }
 }
