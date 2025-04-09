@@ -1,0 +1,43 @@
+﻿@using LiveMapDashboard.Web.Models.Poi
+@model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
+
+
+<div class="max-w-10xl px-4 py-10 sm:px-6 lg:px-6 lg:py-14 mx-auto">
+    @if (TempData["SuccessMessage"] != null)
+    {
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+    }
+
+    <form method="post" asp-controller="poi">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+        <input type="hidden" asp-for="Coordinate.Latitude" />
+        <input type="hidden" asp-for="Coordinate.Longitude" />
+        <input type="hidden" asp-for="ParkId" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml")
+            
+            <div>
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml")
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml")
+            </div>
+        </div>
+        
+        <div class="mt-2 p-4 relative z-10">
+            <div class="flex justify-end gap-3">
+                <button name="action" value="delete" type="submit"
+                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Delete
+                </button>
+                <button name="action" value="save" type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

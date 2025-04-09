@@ -20,6 +20,6 @@ public sealed record PoiCrudformViewModel(
             IsWheelchairAccessible: false,
             ParkId: string.Empty,
             Coordinate: new(0, 0),
-            OpeningHours: new OpeningHoursViewModel[7],
+            OpeningHours: Enumerable.Repeat(OpeningHoursViewModel.Empty, 7).ToArray(),
             Categories: []);
 }
