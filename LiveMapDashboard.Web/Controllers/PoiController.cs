@@ -47,28 +47,6 @@ namespace LiveMapDashboard.Web.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
-                    /*
-                        var responseContent = await result.Content.ReadAsStreamAsync();
-                    
-                        if (responseContent is null)
-                        {
-                            TempData["Success"] = new
-                            {
-                                Message = "Your request was successfully processed!"
-                            };
-                            return View(viewModel);
-                        }
-
-                        PointOfInterest? data = await JsonSerializer.DeserializeAsync<PointOfInterest>(responseContent);
-
-                        // The following could work but would require the use of the
-                        // dynamic type. Dynamics are scary, and we will avoid using them...
-                        TempData["Success"] = new
-                        {
-                            Message = "Your request was successfully processed!"
-                        };
-                    */
-
                     TempData["Success"] = "Your request was successfully processed!";
                 }
                 switch (result.StatusCode)
