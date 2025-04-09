@@ -26,4 +26,9 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         
         return result.Entity.ToDomainRequestForChange();
     }
+
+    public Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
+    {
+        throw new NotImplementedException();
+    }
 }

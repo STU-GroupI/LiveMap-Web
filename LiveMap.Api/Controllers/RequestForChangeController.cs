@@ -12,7 +12,6 @@ namespace LiveMap.Api.Controllers;
 [Route("api/rfc")]
 public class RequestForChangeController : ControllerBase
 {
-
     /// <summary>
     /// Creates an RFC for the given request data
     /// </summary>
@@ -42,6 +41,21 @@ public class RequestForChangeController : ControllerBase
         {
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Rfc);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
+
+    [HttpPatch]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Patch()
+    {
+        try
+        {
+            return Ok();
         }
         catch (Exception ex)
         {
