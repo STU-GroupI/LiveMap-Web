@@ -1,0 +1,64 @@
+﻿@using LiveMapDashboard.Web.Models.Poi
+@model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
+
+<div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+    <div class="mb-2">
+        <label for="title" class="block mb-2 text-sm font-medium">
+            Title
+        </label>
+
+        <input type="text" asp-for="Title" name="title" id="title"
+               class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+               placeholder="Title" />
+        <span asp-validation-for="Title" class="text-sm text-red-600 mt-2"></span>
+    </div>
+
+    <div class="mb-2">
+        <label for="category" class="block mb-2 text-sm font-medium">
+            Category
+        </label>
+
+        <select asp-for="Category" name="category"
+                class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+            <option value="test">Select a category</option>
+
+            @foreach (var category in Model.Categories)
+            {
+            <option value="@category.CategoryName" selected="@(Model.Category == category.CategoryName)">
+                @category.CategoryName
+            </option>
+            }
+        </select>
+
+        <span asp-validation-for="Category" class="text-sm text-red-600 mt-2"></span>
+    </div>
+
+    <div class="mb-2">
+        <label for="description" class="block mb-2 text-sm font-medium">
+            Description
+        </label>
+        <textarea asp-for="Description" id="description"
+                  class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                  rows="3" placeholder="Description">
+                        </textarea>
+
+        <span asp-validation-for="Description" class="text-sm text-red-600 mt-2"></span>
+    </div>
+
+    <div class="flex items-center space-x-3 mb-4">
+        <label for="wheelchair" class="relative inline-block w-11 h-6 cursor-pointer">
+            <input asp-for="IsWheelchairAccessible"
+                   type="checkbox"
+                   id="wheelchair"
+                   class="peer sr-only" />
+
+            <span
+                class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                            </span>
+            <span
+                class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full">
+                            </span>
+        </label>
+        <label for="wheelchair" class="text-sm text-gray-700">Wheelchair accessible</label>
+    </div>
+</div>
