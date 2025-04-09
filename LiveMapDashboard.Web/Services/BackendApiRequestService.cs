@@ -94,7 +94,14 @@ public sealed record BackendApiResponse
     }
 };
 
-public class BackendApiRequestService
+public interface IBackendApiRequestService
+{
+    BackendApiRequestService ConfigureClient(Action<HttpClient> action);
+    Task<BackendApiResponse> SendRequest(HttpRequestMessage request);
+    Task<BackendApiResponse<TResult>> SendRequest<TResult>(HttpRequestMessage request) where TResult : class;
+}
+
+public class BackendApiRequestService : IBackendApiRequestService
 {
     private readonly HttpClient _httpClient;
 
