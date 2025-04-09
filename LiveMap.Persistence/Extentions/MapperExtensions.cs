@@ -1,6 +1,7 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,7 @@ public static class MapperExtensions
             CategoryName = poi.CategoryName,
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
+            IsWheelchairAccessible = poi.IsWheelchairAccessible,
             MapId = poi.MapId,
             Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
@@ -111,6 +113,40 @@ public static class MapperExtensions
         return value;
     }
 
+    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, Map map = null!, Category category = null!)
+    {
+        return new SqlPointOfInterest()
+        {
+            Id = pointOfInterest.Id,
+            Title = pointOfInterest.Title,
+            Description = pointOfInterest.Description,
+            CategoryName = pointOfInterest.CategoryName,
+            
+            Status = pointOfInterest.Status,
+            StatusName = pointOfInterest.StatusName,
+
+            IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible,
+            Position = pointOfInterest.Coordinate.ToSqlPoint(),
+            MapId = pointOfInterest.MapId,
+
+            Category = category,
+            Map = map.ToSqlMap(),
+
+            OpeningHours = pointOfInterest.OpeningHours.Select(oh => oh.ToSqlOpeningHours()).ToList()
+        };
+    }
+
+    public static SqlMap ToSqlMap(this Map map)
+    {
+        return new SqlMap()
+        {
+            Id = map.Id,
+            Name = map.Name,
+            Border = map.Area.ToPolygon(),
+            Position = map.Coordinate.ToSqlPoint()
+        };
+    }
+
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
     {
         return new SqlRequestForChange()
@@ -140,6 +176,19 @@ public static class MapperExtensions
             RFC = null,
             Category = null!,
             Map = null!
+        };
+    }
+
+    public static SqlOpeningHours ToSqlOpeningHours(this OpeningHours openingHours)
+    {
+        return new SqlOpeningHours
+        {
+            Id = openingHours.Id,
+            DayOfWeek = openingHours.DayOfWeek,
+            Start = openingHours.Start,
+            End = openingHours.End,
+            PoiId = openingHours.PoiId,
+            Poi = null!
         };
     }
 }
