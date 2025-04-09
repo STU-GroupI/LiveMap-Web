@@ -3,23 +3,96 @@ using System;
 using static System.Collections.Specialized.BitVector32;
 using System.Net;
 using System.Text.Json;
+using Bogus.Bson;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Identity.Client;
 
 namespace LiveMapDashboard.Web.Services;
 
 // At this point, could consider making these abstract and providing factories for them.
 // If they prove to add to much complexity, abstract it away and simplify the base usage...
-public sealed record BackendApiResponse<T>(
-    HttpStatusCode? StatusCode,
-    bool IsSuccess,
-    T? Value,
-    (string Phrase, string Message)? ErrorMessage
-);
+public sealed record BackendApiResponse<T>
+{
+    public readonly HttpStatusCode? StatusCode;
+    public readonly bool IsSuccess;
+    public readonly T? Value;
+    public readonly (string Phrase, string Message)? ErrorMessage;
 
-public sealed record BackendApiResponse(
-    HttpStatusCode? StatusCode,
-    bool IsSuccess,
-    (string Phrase, string Message)? ErrorMessage
-);
+    private BackendApiResponse(
+        HttpStatusCode? StatusCode,
+        bool IsSuccess,
+        T? Value,
+        (string Phrase, string Message)? ErrorMessage)
+    {
+        this.StatusCode = StatusCode;
+        this.IsSuccess = IsSuccess;
+        this.Value = Value;
+        this.ErrorMessage = ErrorMessage;
+    }
+
+    public static BackendApiResponse<T> Success(
+        HttpStatusCode? statusCode,
+        T? value)
+    {
+        return new BackendApiResponse<T>(
+            StatusCode: statusCode,
+            IsSuccess: true,
+            Value: value,
+            ErrorMessage: null
+        );
+    }
+
+    public static BackendApiResponse<T> Failure(
+        HttpStatusCode? statusCode,
+        T? value,
+        (string Phrase, string Message)? errorMessage)
+    {
+        return new BackendApiResponse<T>(
+            StatusCode: statusCode,
+            IsSuccess: false,
+            Value: value,
+            ErrorMessage: errorMessage
+        );
+    }
+}
+
+public sealed record BackendApiResponse
+{
+    public readonly HttpStatusCode? StatusCode;
+    public readonly bool IsSuccess;
+    public readonly (string Phrase, string Message)? ErrorMessage;
+
+    private BackendApiResponse(
+        HttpStatusCode? StatusCode,
+        bool IsSuccess,
+        (string Phrase, string Message)? ErrorMessage)
+    {
+        this.StatusCode = StatusCode;
+        this.IsSuccess = IsSuccess;
+        this.ErrorMessage = ErrorMessage;
+    }
+
+    public static BackendApiResponse Success(
+        HttpStatusCode? statusCode)
+    {
+        return new BackendApiResponse(
+            StatusCode: statusCode,
+            IsSuccess: true,
+            ErrorMessage: null
+        );
+    }
+
+    public static BackendApiResponse Failure(
+        HttpStatusCode? statusCode,
+        (string Phrase, string Message)? errorMessage)
+    {
+        return new BackendApiResponse(
+            StatusCode: statusCode,
+            IsSuccess: false,
+            ErrorMessage: errorMessage
+        );
+    }
+};
 
 public class BackendApiRequestService
 {
@@ -44,45 +117,42 @@ public class BackendApiRequestService
         {
             var result = await _httpClient.SendAsync(request);
             var responseContent = await result.Content.ReadAsStreamAsync();
-            
+
             if (result.IsSuccessStatusCode)
             {
                 if (responseContent is null)
                 {
-                    return new BackendApiResponse<TResult>(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        Value: null,
-                        ErrorMessage: null
+                    return BackendApiResponse<TResult>.Success(
+                        statusCode: result.StatusCode,
+                        value: null
                     );
                 }
 
                 TResult? data = await JsonSerializer.DeserializeAsync<TResult>(responseContent);
-                return new BackendApiResponse<TResult>(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        Value: data,
-                        ErrorMessage: null
-                );
-            }
 
-            return new BackendApiResponse<TResult>(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        Value: null,
-                        ErrorMessage: (
+                return BackendApiResponse<TResult>.Success(
+                    statusCode: result.StatusCode,
+                    value: data
+                );
+
+            }
+            (string, string) errorMessage = (
                             result.ReasonPhrase
                                 ?? string.Empty,
-                            await JsonSerializer.DeserializeAsync<string>(responseContent) 
-                                ?? string.Empty));
+                            await JsonSerializer.DeserializeAsync<string>(responseContent)
+                                ?? string.Empty);
+
+            return BackendApiResponse<TResult>.Failure(
+                        statusCode: result.StatusCode,
+                        value: null,
+                        errorMessage: errorMessage);
         }
         catch (HttpRequestException ex)
         {
-            return new BackendApiResponse<TResult>(
-                        StatusCode: ex.StatusCode,
-                        IsSuccess: false,
-                        Value: null,
-                        ErrorMessage: (
+            return BackendApiResponse<TResult>.Failure(
+                        statusCode: ex.StatusCode,
+                        value: null,
+                        errorMessage: (
                             "An error occured while making the request",
                             ex.Message
                         ));
@@ -100,38 +170,32 @@ public class BackendApiRequestService
             {
                 if (responseContent is null)
                 {
-                    return new BackendApiResponse(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        ErrorMessage: null
+                    return BackendApiResponse.Success(
+                        statusCode: result.StatusCode
                     );
                 }
 
-                return new BackendApiResponse(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        ErrorMessage: null
+                return BackendApiResponse.Success(
+                    statusCode: result.StatusCode
                 );
             }
 
-            return new BackendApiResponse(
-                        StatusCode: result.StatusCode,
-                        IsSuccess: result.IsSuccessStatusCode,
-                        ErrorMessage: (
-                            result.ReasonPhrase
-                                ?? string.Empty,
-                            await JsonSerializer.DeserializeAsync<string>(responseContent)
-                                ?? string.Empty));
+            return BackendApiResponse.Failure(
+                statusCode: result.StatusCode,
+                errorMessage: (
+                    result.ReasonPhrase
+                        ?? string.Empty,
+                    await JsonSerializer.DeserializeAsync<string>(responseContent)
+                        ?? string.Empty));
         }
         catch (HttpRequestException ex)
         {
-            return new BackendApiResponse(
-                        StatusCode: ex.StatusCode,
-                        IsSuccess: false,
-                        ErrorMessage: (
-                            "An error occured while making the request",
-                            ex.Message
-                        ));
+            return BackendApiResponse.Failure(
+                statusCode: ex.StatusCode,
+                errorMessage: (
+                    "An error occured while making the request",
+                    ex.Message
+                ));
         }
     }
 }
