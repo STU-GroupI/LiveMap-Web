@@ -1,7 +1,7 @@
 ﻿using LiveMapDashboard.Web.Options;
 using Microsoft.Extensions.Options;
 
-namespace LiveMapDashboard.Web.Extensions
+namespace LiveMapDashboard.Web.Extensions.DI
 {
     public static class ConfigureHttpClientFacotries
     {

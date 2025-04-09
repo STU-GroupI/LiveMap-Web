@@ -7,7 +7,7 @@ using Bogus.Bson;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Client;
 
-namespace LiveMapDashboard.Web.Services;
+namespace LiveMapDashboard.Web.Services.Communication;
 
 // At this point, could consider making these abstract and providing factories for them.
 // If they prove to add to much complexity, abstract it away and simplify the base usage...
@@ -94,24 +94,24 @@ public sealed record BackendApiResponse
     }
 };
 
-public interface IBackendApiRequestService
+public interface IBackendApiService
 {
-    BackendApiRequestService ConfigureClient(Action<HttpClient> action);
+    BackendApiHttpService ConfigureClient(Action<HttpClient> action);
     Task<BackendApiResponse> SendRequest(HttpRequestMessage request);
     Task<BackendApiResponse<TResult>> SendRequest<TResult>(HttpRequestMessage request) where TResult : class;
 }
 
-public class BackendApiRequestService : IBackendApiRequestService
+public class BackendApiHttpService : IBackendApiService
 {
     private readonly HttpClient _httpClient;
 
-    public BackendApiRequestService(IHttpClientFactory httpClientFactory)
+    public BackendApiHttpService(IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateBackendClient()
             ?? throw new NullReferenceException("Default backend http client may not be null");
     }
 
-    public BackendApiRequestService ConfigureClient(Action<HttpClient> action)
+    public BackendApiHttpService ConfigureClient(Action<HttpClient> action)
     {
         action(_httpClient);
         return this;
