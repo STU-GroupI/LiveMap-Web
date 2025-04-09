@@ -65,4 +65,14 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         return pointOfInterest.ToDomainPointOfInterest();
     }
+
+    public async Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    {
+        var poi = pointOfInterest.ToSqlPointOfInterest(pointOfInterest.Map, pointOfInterest.Category);
+
+        var result = await _context.PointsOfInterest.AddAsync(poi);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainPointOfInterest();
+    }
 }
