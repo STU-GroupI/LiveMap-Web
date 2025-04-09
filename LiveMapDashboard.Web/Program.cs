@@ -7,6 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Does the spooky config management injection hmmm yes
 builder.Services.RegisterOptions(builder.Configuration);
+builder.Services.ConfigureHttpClients();
 
 var app = builder.Build();
 
