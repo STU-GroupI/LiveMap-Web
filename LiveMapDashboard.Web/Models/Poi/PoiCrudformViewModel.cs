@@ -1,4 +1,6 @@
 ﻿using LiveMap.Domain.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace LiveMapDashboard.Web.Models.Poi;
 
@@ -10,7 +12,7 @@ public sealed record PoiCrudformViewModel(
     string ParkId, 
     Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
-    Category[] Categories)
+    Category[]? Categories) : IValidatableObject
 {
     public static PoiCrudformViewModel Empty => 
         new PoiCrudformViewModel(
@@ -22,4 +24,47 @@ public sealed record PoiCrudformViewModel(
             Coordinate: new(0, 0),
             OpeningHours: Enumerable.Repeat(OpeningHoursViewModel.Empty, 7).ToArray(),
             Categories: []);
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var results = new List<ValidationResult>();
+
+        if (!string.IsNullOrWhiteSpace(Title) && !Regex.IsMatch(Title, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
+        {
+            results.Add(new ValidationResult("Title can only contain alphanumeric characters and basic symbols.", new[] { nameof(Title) }));
+        }
+
+        var validCategories = new List<string> { "Food", "Entertainment", "Park", "Museum" };
+
+        if (!string.IsNullOrWhiteSpace(Category) && !validCategories.Contains(Category))
+        {
+            results.Add(new ValidationResult("Category must be one of the valid predefined values.", new[] { nameof(Category) }));
+        }
+
+        // 4. Park ID must be a valid GUID
+        if (string.IsNullOrWhiteSpace(ParkId) || !Guid.TryParse(ParkId, out _))
+        {
+            results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(ParkId) }));
+        }
+
+        // 5. Opening Hours must be set and follow a valid format
+        if (OpeningHours != null)
+        {
+            foreach (var openingHour in OpeningHours)
+            {
+                if (openingHour == null)
+                {
+                    results.Add(new ValidationResult("Each opening hour must be set.", new[] { nameof(OpeningHours) }));
+                    continue;
+                }
+
+                if (!Regex.IsMatch(openingHour.From, @"^[012345]\d\:[012345]\d$") || !Regex.IsMatch(openingHour.To, @"^[012345]\d\:[012345]\d$"))
+                {
+                    results.Add(new ValidationResult("Opening and closing hours must follow the format [HH:MM].", new[] { nameof(OpeningHours) }));
+                }
+            }
+        }
+
+        return results;
+    }
 }
