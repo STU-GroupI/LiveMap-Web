@@ -10,6 +10,67 @@
         </div>
     }
 
+    @* @{ *@
+@*     ViewData["Title"] = "Home Page"; *@
+@* } *@
+
+@* <div class="text-center"> *@
+@*     <h1 class="display-4">Welcome</h1> *@
+@*     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+@* </div> *@
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .calculation-box {
+        height: 75px;
+        width: 150px;
+        position: absolute;
+        bottom: 40px;
+        left: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        text-align: center;
+    }
+
+    p {
+        font-family: 'Open Sans';
+        margin: 0;
+        font-size: 13px;
+    }
+
+    .maplibregl-map {
+        height: 50vh;
+        width: 100%;
+    }
+
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
+<link rel="stylesheet"
+      href="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css" />
+
+<div class="card">
+    <div class="card-header">
+        ParkNaam
+    </div>
+    <div class="card-body">
+        <div class="card">
+            <div id="map"></div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
+
     <div class="bg-white rounded-xl shadow-xs p-4 sm:p-7">
         <form method="post" asp-controller="poi">
             @Html.AntiForgeryToken()
@@ -18,11 +79,14 @@
             <input hidden
                    type="number"
                    value="@Model.Coordinate.Latitude"
-                   asp-for="Coordinate.Latitude" />
+                   asp-for="Coordinate.Latitude"
+                   id="LatitudeInput" />
+                   
             <input hidden
                    type="number"
                    value="@Model.Coordinate.Longitude"
-                   asp-for="Coordinate.Longitude" />
+                   asp-for="Coordinate.Longitude"
+                   id="LongitudeInput" />
 
             <input hidden
                    type="text"
