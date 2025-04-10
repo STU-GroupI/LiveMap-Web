@@ -1,4 +1,6 @@
-﻿using LiveMapDashboard.Web.Services.Communication;
+﻿
+using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Infrastructure.Services;
 
 namespace LiveMapDashboard.Web.Extensions.DI
 {
@@ -7,7 +9,7 @@ namespace LiveMapDashboard.Web.Extensions.DI
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             return services
-                .AddTransient<IBackendApiService, BackendApiHttpService>()
+                .AddTransient<IBackendApiHttpService, BackendApiHttpService>()
                 .AddTransient<IPointOfInterestService, PointOfInterestHttpService>();
         }
     }
