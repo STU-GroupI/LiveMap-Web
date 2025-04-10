@@ -1,4 +1,5 @@
-﻿using LiveMapDashboard.Web.Options;
+﻿using LiveMap.Infrastructure.Extensions;
+using LiveMapDashboard.Web.Options;
 using Microsoft.Extensions.Options;
 
 namespace LiveMapDashboard.Web.Extensions.DI
