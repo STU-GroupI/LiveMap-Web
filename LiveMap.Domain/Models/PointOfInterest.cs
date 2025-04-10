@@ -17,6 +17,8 @@ public class PointOfInterest
     public string? CategoryName { get; set; }
     public required Category Category { get; set; }
 
+    public required bool IsWheelchairAccessible { get; set; } = false;
+
     public string? StatusName { get; set; }
     public required PointOfInterestStatus Status { get; set; }
 

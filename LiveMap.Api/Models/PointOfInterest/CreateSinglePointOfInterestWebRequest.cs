@@ -1,11 +1,5 @@
 ﻿using LiveMap.Domain.Models;
 
-namespace LiveMap.Api.Models.SuggestedPoi;
+namespace LiveMap.Api.Models.PointOfInterest;
 
-public record CreateSinglePoiSuggestionWebRequest(
-    string Title, 
-    string Description, 
-    string Category,
-    Guid MapId,
-    Coordinate Coordinate, 
-    bool isWheelchairAccessible);
+public sealed record CreateSinglePointOfInterestWebRequest(Domain.Models.PointOfInterest poi);
