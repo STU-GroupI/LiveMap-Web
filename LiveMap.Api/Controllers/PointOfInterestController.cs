@@ -1,10 +1,14 @@
-﻿using LiveMap.Api.Models.PointOfInterest;
+﻿using LiveMap.Api.Models;
+using LiveMap.Api.Models.PointOfInterest;
 using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
+using LiveMap.Application.PointOfInterest.Handlers;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;
@@ -74,33 +78,13 @@ public class PointOfInterestController : ControllerBase
     /// <response code="500">Something went very wrong</response>
     [HttpPost()]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<(string, PointOfInterest)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
-        [FromBody] CreateSinglePoiWebRequest webRequest,
+        [FromBody] CreateSinglePointOfInterestWebRequest webRequest,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
-        PointOfInterest poi = new()
-        {
-            Id = Guid.Empty,
-            Title = webRequest.Title,
-            Description = webRequest.Description,
-            CategoryName = webRequest.CategoryName,
-            Coordinate = webRequest.Coordinate,
-            IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
-            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
-            {
-                DayOfWeek = oh.DayOfWeek,
-                Start = oh.Start,
-                End = oh.End,
-                Id = Guid.Empty,
-                PoiId = Guid.Empty,
-            }).ToList(),
-
-            MapId = Guid.Parse(webRequest.MapId),
-            StatusName = "Active",
-        };
-        var request = new CreateSingleRequest(poi);
+        var request = new CreateSingleRequest(webRequest.poi);
 
         try
         {
