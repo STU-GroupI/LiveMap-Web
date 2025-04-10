@@ -34,6 +34,18 @@ namespace LiveMapDashboard.Web.Controllers
             PoiCrudformViewModel viewModel,
             string action)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("index", viewModel with
+                {
+                    Categories = [
+                        new() { CategoryName = "Food" },
+                        new() { CategoryName = "Entertainment" },
+                        new() { CategoryName = "Park" },
+                        new() { CategoryName = "Museum" }]
+                });
+            }
+            
             var result = await service.CreateSingle(viewModel.ToDomainPointOfInterest());
 
             if (result.IsSuccess)
@@ -63,6 +75,7 @@ namespace LiveMapDashboard.Web.Controllers
                     _ => "An unexpected error occurred. Please try again."
                 };
             }
+            
             return View("index", viewModel with
             {
                 Categories = [
