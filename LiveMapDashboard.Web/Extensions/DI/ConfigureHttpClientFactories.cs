@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace LiveMapDashboard.Web.Extensions.DI
 {
-    public static class ConfigureHttpClientFacotries
+    public static class ConfigureHttpClientFactories
     {
         public static IServiceCollection ConfigureHttpClients(
             this IServiceCollection services)

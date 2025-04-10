@@ -4,7 +4,7 @@ using LiveMap.Domain.Models;
 
 namespace LiveMap.Infrastructure.Services;
 
-public class CategoryHttpSerivce : ICategoryService
+public class CategoryHttpService : ICategoryService
 {
     public Task<BackendApiHttpResponse<Category>> GetAll()
     {
