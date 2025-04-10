@@ -6,9 +6,9 @@ namespace LiveMapDashboard.Web.Extensions.DI
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
-            return services.AddTransient<
-                IBackendApiService, 
-                BackendApiHttpService>();
+            return services
+                .AddTransient<IBackendApiService, BackendApiHttpService>()
+                .AddTransient<IPointOfInterestService, PointOfInterestHttpService>();
         }
     }
 }

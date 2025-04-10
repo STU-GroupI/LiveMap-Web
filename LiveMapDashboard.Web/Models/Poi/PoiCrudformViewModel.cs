@@ -12,7 +12,8 @@ public sealed record PoiCrudformViewModel(
     string ParkId, 
     Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
-    Category[]? Categories) : IValidatableObject
+    Category[]? Categories
+    ) : IValidatableObject
 {
     public static PoiCrudformViewModel Empty => 
         new PoiCrudformViewModel(
@@ -40,14 +41,12 @@ public sealed record PoiCrudformViewModel(
         {
             results.Add(new ValidationResult("Category must be one of the valid predefined values.", new[] { nameof(Category) }));
         }
-
-        // 4. Park ID must be a valid GUID
+        
         if (string.IsNullOrWhiteSpace(ParkId) || !Guid.TryParse(ParkId, out _))
         {
             results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(ParkId) }));
         }
 
-        // 5. Opening Hours must be set and follow a valid format
         if (OpeningHours != null)
         {
             foreach (var openingHour in OpeningHours)
