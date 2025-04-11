@@ -81,10 +81,10 @@ public class PointOfInterestController : ControllerBase
     [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
-        [FromBody] CreateSinglePointOfInterestWebRequest webRequest,
+        [FromBody] PointOfInterest poi,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
-        var request = new CreateSingleRequest(webRequest.poi);
+        var request = new CreateSingleRequest(poi);
 
         try
         {

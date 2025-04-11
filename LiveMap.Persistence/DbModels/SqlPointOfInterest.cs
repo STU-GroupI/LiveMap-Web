@@ -13,16 +13,16 @@ public class SqlPointOfInterest
     public required string Description { get; set; }
     public required Point Position { get; set; }
 
-    public string? CategoryName { get; set; }
-    public required Category Category { get; set; }
+    public required string CategoryName { get; set; }
+    public Category? Category { get; set; }
 
     public required bool IsWheelchairAccessible { get; set; } = false;
 
-    public string? StatusName { get; set; }
-    public required PointOfInterestStatus Status { get; set; }
+    public required string StatusName { get; set; }
+    public PointOfInterestStatus? Status { get; set; }
 
     public required Guid MapId { get; set; }
-    public required SqlMap Map { get; set; }
+    public SqlMap? Map { get; set; }
 
     public virtual ICollection<SqlOpeningHours> OpeningHours { get; set; }
 }

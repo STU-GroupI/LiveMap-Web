@@ -22,6 +22,11 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         this.maps = maps;
     }
 
+    public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var pois = maps.Where(m => m.Id == mapId)

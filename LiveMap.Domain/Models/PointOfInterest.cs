@@ -14,16 +14,16 @@ public class PointOfInterest
     public required string Description { get; set; }
     public required Coordinate Coordinate { get; set; }
 
-    public string? CategoryName { get; set; }
-    public required Category Category { get; set; }
+    public required string CategoryName { get; set; }
+    public Category? Category { get; set; }
 
     public required bool IsWheelchairAccessible { get; set; } = false;
 
-    public string? StatusName { get; set; }
-    public required PointOfInterestStatus Status { get; set; }
+    public required string StatusName { get; set; }
+    public PointOfInterestStatus? Status { get; set; }
 
     public required Guid MapId { get; set; }
-    public required Map Map { get; set; }
+    public Map? Map { get; set; }
 
     public virtual ICollection<OpeningHours> OpeningHours { get; set; }
 }

@@ -113,7 +113,7 @@ public static class MapperExtensions
         return value;
     }
 
-    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, Map map = null!, Category category = null!)
+    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, Map? map = null, Category? category = null)
     {
         return new SqlPointOfInterest()
         {
@@ -130,7 +130,7 @@ public static class MapperExtensions
             MapId = pointOfInterest.MapId,
 
             Category = category,
-            Map = map.ToSqlMap(),
+            Map = map?.ToSqlMap(),
 
             OpeningHours = pointOfInterest.OpeningHours.Select(oh => oh.ToSqlOpeningHours()).ToList()
         };
