@@ -1,5 +1,4 @@
-
-using LiveMapDashboard.Web.Extensions;
+using LiveMapDashboard.Web.Extensions.DI;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -7,6 +6,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Does the spooky config management injection hmmm yes
 builder.Services.RegisterOptions(builder.Configuration);
+builder.Services.ConfigureHttpClients();
+builder.Services.RegisterServices();
 
 var app = builder.Build();
 
