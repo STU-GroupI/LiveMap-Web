@@ -62,7 +62,7 @@ public static class DevelopmentSeeder
     }
     private static Faker<SqlPointOfInterest> GetPointOfInterestFaker(
         List<SqlMap> maps,
-        List<PointOfInterestStatus> statusses,
+        List<PointOfInterestStatus> statuses,
         List<Category> categories,
         List<SqlOpeningHours> openingHours)
     {
@@ -86,8 +86,8 @@ public static class DevelopmentSeeder
             .RuleFor(p => p.CategoryName, f => f.PickRandom(categories.Select(c => c.CategoryName)))
             .RuleFor(p => p.Category, (f, p) => categories.Where(c => c.CategoryName == p.CategoryName).First())
 
-            .RuleFor(p => p.StatusName, f => f.PickRandom(statusses.Select(s => s.Status)))
-            .RuleFor(p => p.Status, (f, p) => statusses.Where(poi => poi.Status == p.StatusName).First())
+            .RuleFor(p => p.StatusName, f => f.PickRandom(statuses.Select(s => s.Status)))
+            .RuleFor(p => p.Status, (f, p) => statuses.Where(poi => poi.Status == p.StatusName).First())
 
             .RuleFor(p => p.MapId, f => maps[f.Random.Int(0, maps.Count - 1)].Id)
             .RuleFor(p => p.Map, (f, p) => maps.Where(map => map.Id == p.MapId).First())
@@ -150,7 +150,7 @@ public static class DevelopmentSeeder
 
     private static Faker<SqlSuggestedPointOfInterest> GetSuggestedPointOfInterestFaker(
         List<SqlMap> maps,
-        List<PointOfInterestStatus> statusses,
+        List<PointOfInterestStatus> statuses,
         List<Category> categories,
         List<SqlRequestForChange>? requestsForChange = null)
     {
@@ -208,7 +208,7 @@ public static class DevelopmentSeeder
             new() { CategoryName = "Entertainment" },
         ];
 
-        List<PointOfInterestStatus> poiStatusses = [
+        List<PointOfInterestStatus> poiStatuses = [
             new() { Status = "Active" },
             new() { Status = "Inactive" },
             new() { Status = "Pending" },
@@ -225,7 +225,7 @@ public static class DevelopmentSeeder
 
         List<SqlPointOfInterest> pointsOfInterest = GetPointOfInterestFaker(
             maps: maps,
-            statusses: poiStatusses,
+            statuses: poiStatuses,
             categories: categories,
             openingHours: openingHours
         ).Generate(50);
@@ -238,12 +238,12 @@ public static class DevelopmentSeeder
 
         List<SqlSuggestedPointOfInterest> suggestedPointsOfInterest = GetSuggestedPointOfInterestFaker(
             maps: maps,
-            statusses: poiStatusses,
+            statuses: poiStatuses,
             categories: categories,
             requestsForChange: rfcsWithoutSuggestedPois).Generate(rfcsWithoutSuggestedPois.Count());
 
         await context.Categories.AddRangeAsync(categories);
-        await context.PoIStatusses.AddRangeAsync(poiStatusses);
+        await context.PoIStatusses.AddRangeAsync(poiStatuses);
         await context.ApprovalStatuses.AddRangeAsync(approvalStatuses);
         await context.Maps.AddRangeAsync(maps);
         await context.PointsOfInterest.AddRangeAsync(pointsOfInterest);
