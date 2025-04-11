@@ -1,13 +1,5 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMap.Persistence.Extensions;
 public static class MapperExtensions
@@ -55,7 +47,7 @@ public static class MapperExtensions
             PoiId = oh.PoiId
         };
     }
-    
+
     public static SuggestedPointOfInterest ToDomainSuggestedPointOfInterest(this SqlSuggestedPointOfInterest suggestedPoi)
     {
         return suggestedPoi.ToDomainSuggestedPointOfInterest(null);
@@ -121,7 +113,7 @@ public static class MapperExtensions
             Title = pointOfInterest.Title,
             Description = pointOfInterest.Description,
             CategoryName = pointOfInterest.CategoryName,
-            
+
             Status = pointOfInterest.Status,
             StatusName = pointOfInterest.StatusName,
 

@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using LiveMap.Domain.Models;
-using LiveMap.Persistence.DbModels;
 
 namespace LiveMapDashboard.Tests.PoiTests;
 
@@ -63,8 +62,8 @@ public static class TestDataGenerator
     {
         var mapFaker = GetMapFaker();
         var maps = new List<Map>(mapFaker.Generate(count));
-        
-        if(!withPois)
+
+        if (!withPois)
         {
             return maps;
         }
