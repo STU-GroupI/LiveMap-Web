@@ -1,11 +1,8 @@
 ﻿using LiveMap.Application;
-using LiveMap.Application.PointOfInterest.Handlers;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;
@@ -64,5 +61,33 @@ public class PointOfInterestController : ControllerBase
         var response = await handler.Handle(request);
 
         return Ok(response.PointsOfInterests);
+    }
+
+    /// <summary>
+    /// Creates a POI for the given request data
+    /// </summary>
+    /// <param name="request">The given request.</param>
+    /// <returns> The POI with callback URL </returns>
+    /// <response code="201">Response with the created POI</response>
+    /// <response code="500">Something went very wrong</response>
+    [HttpPost()]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<(string, PointOfInterest)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Post(
+        [FromBody] PointOfInterest poi,
+        [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
+    {
+        var request = new CreateSingleRequest(poi);
+
+        try
+        {
+            CreateSingleResponse response = await handler.Handle(request);
+            return Created("", response.Poi);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
     }
 }

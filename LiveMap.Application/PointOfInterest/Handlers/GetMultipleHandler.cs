@@ -1,11 +1,6 @@
 ﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
@@ -22,8 +17,8 @@ public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipl
     {
         return new GetMultipleResponse(
             await _pointOfInterestRepository.GetMultiple(
-                request.MapId, 
-                request.Skip, 
+                request.MapId,
+                request.Skip,
                 request.Take));
     }
 }

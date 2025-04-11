@@ -3,11 +3,6 @@ using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Persistence.Repositories;
 public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepository
@@ -33,13 +28,13 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
         if (sqlData.Map is not null) _context.Entry(sqlData.Map).State = EntityState.Unchanged;
         if (sqlData.Category is not null) _context.Entry(sqlData.Category).State = EntityState.Unchanged;
 
-        
+
         var entity = await _context.SuggestedPointsOfInterest.AddAsync(sqlData);
         await _context.SaveChangesAsync();
 
         var response = entity.Entity.ToDomainSuggestedPointOfInterest();
         response.RFC = rfc.ToDomainRequestForChange();
-        
+
         return response;
     }
 }

@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using LiveMap.Domain.Models;
+using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
-using System.Net.Mime;
 using LiveMap.Application.SuggestedPoi.Requests;
 using LiveMap.Application.SuggestedPoi.Responses;
-using LiveMap.Api.Models.SuggestedPoi;
+using LiveMap.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;
 

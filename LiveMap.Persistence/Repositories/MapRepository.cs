@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LiveMap.Application.Map.Persistance;
+﻿using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
@@ -29,14 +24,14 @@ public class MapRepository : IMapRepository
             query = query.Skip(fromValue);
         }
 
-        if(take is int amountValue)
+        if (take is int amountValue)
         {
             query = query.Take(amountValue);
         }
-        
+
         var result = await query.ToListAsync();
 
-        if (result is not { Count: > 0 }) 
+        if (result is not { Count: > 0 })
         {
             return [];
         }
@@ -52,7 +47,7 @@ public class MapRepository : IMapRepository
             .Where(map => map.Id == id)
             .FirstOrDefaultAsync();
 
-        if(map is null)
+        if (map is null)
         {
             return null;
         }
@@ -63,8 +58,8 @@ public class MapRepository : IMapRepository
     public async Task<bool> UpdateMapBorder(Guid id, Coordinate[] coords)
     {
         SqlMap? map = await _context.Maps.FindAsync(id);
-        
-        if(map is null)
+
+        if (map is null)
         {
             return false;
         }

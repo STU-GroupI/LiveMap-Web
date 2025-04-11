@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LiveMap.Application.PointOfInterest.Persistance;
+﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
@@ -31,14 +26,14 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             query = query.Skip(fromValue);
         }
 
-        if(take is int amountValue)
+        if (take is int amountValue)
         {
             query = query.Take(amountValue);
         }
-        
+
         var result = await query.ToListAsync();
 
-        if (result is not { Count: > 0 }) 
+        if (result is not { Count: > 0 })
         {
             return [];
         }
@@ -57,12 +52,22 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             .Where(poi => poi.Id == id)
             .FirstOrDefaultAsync();
 
-        if(pointOfInterest is null)
+        if (pointOfInterest is null)
         {
             return null;
         }
 
 
         return pointOfInterest.ToDomainPointOfInterest();
+    }
+
+    public async Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    {
+        var poi = pointOfInterest.ToSqlPointOfInterest(pointOfInterest.Map, pointOfInterest.Category);
+
+        var result = await _context.PointsOfInterest.AddAsync(poi);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainPointOfInterest();
     }
 }
