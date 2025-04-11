@@ -72,7 +72,7 @@ public class PointOfInterestController : ControllerBase
     /// <response code="500">Something went very wrong</response>
     [HttpPost()]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(string, PointOfInterest)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
         [FromBody] PointOfInterest poi,
