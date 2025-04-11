@@ -105,9 +105,9 @@ public static class MapperExtensions
         return value;
     }
 
-    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, Map? map = null, Category? category = null)
+    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, SqlMap? map = null, Category? category = null)
     {
-        return new SqlPointOfInterest()
+        var sqlPoi = new SqlPointOfInterest()
         {
             Id = pointOfInterest.Id,
             Title = pointOfInterest.Title,
@@ -122,21 +122,28 @@ public static class MapperExtensions
             MapId = pointOfInterest.MapId,
 
             Category = category,
-            Map = map?.ToSqlMap(),
 
             OpeningHours = pointOfInterest.OpeningHours.Select(oh => oh.ToSqlOpeningHours()).ToList()
         };
+
+        sqlPoi.Map = map ?? pointOfInterest.Map?.ToSqlMap(sqlPoi);
+
+        return sqlPoi;
     }
 
-    public static SqlMap ToSqlMap(this Map map)
+    public static SqlMap ToSqlMap(this Map map, SqlPointOfInterest? poi)
     {
-        return new SqlMap()
+        var sqlMap = new SqlMap()
         {
             Id = map.Id,
             Name = map.Name,
             Border = map.Area.ToPolygon(),
             Position = map.Coordinate.ToSqlPoint()
         };
+
+        sqlMap.PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? [];
+
+        return sqlMap;
     }
 
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
