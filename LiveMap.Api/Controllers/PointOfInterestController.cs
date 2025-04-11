@@ -1,14 +1,8 @@
-﻿using LiveMap.Api.Models;
-using LiveMap.Api.Models.PointOfInterest;
-using LiveMap.Api.Models.SuggestedPoi;
-using LiveMap.Application;
-using LiveMap.Application.PointOfInterest.Handlers;
+﻿using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;

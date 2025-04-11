@@ -1,7 +1,5 @@
 ﻿using LiveMap.Domain.Models;
-using LiveMap.Persistence.Extensions;
 using NetTopologySuite.Geometries;
-using Coordinate = LiveMap.Domain.Models.Coordinate;
 
 namespace LiveMap.Persistence.DbModels;
 

@@ -61,8 +61,8 @@ public static class DevelopmentSeeder
         return geometryFactory.CreatePolygon(linearRing);
     }
     private static Faker<SqlPointOfInterest> GetPointOfInterestFaker(
-        List<SqlMap> maps, 
-        List<PointOfInterestStatus> statusses, 
+        List<SqlMap> maps,
+        List<PointOfInterestStatus> statusses,
         List<Category> categories,
         List<SqlOpeningHours> openingHours)
     {
@@ -156,8 +156,8 @@ public static class DevelopmentSeeder
     {
         // You IDE may tell you that new is not needed here. It is.
         // We want to explicitly use the constructor to soft-copy the rfc array to the tracked one.
-        List<SqlRequestForChange>? trackedRFCs = requestsForChange is not null 
-            ? new(requestsForChange) 
+        List<SqlRequestForChange>? trackedRFCs = requestsForChange is not null
+            ? new(requestsForChange)
             : null;
 
         var pickRfc = (Faker f) =>
@@ -170,7 +170,7 @@ public static class DevelopmentSeeder
             SqlRequestForChange rfc = f.PickRandom(trackedRFCs);
             trackedRFCs.Remove(rfc);
 
-            if(rfc.PoiId is not null)
+            if (rfc.PoiId is not null)
             {
                 return null;
             }

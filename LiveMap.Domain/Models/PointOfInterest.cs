@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LiveMap.Domain.Models;
+﻿namespace LiveMap.Domain.Models;
 public class PointOfInterest
 {
     public required Guid Id { get; set; }
