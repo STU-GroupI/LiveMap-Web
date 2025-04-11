@@ -18,15 +18,13 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         this.pois = maps
             .SelectMany(m => m.PointOfInterests ?? [])
             .ToList();
-
+        
         this.maps = maps;
     }
 
     public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
     {
-        // :p
-        pois.Add(pointOfInterest);
-        return Task.FromResult(pointOfInterest);
+        throw new NotImplementedException();
     }
 
     public Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
