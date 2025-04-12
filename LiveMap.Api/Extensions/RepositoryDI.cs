@@ -1,6 +1,6 @@
 ﻿using LiveMap.Persistence.Repositories;
-using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
+using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Rfc = LiveMap.Application.RequestForChange;
 using SuggestedPoi = LiveMap.Application.SuggestedPoi;
 
