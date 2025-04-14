@@ -18,18 +18,14 @@ const map = new maplibregl.Map({
 });
 
 const markers = []; // To keep track of added markers
-const minDistance = 0.001; // Minimum distance between markers in meters
-let lastTap = 0; // To track double-tap events
+const distance = 1;
+const calculationformula = 1000; // 1 km = 1000 m
+const minDistance = distance / calculationformula; // Minimum distance between markers in meters
 
 map.on('click', onMapClick);
 
 function onMapClick(e) {
     const { lngLat } = e;
-
-    // Double tap detection
-    const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTap;
-    lastTap = currentTime;
 
     // If a marker already exists, remove it before adding a new one
     if (markers.length > 0) {
@@ -39,7 +35,7 @@ function onMapClick(e) {
 
     // Proceed with placing the marker only if it is at least 2 meters from the existing markers
     if (isTooCloseToOtherMarkers(lngLat)) {
-        showAlert('warning', 'Er moet minstens 2 meter afstand zijn tussen markers.');
+        showAlert('warning', 'Er moet minstens 1 meter afstand zijn tussen markers.');
         return;
     }
 
@@ -58,11 +54,11 @@ function onMapClick(e) {
     console.log(`Marker geplaatst op: ${lngLat.lng}, ${lngLat.lat}`);
     console.log(document.getElementById('LatitudeInput').value = lngLat.lat);
     console.log(document.getElementById('LongitudeInput').value);
-
     onAreaChanged();
 }
 
 function onAreaChanged() {
+    centerOnMap();
     const startDrawingBtn = document.querySelector('#drawMap');
     if (markers.length > 0) {
         console.log(`Er is ${markers.length} marker geplaatst.`);
@@ -201,6 +197,26 @@ document.addEventListener('DOMContentLoaded', () => {
         centerOnMap();
     });
 });
+
+
+function centerOnMap() {
+    if (markers.length === 0) {
+        showAlert('error', 'Er zijn geen markers gezet.');
+        return;
+    }
+
+    const points = markers.map(marker => turf.point([marker.getLngLat().lng, marker.getLngLat().lat]));
+    const featureCollection = turf.featureCollection(points);
+    const center = turf.center(featureCollection);
+
+    map.flyTo({
+        center: center.geometry.coordinates,
+        zoom: 17,
+        speed: 1.2,     // Adjust speed (default: 1.2)
+        curve: 1.42,    // Adjust curvature (default: 1.42)
+        easing: t => t  // Optionally adjust the easing function
+    });
+}
 
 function showAlert(type, message) {
     alert(`${type.toUpperCase()}: ${message}`);
