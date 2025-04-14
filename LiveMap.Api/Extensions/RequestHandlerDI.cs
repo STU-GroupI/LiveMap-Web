@@ -1,5 +1,6 @@
 ﻿using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
+using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Rfc = LiveMap.Application.RequestForChange;
 using SuggestedPoi = LiveMap.Application.SuggestedPoi;
 using LiveMap.Application;
@@ -20,6 +21,12 @@ public static class RequestHandlerDI
                 PointOfInterest.Requests.GetMultipleRequest,
                 PointOfInterest.Responses.GetMultipleResponse>,
             PointOfInterest.Handlers.GetMultipleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
+                PointOfInterest.Requests.CreateSingleRequest,
+                PointOfInterest.Responses.CreateSingleResponse>,
+            PointOfInterest.Handlers.CreateSingleHandler>();
 
         services.AddTransient<
             IRequestHandler<
