@@ -24,8 +24,8 @@ public static class ViewModelMapperExtensions
             Id = Guid.Empty,
             PoiId = Guid.Empty,
             DayOfWeek = dayOfWeek,
-            Start = toTime(vm.From),
-            End = toTime(vm.To),
+            Start = toTime(vm.Start),
+            End = toTime(vm.End),
         };
     }
     public static List<OpeningHours> ToDomainOpeningHoursList(this ICollection<OpeningHoursViewModel> vm)
@@ -46,7 +46,7 @@ public static class ViewModelMapperExtensions
             Description = viewModel.Description,
             Id = Guid.Empty,
             Map = null!,
-            MapId = Guid.Parse(viewModel.ParkId),
+            MapId = Guid.Parse(viewModel.MapId),
             OpeningHours = viewModel.OpeningHours.ToDomainOpeningHoursList(),
             Status = null!,
             StatusName = string.Empty,

@@ -28,14 +28,14 @@
                     <label for="@camelDay" class="min-w-[80px] text-sm text-gray-700">@dayName</label>
 
                     <div class="max-w-32">
-                        <input asp-for="OpeningHours[@i].From" type="time"
+                        <input asp-for="OpeningHours[@i].Start" type="time"
                                class="border py-1.5 sm:py-1 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
                     </div>
                     
                     <span class="text-sm text-gray-500">to</span>
 
                     <div class="max-w-32">
-                        <input asp-for="OpeningHours[@i].To" type="time"
+                        <input asp-for="OpeningHours[@i].End" type="time"
                                class="border py-1.5 sm:py-1 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
                     </div>
                 </div>

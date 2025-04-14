@@ -7,7 +7,7 @@
            class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
             Go Back
         </a>
-        <form method="post" asp-controller="poi" asp-action="delete">
+        <form method="delete" asp-controller="poi" asp-action="delete">
             @Html.AntiForgeryToken()
             <button type="submit"
                     class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
@@ -40,7 +40,7 @@
 
         <input type="hidden" asp-for="Coordinate.Latitude" />
         <input type="hidden" asp-for="Coordinate.Longitude" />
-        <input type="hidden" asp-for="ParkId" />
+        <input type="hidden" asp-for="MapId" />
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml")

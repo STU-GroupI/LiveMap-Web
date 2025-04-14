@@ -42,7 +42,7 @@ public class BackendApiHttpService : IBackendApiHttpService
                 );
             }
 
-            string message = responseContent.Length > 0 
+            string message = responseContent.Length > 0
                 ? await JsonSerializer.DeserializeAsync<string>(responseContent) ?? string.Empty
                 : string.Empty;
 
@@ -76,16 +76,10 @@ public class BackendApiHttpService : IBackendApiHttpService
 
             if (result.IsSuccessStatusCode)
             {
-                if (responseContent is null)
-                {
-                    return BackendApiHttpResponse.Success(
-                        statusCode: result.StatusCode
-                    );
-                }
-
                 return BackendApiHttpResponse.Success(
                     statusCode: result.StatusCode
                 );
+
             }
 
             return BackendApiHttpResponse.Failure(
