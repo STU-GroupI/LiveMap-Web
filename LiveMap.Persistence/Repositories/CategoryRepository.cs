@@ -33,7 +33,8 @@ public class CategoryRepository : ICategoryRepository
             setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
 
         _context.Categories.Remove(category);
-
+        await _context.SaveChangesAsync();
+        
         try
         {
             // Commit transaction if all commands succeed, transaction will auto-rollback
