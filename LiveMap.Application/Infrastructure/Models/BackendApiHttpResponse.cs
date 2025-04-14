@@ -2,6 +2,9 @@
 
 namespace LiveMap.Application.Infrastructure.Models;
 
+// TODO: Make this so there is always an expected resposne.
+// You should always expect content. You could get a URL with a callback in it after, for instance, an update.
+
 public sealed record BackendApiHttpResponse
 {
     public readonly HttpStatusCode? StatusCode;

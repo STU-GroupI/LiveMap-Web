@@ -21,7 +21,7 @@ namespace LiveMapDashboard.Web.Controllers
                     new() { CategoryName = "Park" }, 
                     new() { CategoryName = "Museum" }],
 
-                ParkId = Guid.NewGuid().ToString(),
+                MapId = Guid.NewGuid().ToString(),
             };
             return View(viewModel);
         }

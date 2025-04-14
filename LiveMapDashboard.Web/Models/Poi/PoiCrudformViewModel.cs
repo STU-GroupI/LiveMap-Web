@@ -9,7 +9,7 @@ public sealed record PoiCrudformViewModel(
     string Category, 
     string Description, 
     bool IsWheelchairAccessible,
-    string ParkId, 
+    string MapId, 
     Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
     Category[]? Categories
@@ -21,7 +21,7 @@ public sealed record PoiCrudformViewModel(
             Category: string.Empty,
             Description: string.Empty,
             IsWheelchairAccessible: false,
-            ParkId: string.Empty,
+            MapId: string.Empty,
             Coordinate: new(0, 0),
             OpeningHours: Enumerable.Repeat(OpeningHoursViewModel.Empty, 7).ToArray(),
             Categories: []);
@@ -42,9 +42,9 @@ public sealed record PoiCrudformViewModel(
             results.Add(new ValidationResult("Category must be one of the valid predefined values.", new[] { nameof(Category) }));
         }
         
-        if (string.IsNullOrWhiteSpace(ParkId) || !Guid.TryParse(ParkId, out _))
+        if (string.IsNullOrWhiteSpace(MapId) || !Guid.TryParse(MapId, out _))
         {
-            results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(ParkId) }));
+            results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(MapId) }));
         }
 
         if (OpeningHours != null)
@@ -57,7 +57,7 @@ public sealed record PoiCrudformViewModel(
                     continue;
                 }
 
-                if (!Regex.IsMatch(openingHour.From, @"^[012345]\d\:[012345]\d$") || !Regex.IsMatch(openingHour.To, @"^[012345]\d\:[012345]\d$"))
+                if (!Regex.IsMatch(openingHour.Start, @"^[012345]\d\:[012345]\d$") || !Regex.IsMatch(openingHour.End, @"^[012345]\d\:[012345]\d$"))
                 {
                     results.Add(new ValidationResult("Opening and closing hours must follow the format [HH:MM].", new[] { nameof(OpeningHours) }));
                 }

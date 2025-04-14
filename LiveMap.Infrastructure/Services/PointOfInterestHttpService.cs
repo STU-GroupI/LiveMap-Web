@@ -8,7 +8,7 @@ namespace LiveMap.Infrastructure.Services;
 public class PointOfInterestHttpService : IPointOfInterestService
 {
     private readonly IBackendApiHttpService _backendApiService;
-    // TODO: God forbid we do this. Add this to a config file or so help you god I will go absolute apeshit
+    // TODO: Turn this into configuration over contract
     private const string _ENDPOINT = "poi";
 
     public PointOfInterestHttpService(IBackendApiHttpService backendApiService)
@@ -20,7 +20,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
     {
         throw new NotImplementedException();
     }
-    public Task<BackendApiHttpResponse<PointOfInterest>> GetPaged(string mapId, int? from, int? to)
+    public Task<BackendApiHttpResponse<PointOfInterest>> GetPaged(string mapId, int? skip, int? take)
     {
         throw new NotImplementedException();
     }
