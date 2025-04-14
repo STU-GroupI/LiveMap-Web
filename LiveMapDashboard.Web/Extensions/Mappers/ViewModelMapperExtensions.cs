@@ -48,6 +48,7 @@ public static class ViewModelMapperExtensions
             Map = null!,
             MapId = Guid.Parse(viewModel.MapId),
             OpeningHours = viewModel.OpeningHours.ToDomainOpeningHoursList(),
+            IsWheelchairAccessible = viewModel.IsWheelchairAccessible,
             Status = null!,
             StatusName = string.Empty,
         };

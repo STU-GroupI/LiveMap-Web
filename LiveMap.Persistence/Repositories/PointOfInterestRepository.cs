@@ -63,7 +63,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
     public async Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
     {
-        var poi = pointOfInterest.ToSqlPointOfInterest(pointOfInterest.Map, pointOfInterest.Category);
+        var poi = pointOfInterest.ToSqlPointOfInterest();
 
         var result = await _context.PointsOfInterest.AddAsync(poi);
         await _context.SaveChangesAsync();
