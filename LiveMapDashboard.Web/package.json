@@ -4,18 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "copy:preline": "copy \"node_modules\\preline\\dist\\preline.js\" \"wwwroot\\js\\preline.js\"",
-    "dev:css": "npx tailwindcss -i ./wwwroot/css/site.css -o wwwroot/css/output.css --watch",
-    "build:css": "npx @tailwindcss/cli -i ./wwwroot/css/site.css -o ./wwwroot/css/styles.css --minify"
+    "copy:preline": "copy \"node_modules\\preline\\dist\\preline.js\" \"wwwroot\\js\\preline.js\" && copy \"node_modules\\preline\\variants.css\" \"wwwroot\\css\\preline\\variants.css\"",
+    "build:css": "postcss ./wwwroot/css/base.css -o ./wwwroot/css/styles.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.3",
+    "@tailwindcss/forms": "^0.5.10",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
     "tailwindcss": "^4.1.3"
   },
   "dependencies": {
+    "@preline/theme-switch": "^3.0.0",
+    "@tailwindcss/postcss": "^4.1.3",
     "preline": "^3.0.1"
   }
 }
