@@ -43,8 +43,9 @@ function onMapClick(e) {
         .setLngLat([lngLat.lng, lngLat.lat])
         .addTo(map);
     
-    document.getElementById('Coordinate_Latitude').value = lngLat.lat;
-    document.getElementById('Coordinate_Longitude').value = lngLat.lng;
+    document.getElementById('Coordinate_Latitude').value = lngLat.lat.toString().replace('.', ',');
+    document.getElementById('Coordinate_Longitude').value = lngLat.lng.toString().replace('.', ',');
+
 
     // Store the marker in the markers array
     markers.push(marker);
