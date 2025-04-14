@@ -6,8 +6,6 @@ MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
-let clickedLngLat = null;
-
 
 const map = new maplibregl.Map({
     container: 'map',
@@ -44,6 +42,10 @@ function onMapClick(e) {
     const marker = new maplibregl.Marker()
         .setLngLat([lngLat.lng, lngLat.lat])
         .addTo(map);
+    
+    document.getElementById('LatitudeInput').value = lngLat.lat;
+    document.getElementById('LongitudeInput').value = lngLat.lng;
+    showAlert('success', 'Locatie succesvol toegevoegd!');
 
     // Store the marker in the markers array
     markers.push(marker);
@@ -91,17 +93,6 @@ function centerOnMap() {
         easing: t => t  // Optionally adjust the easing function
     });
 }
-
-document.getElementById('addPOIButton').addEventListener('click', () => {
-    if (!clickedLngLat) {
-        showAlert('warning', 'Klik eerst op de kaart om een locatie te selecteren.');
-        return;
-    }
-
-    document.getElementById('LatitudeInput').value = clickedLngLat.lat;
-    document.getElementById('LongitudeInput').value = clickedLngLat.lng;
-    showAlert('success', 'Locatie succesvol toegevoegd!');
-});
 
 function showAlert(type, message) {
     alert(`${type.toUpperCase()}: ${message}`);
