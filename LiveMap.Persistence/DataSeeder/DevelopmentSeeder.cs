@@ -214,6 +214,7 @@ public static class DevelopmentSeeder
             new() { CategoryName = "Trash bin" },
             new() { CategoryName = "Parking" },
             new() { CategoryName = "Entertainment" },
+            new() { CategoryName = "EMPTY" },
         ];
 
         List<PointOfInterestStatus> poiStatuses = [
