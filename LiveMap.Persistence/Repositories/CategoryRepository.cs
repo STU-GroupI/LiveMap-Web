@@ -145,12 +145,12 @@ public async Task<bool> Update(string oldName, string newName)
         try
         {
             await _context.PointsOfInterest.Where(poi => poi.CategoryName == name).ExecuteUpdateAsync(setters =>
-                setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
+            setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
 
             await _context.SuggestedPointsOfInterest.Where(poi => poi.CategoryName == name).ExecuteUpdateAsync(setters =>
-                setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
+            setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
 
-            _context.Categories.Remove(category);
+        _context.Categories.Remove(category);
 
             await _context.SaveChangesAsync();
 
