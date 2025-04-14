@@ -51,11 +51,24 @@ public class RequestForChangeController : ControllerBase
     [HttpPatch]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, RequestForChange)>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Patch()
+    public async Task<IActionResult> Patch(
+        [FromBody] UpdateSingleRfcWebRequest webRequest,
+        [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler
+        )
     {
         try
         {
-            return Ok();
+            var rfc = webRequest.RequestForChange;
+            rfc.ApprovalStatus = webRequest.ApprovalStatus.ToString();
+
+            if (webRequest.ApprovalStatus.ToString() == ApprovalStatus.APPROVED)
+            {
+                rfc.ApprovedOn = DateTime.UtcNow;
+            }
+            var request = new UpdateSingleRequest(rfc);
+            UpdateSingleResponse response = await handler.Handle(request);
+            return Ok(response.Rfc);
+
         }
         catch (Exception ex)
         {
