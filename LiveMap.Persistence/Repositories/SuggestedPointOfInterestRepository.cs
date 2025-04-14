@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Persistence.Repositories;
 public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepository
@@ -41,5 +42,32 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
         response.RFC = rfc.ToDomainRequestForChange();
         
         return response;
+    }
+
+    public async Task<ICollection<SuggestedPointOfInterest>> GetMultiple(Guid parkId, int? skip, int? take)
+    {
+        var query = _context.SuggestedPointsOfInterest
+            .Where(spoi => spoi.MapId == parkId)
+            .Include(spoi => spoi.RFC)
+            .AsQueryable();
+
+        if (skip is int fromValue)
+        {
+            query = query.Skip(fromValue);
+        }
+
+        if (take is int amountValue)
+        {
+            query = query.Take(amountValue);
+        }
+
+        var result = await query.ToListAsync();
+        if (result is not { Count: > 0 })
+        {
+            return [];
+        }
+
+        int bp = 0;
+        return result.Select(spoi => spoi.ToDomainSuggestedPointOfInterest()).ToList();
     }
 }

@@ -51,6 +51,12 @@ public static class RequestHandlerDI
                 SuggestedPoi.Responses.CreateSingleResponse>,
             SuggestedPoi.Handlers.CreateSingleHandler>();
 
+        services.AddTransient<
+            IRequestHandler<
+                SuggestedPoi.Requests.GetMultipleRequest,
+                SuggestedPoi.Responses.GetMultipleResponse>,
+            SuggestedPoi.Handlers.GetMultipleHandler>();
+
         return services;
     }
 }

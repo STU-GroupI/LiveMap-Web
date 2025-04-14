@@ -1,4 +1,7 @@
-# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@baseUrl = https://localhost:7211/api
+
+@basePath = suggestedpoi
+
 POST http://localhost:5006/api/rfc/poisuggestion
 Content-Type: application/json
 {
@@ -12,3 +15,6 @@ Content-Type: application/json
     },
     "isWheelchairAccessible" : true
 }
+
+GET {{baseUrl}}/{{basePath}}?parkId=e312d71b-445f-403d-8399-22e46d011a00
+Accept: application/json
