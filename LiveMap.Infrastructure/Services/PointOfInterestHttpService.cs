@@ -16,11 +16,11 @@ public class PointOfInterestHttpService : IPointOfInterestService
         _backendApiService = backendApiService;
     }
 
-    public Task<BackendApiHttpResponse<PointOfInterest>> GetSingle(Guid id)
+    public Task<BackendApiHttpResponse<PointOfInterest>> Get(Guid id)
     {
         throw new NotImplementedException();
     }
-    public Task<BackendApiHttpResponse<PointOfInterest>> GetPaged(string mapId, int? skip, int? take)
+    public Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
     {
         throw new NotImplementedException();
     }

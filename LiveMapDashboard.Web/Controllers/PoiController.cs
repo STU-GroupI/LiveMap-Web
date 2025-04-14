@@ -1,8 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
-using LiveMap.Domain.Models;
-using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
+using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,18 +10,10 @@ namespace LiveMapDashboard.Web.Controllers
     [Route("[controller]")]
     public class PoiController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index(
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
         {
-            var viewModel = PoiCrudformViewModel.Empty with
-            {
-                Categories = [
-                    new() { CategoryName = "Food" }, 
-                    new() { CategoryName = "Entertainment" }, 
-                    new() { CategoryName = "Park" }, 
-                    new() { CategoryName = "Museum" }],
-
-                MapId = Guid.NewGuid().ToString(),
-            };
+            var viewModel = await provider.Provide();
             return View(viewModel);
         }
 
@@ -31,19 +22,13 @@ namespace LiveMapDashboard.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(
             [FromServices] IPointOfInterestService service,
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
             PoiCrudformViewModel viewModel,
             string action)
         {
             if (!ModelState.IsValid)
             {
-                return View("index", viewModel with
-                {
-                    Categories = [
-                        new() { CategoryName = "Food" },
-                        new() { CategoryName = "Entertainment" },
-                        new() { CategoryName = "Park" },
-                        new() { CategoryName = "Museum" }]
-                });
+                return View("index", provider.Hydrate(viewModel));
             }
 
             var poi = viewModel.ToDomainPointOfInterest();
@@ -51,7 +36,7 @@ namespace LiveMapDashboard.Web.Controllers
 
             if (result.IsSuccess)
             {
-                ViewData["Success"] = "Your request was successfully processed!";
+                ViewData["SuccessMessage"] = "Your request was successfully processed!";
             }
             else
             {
@@ -63,15 +48,8 @@ namespace LiveMapDashboard.Web.Controllers
                     _ => "Something went wrong while trying to contact the application. Please try again later"
                 };
             }
-            
-            return View("index", viewModel with
-            {
-                Categories = [
-                    new() { CategoryName = "Food" },
-                    new() { CategoryName = "Entertainment" },
-                    new() { CategoryName = "Park" },
-                    new() { CategoryName = "Museum" }]
-            });
+
+            return View("index", await provider.Hydrate(viewModel));
         }
     }
 }

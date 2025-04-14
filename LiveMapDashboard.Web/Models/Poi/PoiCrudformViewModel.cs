@@ -1,4 +1,6 @@
-﻿using LiveMap.Domain.Models;
+﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
@@ -12,8 +14,7 @@ public sealed record PoiCrudformViewModel(
     string MapId, 
     Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
-    Category[]? Categories
-    ) : IValidatableObject
+    Category[]? Categories) : IValidatableObject
 {
     public static PoiCrudformViewModel Empty => 
         new PoiCrudformViewModel(
@@ -33,13 +34,6 @@ public sealed record PoiCrudformViewModel(
         if (!string.IsNullOrWhiteSpace(Title) && !Regex.IsMatch(Title, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
         {
             results.Add(new ValidationResult("Title can only contain alphanumeric characters and basic symbols.", new[] { nameof(Title) }));
-        }
-
-        var validCategories = new List<string> { "Food", "Entertainment", "Park", "Museum" };
-
-        if (!string.IsNullOrWhiteSpace(Category) && !validCategories.Contains(Category))
-        {
-            results.Add(new ValidationResult("Category must be one of the valid predefined values.", new[] { nameof(Category) }));
         }
         
         if (string.IsNullOrWhiteSpace(MapId) || !Guid.TryParse(MapId, out _))

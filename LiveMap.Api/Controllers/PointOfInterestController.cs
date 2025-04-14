@@ -1,4 +1,6 @@
-﻿using LiveMap.Application;
+﻿using LiveMap.Api.Models.PointOfInterest;
+using LiveMap.Api.Models.SuggestedPoi;
+using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
@@ -75,9 +77,29 @@ public class PointOfInterestController : ControllerBase
     [ProducesResponseType<(string, PointOfInterest)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Post(
-        [FromBody] PointOfInterest poi,
+        [FromBody] CreateSinglePoiWebRequest webRequest,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
+        PointOfInterest poi = new()
+        {
+            Id = Guid.Empty,
+            Title = webRequest.Title,
+            Description = webRequest.Description,
+            CategoryName = webRequest.CategoryName,
+            Coordinate = webRequest.Coordinate,
+            IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
+            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
+            {
+                DayOfWeek = oh.DayOfWeek,
+                Start = oh.Start,
+                End = oh.End,
+                Id = Guid.Empty,
+                PoiId = Guid.Empty,
+            }).ToList(),
+
+            MapId = Guid.Parse(webRequest.MapId),
+            StatusName = "Active",
+        };
         var request = new CreateSingleRequest(poi);
 
         try

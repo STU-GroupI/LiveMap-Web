@@ -1,6 +1,7 @@
 using LiveMapDashboard.Web.Extensions.DI;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -8,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.RegisterOptions(builder.Configuration);
 builder.Services.ConfigureHttpClients();
 builder.Services.RegisterServices();
+builder.Services.RegisterViewModelProviders();
 
 var app = builder.Build();
 
@@ -18,6 +20,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();

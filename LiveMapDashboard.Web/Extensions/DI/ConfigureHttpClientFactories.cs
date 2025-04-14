@@ -25,7 +25,7 @@ namespace LiveMapDashboard.Web.Extensions.DI
                     var options = serviceProvider
                         .GetRequiredService<IOptions<BackendConfigurationOptions>>().Value;
 
-                    client.BaseAddress = new Uri($"{options.Url}/{options.Api}");
+                    client.BaseAddress = new Uri($"{options.Url}/{options.Api}/");
                     //client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
                 });
 

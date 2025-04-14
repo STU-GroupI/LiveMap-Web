@@ -14,6 +14,7 @@ public class BackendApiHttpService : IBackendApiHttpService
     {
         _httpClient = httpClientFactory.CreateBackendClient()
             ?? throw new NullReferenceException("Default backend http client may not be null");
+        _httpClient.Timeout = TimeSpan.FromMinutes(100);
     }
 
     public async Task<BackendApiHttpResponse<TResult>> SendRequest<TResult>(HttpRequestMessage request)
@@ -22,19 +23,23 @@ public class BackendApiHttpService : IBackendApiHttpService
         try
         {
             var result = await _httpClient.SendAsync(request);
-            var responseContent = await result.Content.ReadAsStreamAsync();
 
             if (result.IsSuccessStatusCode)
             {
-                if (responseContent is null)
+
+                var contentStream = await result.Content.ReadAsStreamAsync();
+                if (contentStream is null || contentStream.Length == 0)
                 {
                     return BackendApiHttpResponse<TResult>.Success(
                         statusCode: result.StatusCode,
                         value: null
                     );
                 }
-
-                TResult? data = await JsonSerializer.DeserializeAsync<TResult>(responseContent);
+                string temp = await result.Content.ReadAsStringAsync();
+                TResult? data = await JsonSerializer.DeserializeAsync<TResult>(contentStream, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
 
                 return BackendApiHttpResponse<TResult>.Success(
                     statusCode: result.StatusCode,
@@ -42,10 +47,7 @@ public class BackendApiHttpService : IBackendApiHttpService
                 );
             }
 
-            string message = responseContent.Length > 0
-                ? await JsonSerializer.DeserializeAsync<string>(responseContent) ?? string.Empty
-                : string.Empty;
-
+            string message = (await result.Content.ReadAsStringAsync()) ?? string.Empty;
 
             (string, string) errorMessage = (
                             result.ReasonPhrase ?? string.Empty,

@@ -6,13 +6,37 @@ namespace LiveMap.Infrastructure.Services;
 
 public class CategoryHttpService : ICategoryService
 {
-    public Task<BackendApiHttpResponse<Category>> GetAll()
+    private const string _ENDPOINT = "category";
+    private readonly IBackendApiHttpService _backendApiService;
+
+    public CategoryHttpService(IBackendApiHttpService backendApiService)
     {
-        throw new NotImplementedException();
+        _backendApiService = backendApiService;
     }
-    public Task<BackendApiHttpResponse<Category>> GetSingle(Guid id)
+
+    public async Task<BackendApiHttpResponse<Category>> Get(string name)
     {
-        throw new NotImplementedException();
+        var uri = new Uri($"{_ENDPOINT}/{name}", UriKind.Relative);
+
+        return await _backendApiService
+            .SendRequest<Category>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = uri
+            });
+    }
+
+    public async Task<BackendApiHttpResponse<Category[]>> Get(int? skip, int? take)
+    {
+        var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}";
+        var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
+
+        return await _backendApiService
+            .SendRequest<Category[]>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = uri
+            });
     }
     public Task<BackendApiHttpResponse<Category>> CreateSingle(Category poi)
     {
