@@ -13,12 +13,12 @@ public class MapHttpService : IMapService
         _backendApiService = backendApiHttpService;
     }
 
-    public Task<BackendApiHttpResponse<Map>> CreateSingle(Category poi)
+    public Task<BackendApiHttpResponse<Map>> CreateSingle(Map poi)
     {
         throw new NotImplementedException();
     }
 
-    public Task<BackendApiHttpResponse> Delete(Category poi)
+    public Task<BackendApiHttpResponse> Delete(Map poi)
     {
         throw new NotImplementedException();
     }
@@ -47,7 +47,7 @@ public class MapHttpService : IMapService
     }
 
 
-    public Task<BackendApiHttpResponse<Map>> UpdateSingle(Category poi)
+    public Task<BackendApiHttpResponse<Map>> UpdateSingle(Map poi)
     {
         throw new NotImplementedException();
     }
