@@ -54,6 +54,9 @@ public class LiveMapContext : DbContext
                 .HasForeignKey(oh => oh.PoiId);
 
             entityBuilder.Property(e => e.Position).HasColumnType("geometry");
+
+            entityBuilder.Property(poi => poi.CategoryName)
+                .HasDefaultValue("EMPTY");
         });
 
         modelBuilder.Entity<SqlMap>(entityBuilder =>
