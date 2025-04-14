@@ -24,4 +24,9 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
             SubmittedOn = DateTime.UtcNow,
         });
     }
+
+    public Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
+    {
+        throw new NotImplementedException();
+    }
 }
