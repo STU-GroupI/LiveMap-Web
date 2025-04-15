@@ -23,21 +23,21 @@ map.doubleClickZoom.disable();
 const markers = []; // To keep track of added markers
 let clickedLngLat = null; // To store the clicked coordinates
 
-let clickTimeout = null; // Timer voor het uitstellen van de click-handler
+let clickTimeout = null; // Timer to differentiate between single and double clicks
 
 // Event listener voor single click
 map.on('click', (e) => {
-    // Start een timer om de click actie uit te stellen
+    // Start a timer to delay the single click action
     if (clickTimeout) clearTimeout(clickTimeout);
     clickTimeout = setTimeout(() => {
         onMapClick(e);
         clickTimeout = null;
-    }, 250); // 250 ms is gebruikelijk; pas aan indien nodig
+    }, 250); // 250 ms is a common threshold, we can change this if needed
 });
 
 // Event listener voor double click
 map.on('dblclick', (e) => {
-    // Annuleer de single click als de dubbele klik wordt gedetecteerd
+    // Cancel the single click action if it was triggered
     if (clickTimeout) {
         clearTimeout(clickTimeout);
         clickTimeout = null;
