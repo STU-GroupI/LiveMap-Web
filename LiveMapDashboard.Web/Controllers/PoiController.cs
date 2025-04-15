@@ -28,7 +28,7 @@ namespace LiveMapDashboard.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("index", provider.Hydrate(viewModel));
+                return View("index", await provider.Hydrate(viewModel));
             }
 
             var poi = viewModel.ToDomainPointOfInterest();
