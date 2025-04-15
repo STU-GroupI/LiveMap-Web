@@ -16,63 +16,49 @@ const map = new maplibregl.Map({
     pitchWithRotate: false,
 });
 
-const markers = []; // To keep track of added markers
-const distance = 1;
-const calculationformula = 1000; // 1 km = 1000 m
-const minDistance = distance / calculationformula; // Minimum distance between markers in meters
+//Prevent the map from zooming in when double clicking
+map.doubleClickZoom.disable();
 
-map.on('click', onMapClick);
+
+const markers = []; // To keep track of added markers
+let clickedLngLat = null; // To store the clicked coordinates
+
+let clickTimeout = null; // Timer voor het uitstellen van de click-handler
+
+// Event listener voor single click
+map.on('click', (e) => {
+    // Start een timer om de click actie uit te stellen
+    if (clickTimeout) clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+        onMapClick(e);
+        clickTimeout = null;
+    }, 250); // 250 ms is gebruikelijk; pas aan indien nodig
+});
+
+// Event listener voor double click
+map.on('dblclick', (e) => {
+    // Annuleer de single click als de dubbele klik wordt gedetecteerd
+    if (clickTimeout) {
+        clearTimeout(clickTimeout);
+        clickTimeout = null;
+    }
+    onMapDoubleClick(e);
+});
 
 function onMapClick(e) {
     const { lngLat } = e;
-
-    // If a marker already exists, remove it before adding a new one
-    if (markers.length > 0) {
-        markers[0].remove(); // Remove the existing marker
-        markers.length = 0; // Clear the markers array
-    }
-
-    // Proceed with placing the marker only if it is at least 2 meters from the existing markers
-    if (isTooCloseToOtherMarkers(lngLat)) {
-        showAlert('warning', 'Er moet minstens 1 meter afstand zijn tussen markers.');
-        return;
-    }
-
-    // Add the marker at the clicked position
-    const marker = new maplibregl.Marker()
-        .setLngLat([lngLat.lng, lngLat.lat])
-        .addTo(map);
-    
-    document.getElementById('Coordinate_Latitude').value = lngLat.lat.toString().replace('.', ',');
-    document.getElementById('Coordinate_Longitude').value = lngLat.lng.toString().replace('.', ',');
-
-
-    // Store the marker in the markers array
-    markers.push(marker);
-    onAreaChanged();
+    clickedLngLat = lngLat; // Store the clicked coordinates
+    placeMarkerOnMap(); // Call the function to place the marker
 }
 
-function onAreaChanged() {
-    centerOnMap();
-    if (markers.length > 0) {
-        console.log(`Er is ${markers.length} marker geplaatst.`);
-    }
+function onMapDoubleClick(e) {
+    const { lngLat } = e;
+    clickedLngLat = lngLat; // Store the clicked coordinates
+    document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
+    document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
+    showAlert('success', 'Coördinaten zijn toegepast.');
+    placeMarkerOnMap(); // Call the function to place the marker
 }
-
-function isTooCloseToOtherMarkers(lngLat) {
-    for (const marker of markers) {
-        const markerLngLat = marker.getLngLat();
-        const distance = turf.distance(
-            turf.point([markerLngLat.lng, markerLngLat.lat]),
-            turf.point([lngLat.lng, lngLat.lat])
-        );
-        if (distance < minDistance) {
-            return true; // Found a marker within the minimum distance
-        }
-    }
-    return false; // No markers are too close
-}
-
 
 function centerOnMap() {
     if (markers.length === 0) {
@@ -96,3 +82,35 @@ function centerOnMap() {
 function showAlert(type, message) {
     alert(`${type.toUpperCase()}: ${message}`);
 }
+
+function placeMarkerOnMap(){
+
+    // If a marker already exists, remove it before adding a new one
+    if (markers.length > 0) {
+        markers[0].remove(); // Remove the existing marker
+        markers.length = 0; // Clear the markers array
+    }
+
+    // Add the marker at the clicked position
+    const marker = new maplibregl.Marker()
+        .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
+        .addTo(map);
+
+    // Store the marker in the markers array
+    markers.push(marker);
+    centerOnMap(); // Center the map on the new marker
+}
+
+
+document.getElementById('applyLocationButton').addEventListener('click', () => {
+    if (!clickedLngLat) {
+        showAlert('warning', 'Klik eerst op de kaart om een locatie te selecteren.');
+        return;
+    }
+
+    document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
+    document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
+    showAlert('success', 'Coördinaten zijn toegepast.');
+});
+
+

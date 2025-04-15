@@ -1,47 +1,17 @@
 ﻿@using LiveMapDashboard.Web.Models.Poi
 @model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
 
-<div class="h-fit mt-2 ">
-    <style>
-    .calculation-box {
-        height: 75px;
-        width: 150px;
-        position: absolute;
-        bottom: 40px;
-        left: 10px;
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 15px;
-        text-align: center;
-    }
+<div class="mt-2">
+    <script src="~/js/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
+    <link rel="stylesheet" href="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css" />
 
-    p {
-        font-family: 'Open Sans';
-        margin: 0;
-        font-size: 13px;
-    }
-
-    .maplibregl-map {
-        height: 50vh;
-        width: 100%;
-    }
-
-    a.disabled {
-        pointer-events: none;
-        cursor: default;
-    }
-</style>
-
-<script src="~/js/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
-<link rel="stylesheet"
-      href="https://www.unpkg.com/@@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css" />
-
-
-    <div class="card h-full w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
-        <div class="card-body h-full w-full">
-            <div id="map" class="rounded-lg"></div>
+    <!-- Kaart -->
+    <div class="card w-full h-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="card-body w-full h-full">
+            <div id="map" class="h-[50vh] w-full rounded-lg"></div>
         </div>
     </div>
 </div>

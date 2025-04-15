@@ -561,6 +561,9 @@
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
   }
+  .mb-6 {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
   .mb-auto {
     margin-bottom: auto;
   }
@@ -648,8 +651,8 @@
   .h-100 {
     height: calc(var(--spacing) * 100);
   }
-  .h-\[500px\] {
-    height: 500px;
+  .h-\[50vh\] {
+    height: 50vh;
   }
   .h-auto {
     height: auto;
@@ -938,6 +941,9 @@
   .border-black {
     border-color: var(--color-black);
   }
+  .border-blue-500 {
+    border-color: var(--color-blue-500);
+  }
   .border-current {
     border-color: currentcolor;
   }
@@ -970,9 +976,6 @@
   }
   .bg-blue-600 {
     background-color: var(--color-blue-600);
-  }
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
   }
   .bg-gray-200 {
     background-color: var(--color-gray-200);
