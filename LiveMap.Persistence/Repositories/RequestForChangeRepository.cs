@@ -27,8 +27,29 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return result.Entity.ToDomainRequestForChange();
     }
 
-    public Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
+    public async Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
     {
-        throw new NotImplementedException();
+        var existingRfc = await _context.RequestsForChange.FirstOrDefaultAsync(r => r.Id == requestForChange.Id);
+        
+        if (existingRfc == null)
+        {
+            return null;
+        }
+        
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+
+        try
+        {
+            _context.RequestsForChange.Update(existingRfc);
+            await _context.SaveChangesAsync();
+
+            return existingRfc.ToDomainRequestForChange();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
