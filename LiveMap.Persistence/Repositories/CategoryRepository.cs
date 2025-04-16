@@ -17,6 +17,68 @@ public class CategoryRepository : ICategoryRepository
         _context = context;
     }
 
+    public async Task<Category> Create(Category category)
+    {
+        _context.Categories.Add(category);
+        await _context.SaveChangesAsync();
+        return category;
+    }
+
+    public async Task<Category?> GetSingle(string name)
+    {
+        var category = await _context.Categories
+            .Where(c => c.CategoryName == name)
+            .FirstOrDefaultAsync();
+
+        if (category is null) return null;
+
+        return category;
+    }
+
+    public async Task<ICollection<Category>> GetMultiple(string name, int? skip, int? take)
+    {
+        var query = _context.Categories.AsQueryable();
+
+        if (name is not null)
+        {
+            query = query.Where(c => c.CategoryName.Contains(name));
+        }
+
+        if (skip is int fromValue)
+        {
+            query = query.Skip(fromValue);
+        }
+
+        if (take is int amountValue)
+        {
+            query = query.Take(amountValue);
+        }
+
+        var result = await query.ToListAsync();
+
+        if (result is not { Count: > 0 }) return new List<Category>();
+
+        return result;
+    }
+
+    public async Task<bool> Update(Category category)
+    {
+        var existingCategory = await _context.Categories
+            .Where(c => c.CategoryName == category.CategoryName)
+            .FirstOrDefaultAsync();
+
+        if (existingCategory != null)
+        {
+        existingCategory.CategoryName = category.CategoryName;
+
+        await _context.SaveChangesAsync();
+        return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public async Task<bool> Delete(Category category)
     {
         // At this point may consider using Dapper instead. Every executeUpdate is a trip to the database.
