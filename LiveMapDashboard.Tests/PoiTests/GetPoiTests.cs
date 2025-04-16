@@ -1,13 +1,7 @@
 ﻿using LiveMap.Application.PointOfInterest.Handlers;
 using LiveMap.Application.PointOfInterest.Requests;
-using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMapDashboard.Tests.PoiTests;
 public class GetPoiTests

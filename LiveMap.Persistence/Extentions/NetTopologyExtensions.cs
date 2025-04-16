@@ -1,10 +1,5 @@
 ﻿using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Persistence.Extensions;
 public static class NetTopologyExtensions

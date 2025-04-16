@@ -109,11 +109,15 @@ namespace LiveMap.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsWheelchairAccessible")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("MapId")
                         .HasColumnType("uniqueidentifier");
@@ -123,6 +127,7 @@ namespace LiveMap.Persistence.Migrations
                         .HasColumnType("geometry");
 
                     b.Property<string>("StatusName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
@@ -232,7 +237,9 @@ namespace LiveMap.Persistence.Migrations
                 {
                     b.HasOne("LiveMap.Domain.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryName");
+                        .HasForeignKey("CategoryName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LiveMap.Persistence.DbModels.SqlMap", "Map")
                         .WithMany("PointOfInterests")
@@ -242,7 +249,9 @@ namespace LiveMap.Persistence.Migrations
 
                     b.HasOne("LiveMap.Domain.Models.PointOfInterestStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusName");
+                        .HasForeignKey("StatusName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 

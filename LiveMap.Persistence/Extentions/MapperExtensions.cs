@@ -1,12 +1,5 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMap.Persistence.Extensions;
 public static class MapperExtensions
@@ -32,6 +25,7 @@ public static class MapperExtensions
             CategoryName = poi.CategoryName,
             Coordinate = poi.Position.Coordinate.ToDomainCoordinate(),
             Description = poi.Description,
+            IsWheelchairAccessible = poi.IsWheelchairAccessible,
             MapId = poi.MapId,
             Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
@@ -53,7 +47,7 @@ public static class MapperExtensions
             PoiId = oh.PoiId
         };
     }
-    
+
     public static SuggestedPointOfInterest ToDomainSuggestedPointOfInterest(this SqlSuggestedPointOfInterest suggestedPoi)
     {
         return suggestedPoi.ToDomainSuggestedPointOfInterest(null);
@@ -111,6 +105,47 @@ public static class MapperExtensions
         return value;
     }
 
+    public static SqlPointOfInterest ToSqlPointOfInterest(this PointOfInterest pointOfInterest, SqlMap? map = null, Category? category = null)
+    {
+        var sqlPoi = new SqlPointOfInterest()
+        {
+            Id = pointOfInterest.Id,
+            Title = pointOfInterest.Title,
+            Description = pointOfInterest.Description,
+            CategoryName = pointOfInterest.CategoryName,
+
+            Status = pointOfInterest.Status,
+            StatusName = pointOfInterest.StatusName,
+
+            IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible,
+            Position = pointOfInterest.Coordinate.ToSqlPoint(),
+            MapId = pointOfInterest.MapId,
+
+            Category = category,
+
+            OpeningHours = pointOfInterest.OpeningHours.Select(oh => oh.ToSqlOpeningHours()).ToList()
+        };
+
+        sqlPoi.Map = map ?? pointOfInterest.Map?.ToSqlMap(sqlPoi);
+
+        return sqlPoi;
+    }
+
+    public static SqlMap ToSqlMap(this Map map, SqlPointOfInterest? poi)
+    {
+        var sqlMap = new SqlMap()
+        {
+            Id = map.Id,
+            Name = map.Name,
+            Border = map.Area.ToPolygon(),
+            Position = map.Coordinate.ToSqlPoint()
+        };
+
+        sqlMap.PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? [];
+
+        return sqlMap;
+    }
+
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
     {
         return new SqlRequestForChange()
@@ -140,6 +175,19 @@ public static class MapperExtensions
             RFC = null,
             Category = null!,
             Map = null!
+        };
+    }
+
+    public static SqlOpeningHours ToSqlOpeningHours(this OpeningHours openingHours)
+    {
+        return new SqlOpeningHours
+        {
+            Id = openingHours.Id,
+            DayOfWeek = openingHours.DayOfWeek,
+            Start = openingHours.Start,
+            End = openingHours.End,
+            PoiId = openingHours.PoiId,
+            Poi = null!
         };
     }
 }
