@@ -70,7 +70,7 @@ public static class MapperExtensions
             CategoryName = suggestedPoi.CategoryName,
             Category = suggestedPoi?.Category,
 
-            MapId = suggestedPoi.MapId,
+            MapId = suggestedPoi!.MapId,
             Map = suggestedPoi.Map?.ToDomainMap(),
 
             Coordinate = suggestedPoi.Position.ToDomainCoordinate(),

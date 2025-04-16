@@ -18,8 +18,9 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Node Dependencies
+      - name: Install Node Dependencies (in the web project)
         run: npm ci
+        working-directory: ./LiveMapDashboard.Web
 
       - name: Set RunTailwind to true for Tailwind build
         run: echo "RunTailwind=true" >> $GITHUB_ENV

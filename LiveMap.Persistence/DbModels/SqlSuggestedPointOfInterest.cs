@@ -19,5 +19,5 @@ public class SqlSuggestedPointOfInterest
     public required SqlMap Map { get; set; }
 
     public Guid? RFCId { get; set; }
-    public required SqlRequestForChange RFC { get; set; }
+    public required SqlRequestForChange? RFC { get; set; }
 }
