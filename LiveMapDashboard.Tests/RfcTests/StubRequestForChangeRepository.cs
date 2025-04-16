@@ -43,4 +43,10 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
         
         return Task.FromResult(existingRfc);
     }
+
+    public Task<RequestForChange?> GetSingle(Guid id)
+    {
+        RequestForChange rfc = RequestsForChange.FirstOrDefault(r => r.Id == id);
+        return Task.FromResult(rfc);
+    }
 }

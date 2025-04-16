@@ -1,6 +1,8 @@
 using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -49,5 +51,15 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         {
             return null;
         }
+    }
+
+    public async Task<RequestForChange?> GetSingle(Guid id)
+    {
+        SqlRequestForChange? requestForChange = await _context.RequestsForChange
+            .Include(rfc => rfc.Message)
+            .Where(r => r.Id == id)
+            .FirstOrDefaultAsync();
+
+        return requestForChange.ToDomainRequestForChange();
     }
 }

@@ -51,6 +51,12 @@ public static class RequestHandlerDI
                 Rfc.Requests.CreateSingleRequest,
                 Rfc.Responses.CreateSingleResponse>,
             Rfc.Handlers.CreateSingleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Rfc.Requests.UpdateSingleRequest,
+                Rfc.Responses.UpdateSingleResponse>,
+            Rfc.Handlers.UpdateSingleHandler>();
 
         services.AddTransient<
             IRequestHandler<
