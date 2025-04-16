@@ -36,13 +36,13 @@ public static class MapperExtensions
             Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
-            StatusName = poi.StatusName
+            StatusName = poi.StatusName,
         };
         data.OpeningHours = poi.OpeningHours?.Select(oh => oh.ToOpeningHours(data)).ToList() ?? [];
         return data;
     }
 
-    public static OpeningHours ToOpeningHours(this SqlOpeningHours oh, PointOfInterest? poi)
+    public static OpeningHours ToOpeningHours(this SqlOpeningHours oh, PointOfInterest poi)
     {
         return new()
         {
@@ -50,7 +50,8 @@ public static class MapperExtensions
             DayOfWeek = oh.DayOfWeek,
             Start = oh.Start,
             End = oh.End,
-            PoiId = oh.PoiId
+            PoiId = oh.PoiId,
+            Poi = poi,
         };
     }
     
@@ -113,7 +114,7 @@ public static class MapperExtensions
 
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
     {
-        return new SqlRequestForChange()
+        return new SqlRequestForChange
         {
             Id = requestForChange.Id,
             ApprovalStatus = requestForChange.ApprovalStatus,
@@ -122,6 +123,7 @@ public static class MapperExtensions
             SubmittedOn = requestForChange.SubmittedOn,
             PoiId = requestForChange.PoiId,
             Message = requestForChange.Message,
+            ApprovalStatusProp = new ApprovalStatus { Status = requestForChange.ApprovalStatus }
         };
     }
 

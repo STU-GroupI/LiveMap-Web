@@ -45,7 +45,7 @@ public class SuggestedPoiController : ControllerBase
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.SuggestedPoi);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }

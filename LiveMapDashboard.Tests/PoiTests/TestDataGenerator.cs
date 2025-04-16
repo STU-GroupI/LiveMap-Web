@@ -8,6 +8,8 @@ public static class TestDataGenerator
 {
     public static Faker<PointOfInterest> GetPointOfInterestFaker(Map? map = null)
     {
+        #pragma warning disable CS8601
+    
         return new Faker<PointOfInterest>()
             .RuleFor(p => p.Id, f => f.Random.Guid())
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(3))
@@ -15,16 +17,23 @@ public static class TestDataGenerator
             .RuleFor(p => p.Coordinate, f => new Coordinate(
                 f.Address.Latitude(),
                 f.Address.Longitude()))
-
             .RuleFor(p => p.CategoryName, f => f.Commerce.Department())
             .RuleFor(p => p.Category, (f, p) => new Category { CategoryName = p.CategoryName })
-
             .RuleFor(p => p.StatusName, f => f.PickRandom(new[] { "Active", "Inactive", "Pending" }))
             .RuleFor(p => p.Status, (f, p) => new PointOfInterestStatus { Status = p.StatusName })
-
             .RuleFor(p => p.MapId, f => map?.Id ?? f.Random.Guid())
-            .RuleFor(p => p.Map, (f, p) => map ?? new Map { Id = p.MapId, Name = f.Address.City() });
+            .RuleFor(p => p.Map, (f, p) => map ?? new Map
+            {
+                Id = p.MapId,
+                Name = f.Address.City(),
+                PointOfInterests = new List<PointOfInterest>(),
+                Area = new Coordinate[] {},
+                Coordinate = p.Coordinate
+            });
+    
+        #pragma warning restore CS8601
     }
+
 
     public static PointOfInterest GenerateSinglePointOfInterest()
     {

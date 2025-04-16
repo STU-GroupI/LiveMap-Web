@@ -21,7 +21,7 @@ public class PointOfInterest
     public required PointOfInterestStatus Status { get; set; }
 
     public required Guid MapId { get; set; }
-    public required Map Map { get; set; }
+    public Map? Map { get; set; }
 
-    public virtual ICollection<OpeningHours> OpeningHours { get; set; }
+    public virtual ICollection<OpeningHours>? OpeningHours { get; set; }
 }

@@ -1,0 +1,29 @@
+﻿name: Tailwind CSS Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  tailwind-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Set RunTailwind to true for Tailwind build
+        run: echo "RunTailwind=true" >> $GITHUB_ENV
+
+      - name: Build Tailwind CSS
+        run: |
+          dotnet build

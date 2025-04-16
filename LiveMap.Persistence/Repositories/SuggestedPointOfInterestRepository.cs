@@ -21,10 +21,12 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
 
     public async Task<SuggestedPointOfInterest> CreateSuggestedPointOfInterest(SuggestedPointOfInterest suggestedPoi)
     {
-        SqlRequestForChange rfc = new SqlRequestForChange()
+        SqlRequestForChange rfc = new SqlRequestForChange
         {
             SubmittedOn = DateTime.UtcNow,
             ApprovalStatus = ApprovalStatus.PENDING,
+            Id = default,
+            ApprovalStatusProp = new ApprovalStatus { Status = ApprovalStatus.PENDING },
         };
 
         var sqlData = suggestedPoi.ToSqlSuggestedPointOfInterest();

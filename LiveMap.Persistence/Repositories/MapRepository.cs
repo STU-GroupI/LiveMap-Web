@@ -81,15 +81,15 @@ public class MapRepository : IMapRepository
             _context.Maps.Update(map);
             _context.SaveChanges();
         }
-        catch (DbUpdateConcurrencyException ex)
+        catch (DbUpdateConcurrencyException)
         {
             return false;
         }
-        catch (DbUpdateException ex)
+        catch (DbUpdateException)
         {
             return false;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
