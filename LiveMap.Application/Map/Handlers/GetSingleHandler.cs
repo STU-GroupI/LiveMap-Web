@@ -1,12 +1,6 @@
 ﻿using LiveMap.Application.Map.Persistance;
 using LiveMap.Application.Map.Requests;
 using LiveMap.Application.Map.Responses;
-using LiveMap.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Application.Map.Handlers;
 

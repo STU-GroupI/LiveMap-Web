@@ -1,0 +1,8 @@
+﻿@using LiveMapDashboard.Web.Models.Poi
+@model PoiCrudformViewModel
+
+@await Component.InvokeAsync("PoiForm", Model)
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

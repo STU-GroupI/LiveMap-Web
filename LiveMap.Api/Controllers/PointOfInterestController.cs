@@ -1,11 +1,10 @@
-﻿using LiveMap.Application;
-using LiveMap.Application.PointOfInterest.Handlers;
+﻿using LiveMap.Api.Models.PointOfInterest;
+using LiveMap.Api.Models.SuggestedPoi;
+using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;
@@ -64,5 +63,53 @@ public class PointOfInterestController : ControllerBase
         var response = await handler.Handle(request);
 
         return Ok(response.PointsOfInterests);
+    }
+
+    /// <summary>
+    /// Creates a POI for the given request data
+    /// </summary>
+    /// <param name="request">The given request.</param>
+    /// <returns> The POI with callback URL </returns>
+    /// <response code="201">Response with the created POI</response>
+    /// <response code="500">Something went very wrong</response>
+    [HttpPost()]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<(string, PointOfInterest)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Post(
+        [FromBody] CreateSinglePoiWebRequest webRequest,
+        [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
+    {
+        PointOfInterest poi = new()
+        {
+            Id = Guid.Empty,
+            Title = webRequest.Title,
+            Description = webRequest.Description,
+            CategoryName = webRequest.CategoryName,
+            Coordinate = webRequest.Coordinate,
+            IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
+            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
+            {
+                DayOfWeek = oh.DayOfWeek,
+                Start = oh.Start,
+                End = oh.End,
+                Id = Guid.Empty,
+                PoiId = Guid.Empty,
+            }).ToList(),
+
+            MapId = Guid.Parse(webRequest.MapId),
+            StatusName = "Active",
+        };
+        var request = new CreateSingleRequest(poi);
+
+        try
+        {
+            CreateSingleResponse response = await handler.Handle(request);
+            return Created("", response.Poi);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
     }
 }

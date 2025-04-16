@@ -1,6 +1,6 @@
 ﻿using LiveMapDashboard.Web.Options;
 
-namespace LiveMapDashboard.Web.Extensions;
+namespace LiveMapDashboard.Web.Extensions.DI;
 public static class ConfigurationDI
 {
     public static IServiceCollection RegisterOptions(this IServiceCollection services, ConfigurationManager config)
