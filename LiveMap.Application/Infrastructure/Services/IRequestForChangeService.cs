@@ -6,9 +6,9 @@ public interface IRequestForChangeService
 {
     Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Get(string name);
     Task<BackendApiHttpResponse<DomainModels.RequestForChange[]>> Get(int? skip, int? take);
-    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> CreateSingle(DomainModels.RequestForChange poi);
-    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> UpdateSingle(DomainModels.RequestForChange poi);
-    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Approve(DomainModels.RequestForChange poi);
-    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Deny(DomainModels.RequestForChange poi);
-    Task<BackendApiHttpResponse> Delete(DomainModels.RequestForChange poi);
+    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> CreateSingle(DomainModels.RequestForChange rfc);
+    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> UpdateSingle(DomainModels.RequestForChange rfc);
+    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Approve(DomainModels.RequestForChange rfc);
+    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Deny(DomainModels.RequestForChange rfc);
+    Task<BackendApiHttpResponse> Delete(DomainModels.RequestForChange rfc);
 }

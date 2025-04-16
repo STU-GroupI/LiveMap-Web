@@ -32,7 +32,7 @@ namespace LiveMapDashboard.Web.Controllers
         [HttpPost("Approve")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(
-            [FromBody] SuggestionFormViewModel viewModel,
+            SuggestionFormViewModel viewModel,
             [FromServices] IViewModelProvider<SuggestionFormViewModel> provider)
         {
             if (!ModelState.IsValid)
@@ -67,7 +67,7 @@ namespace LiveMapDashboard.Web.Controllers
         [HttpPost("Deny")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deny(
-            [FromBody] SuggestionFormViewModel viewModel,
+            SuggestionFormViewModel viewModel,
             [FromServices] IViewModelProvider<SuggestionFormViewModel> provider)
         {
             var rfc = viewModel.ToDomainRequestForChange();

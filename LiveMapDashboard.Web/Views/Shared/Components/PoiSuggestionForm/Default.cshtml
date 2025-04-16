@@ -8,9 +8,8 @@
            class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
             Go Back
         </a>
-        <form method="post" asp-controller="suggestion" asp-action="Deny">
+        <form method="post" asp-controller="Suggestion" asp-action="Deny">
             @Html.AntiForgeryToken()
-            <input type="hidden" name="_method" value="PATCH" />
             <input type="hidden" asp-for="RfcId"/>
             
             <button type="submit" class="inline-flex items-center gap-x-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">

@@ -14,7 +14,7 @@ namespace LiveMapDashboard.Web.Models.Suggestion
         Category[]? Categories,
         string RfcId,
         string Message,
-        string ApprovalStatus
+        string? ApprovalStatus
     ) : PoiCrudformViewModel(
         Title,
         Category,
