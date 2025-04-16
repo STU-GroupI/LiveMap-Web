@@ -12,7 +12,10 @@ namespace LiveMap.Api.Controllers;
 [Route("api/category")]
 public class CategoryController : ControllerBase
 {
-    /// <summary>
+
+
+
+        /// <summary>
     /// Get a specific category.
     /// </summary>
     /// <param name="name">The name of the specified Category.</param>
@@ -27,19 +30,19 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-            var request = new GetSingleRequest(name);
-            GetSingleResponse response = await handler.Handle(request);
+        var request = new GetSingleRequest(name);
+        GetSingleResponse response = await handler.Handle(request);
 
-            if (response.Category is null)
-            {
-                return NotFound();
-            }
+        if (response.Category is null)
+        {
+            return NotFound();
+        }
 
-            var category = response.Category;
-            return Ok(category);
+        var category = response.Category;
+        return Ok(category);
     }
 
-    /// <summary>
+        /// <summary>
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
@@ -62,6 +65,11 @@ public class CategoryController : ControllerBase
         var request = new CreateSingleRequest(category);
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Category);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
     }
 
     /// <summary>
@@ -80,9 +88,9 @@ public class CategoryController : ControllerBase
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-            var request = new GetMultipleRequest(name, skip, take);
-            var response = await handler.Handle(request);
-            return Ok(response.Categories);
+        var request = new GetMultipleRequest(name, skip, take);
+        var response = await handler.Handle(request);
+        return Ok(response.Categories);
     }
 
     /// <summary>
@@ -124,6 +132,8 @@ public class CategoryController : ControllerBase
     {
         var request = new DeleteSingleRequest(name);
 
+        try
+        {
             var response = await handler.Handle(request);
 
             return Ok(response.Categories);
@@ -131,5 +141,11 @@ public class CategoryController : ControllerBase
                 return NotFound("Category not found");
 
             return NoContent();
+        }
+        catch
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
     }
+
 }
