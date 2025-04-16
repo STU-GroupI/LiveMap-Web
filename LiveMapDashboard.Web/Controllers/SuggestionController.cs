@@ -29,7 +29,8 @@ namespace LiveMapDashboard.Web.Controllers
             return View("SuggestionForm", viewModel);
         }
 
-        [HttpPost]
+        [HttpPost("Approve")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(
             [FromBody] SuggestionFormViewModel viewModel,
             [FromServices] IViewModelProvider<SuggestionFormViewModel> provider)
@@ -63,7 +64,8 @@ namespace LiveMapDashboard.Web.Controllers
             return View("SuggestionForm", provider.Hydrate(viewModel));
         }
 
-        [HttpPatch]
+        [HttpPost("Deny")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deny(
             [FromBody] SuggestionFormViewModel viewModel,
             [FromServices] IViewModelProvider<SuggestionFormViewModel> provider)
