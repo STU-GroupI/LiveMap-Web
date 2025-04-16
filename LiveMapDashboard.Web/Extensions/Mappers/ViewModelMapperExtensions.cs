@@ -1,5 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Models.Poi;
+using LiveMapDashboard.Web.Models.Suggestion;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMapDashboard.Web.Extensions.Mappers;
@@ -34,7 +35,6 @@ public static class ViewModelMapperExtensions
             oh.ToDomainOpeningHours((DayOfWeek)(index == 0 ? 6 : index - 1)))
             .ToList();
     }
-
     public static PointOfInterest ToDomainPointOfInterest(this PoiCrudformViewModel viewModel)
     {
         return new()
@@ -51,6 +51,17 @@ public static class ViewModelMapperExtensions
             IsWheelchairAccessible = viewModel.IsWheelchairAccessible,
             Status = null!,
             StatusName = string.Empty,
+        };
+    }
+    public static RequestForChange ToDomainRequestForChange(this SuggestionFormViewModel viewModel) 
+    {
+        return new()
+        {
+            Id = Guid.Empty,
+            ApprovalStatus = string.Empty,
+            ApprovedOn = default,
+            Message = viewModel.Message,
+            SubmittedOn = default
         };
     }
 }
