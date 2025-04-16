@@ -34,13 +34,13 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
         if (sqlData.Map is not null) _context.Entry(sqlData.Map).State = EntityState.Unchanged;
         if (sqlData.Category is not null) _context.Entry(sqlData.Category).State = EntityState.Unchanged;
 
-        
+
         var entity = await _context.SuggestedPointsOfInterest.AddAsync(sqlData);
         await _context.SaveChangesAsync();
 
         var response = entity.Entity.ToDomainSuggestedPointOfInterest();
         response.RFC = rfc.ToDomainRequestForChange();
-        
+
         return response;
     }
 

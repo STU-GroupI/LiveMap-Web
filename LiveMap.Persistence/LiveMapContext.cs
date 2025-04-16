@@ -1,5 +1,4 @@
 ﻿using LiveMap.Domain.Models;
-using LiveMap.Persistence.DataSeeder;
 using LiveMap.Persistence.DbModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +31,7 @@ public class LiveMapContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.Entity<SqlPointOfInterest>(entityBuilder =>
         {
             entityBuilder.ToTable("PointOfInterest")
@@ -124,7 +123,7 @@ public class LiveMapContext : DbContext
             entityBuilder.ToTable("OpeningHours")
                 .HasKey(oh => oh.Id);
 
-            entityBuilder       
+            entityBuilder
                 .HasOne(o => o.Poi)
                 .WithMany(p => p.OpeningHours)
                 .HasForeignKey(o => o.PoiId);

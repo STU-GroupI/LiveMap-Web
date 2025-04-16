@@ -1,10 +1,8 @@
 ﻿using LiveMap.Persistence;
 using LiveMap.Persistence.DataSeeder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using static Bogus.DataSets.Name;
 
-namespace LiveMap.Api.Extensions; 
+namespace LiveMap.Api.Extensions;
 public static class LiveMapContextDI
 {
     public static IServiceCollection RegisterLiveMapContext(this IServiceCollection services, string connectionString)
