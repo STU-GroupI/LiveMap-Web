@@ -1,7 +1,7 @@
 ﻿@using LiveMapDashboard.Web.Models.Poi
 @model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
 
-<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+<div class="max-w-12xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
     <div class="flex justify-between">
         <a href="javascript:history.back()"
            class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+<div class="max-w-12xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
     @if (ViewData["SuccessMessage"] != null)
     {
     <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
@@ -33,7 +33,7 @@
     }
 </div>
 
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+<div class="max-w-12xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
     <form method="post" asp-controller="poi" asp-action="submit">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
@@ -57,8 +57,7 @@
                 <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" onclick="confirmLeave()">
                     Cancel
                 </div>
-                <button type="submit"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                     Save
                 </button>
             </div>
