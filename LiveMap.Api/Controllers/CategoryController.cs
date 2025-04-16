@@ -1,4 +1,5 @@
-﻿using LiveMap.Application;
+﻿using LiveMap.Api.Models.Category;
+using LiveMap.Application;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
 using LiveMap.Domain.Models;
