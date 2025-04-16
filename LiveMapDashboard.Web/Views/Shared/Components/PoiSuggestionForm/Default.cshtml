@@ -8,8 +8,10 @@
            class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
             Go Back
         </a>
-        <form method="delete" asp-controller="suggestion" asp-action="delete">
+        <form method="patch" asp-controller="suggestion" asp-action="deny">
             @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="RfcId" />
             <button type="submit"
                     class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
                 Delete
@@ -35,7 +37,7 @@
 </div>
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    <form method="post" asp-controller="suggestion" asp-action="submit">
+    <form method="post" asp-controller="suggestion">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
@@ -57,12 +59,12 @@
 
         <div class="mt-2 py-4 relative z-10">
             <div class="flex justify-end gap-3 w-100">
-                <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" onclick="confirmLeave()">
-                    Cancel
-                </div>
-                <button type="submit"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Save
+                <button asp-action="submit" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    Approve
+                </button>
+
+                <button asp-action="deny" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Reject
                 </button>
             </div>
         </div>

@@ -17,7 +17,14 @@ namespace LiveMapDashboard.Web.Controllers
             return View("SuggestionForm", viewModel);
         }
 
-        public async Task<IActionResult> Approve()
+        [HttpPost]
+        public async Task<IActionResult> Approve([FromBody] SuggestionFormViewModel viewModel)
+        {
+            return Ok();
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> Deny([FromBody] SuggestionFormViewModel viewModel)
         {
             return Ok();
         }
