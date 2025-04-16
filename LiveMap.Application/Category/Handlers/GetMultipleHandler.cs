@@ -1,4 +1,5 @@
-﻿using LiveMap.Application.Category.Persistance;
+using LiveMap.Application.Category.Persistance;
+using LiveMap.Application.Category.Persistance;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
 using System;
@@ -19,6 +20,10 @@ public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipl
 
     public async Task<GetMultipleResponse> Handle(GetMultipleRequest request)
     {
-        return new(await _categoryRepository.GetMultiple(request.Skip, request.Take));
+        return new GetMultipleResponse(
+            await _categoryRepository.GetMultiple(
+                request.name,
+                request.Skip, 
+                request.Take));
     }
 }
