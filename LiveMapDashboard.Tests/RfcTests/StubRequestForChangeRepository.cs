@@ -27,6 +27,20 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
 
     public Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
     {
-        throw new NotImplementedException();
+        var existingRfc = RequestsForChange.FirstOrDefault(r => r.Id == requestForChange.Id);
+
+        if (existingRfc == null)
+        {
+            // Add the RFC to the list if it doesn't exist (for test purposes)
+            requestForChange.SubmittedOn = DateTime.UtcNow; 
+            RequestsForChange.Add(requestForChange);
+            return Task.FromResult(requestForChange);
+        }
+
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovalStatus == "APPROVED" ? DateTime.UtcNow : requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+        
+        return Task.FromResult(existingRfc);
     }
 }
