@@ -1,0 +1,8 @@
+﻿@using LiveMapDashboard.Web.Models.Suggestion
+@model SuggestionFormViewModel
+
+@await Component.InvokeAsync("PoiSuggestionForm", Model)
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
