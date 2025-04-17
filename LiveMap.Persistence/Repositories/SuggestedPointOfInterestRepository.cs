@@ -51,15 +51,15 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
             .Include(spoi => spoi.RFC)
             .AsQueryable();
 
-        //{
-        //    if (ascending is bool fromValue)
-        //    {
-        //        query = fromValue
-        //            ? query.OrderBy(spoi => spoi.RFC.SubmittedOn)
-        //            : query.OrderByDescending(spoi => spoi.RFC.SubmittedOn);
-        //    }
-        //    query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
-        //}
+        {
+            if (ascending is bool fromValue)
+            {
+                query = fromValue
+                    ? query.OrderBy(spoi => spoi.RFC.SubmittedOn)
+                    : query.OrderByDescending(spoi => spoi.RFC.SubmittedOn);
+            }
+            query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
+        }
 
         {
             if (skip is int fromValue)
