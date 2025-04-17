@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.SuggestedPoi.Requests;
 
-public sealed record GetMultipleRequest(Guid Id, int? Skip, int? Take);
+public sealed record GetMultipleRequest(Guid Id, int? Skip, int? Take, bool? Ascending);

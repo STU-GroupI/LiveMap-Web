@@ -44,18 +44,28 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
         return response;
     }
 
-    public async Task<ICollection<SuggestedPointOfInterest>> GetMultiple(Guid parkId, int? skip, int? take)
+    public async Task<ICollection<SuggestedPointOfInterest>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
     {
         var query = _context.SuggestedPointsOfInterest
             .Where(spoi => spoi.MapId == parkId)
             .Include(spoi => spoi.RFC)
             .AsQueryable();
 
-        query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
-
-        if (skip is int fromValue)
         {
-            query = query.Skip(fromValue);
+            if (ascending is bool fromValue)
+            {
+                query = fromValue
+                    ? query.OrderBy(spoi => spoi.RFC.SubmittedOn)
+                    : query.OrderByDescending(spoi => spoi.RFC.SubmittedOn);
+            }
+            query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
+        }
+
+        {
+            if (skip is int fromValue)
+            {
+                query = query.Skip(fromValue);
+            }
         }
 
         if (take is int amountValue)

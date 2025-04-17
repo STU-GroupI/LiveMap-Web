@@ -66,9 +66,10 @@ public class SuggestedPoiController : ControllerBase
         [FromRoute] string id,
         [FromQuery] int? skip,
         [FromQuery] int? take,
+        [FromQuery] bool? ascending,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(Guid.Parse(id), skip, take);
+        var request = new GetMultipleRequest(Guid.Parse(id), skip, take, ascending);
         var response = await handler.Handle(request);
 
         return Ok(response.SuggestedPointOfInterests);
