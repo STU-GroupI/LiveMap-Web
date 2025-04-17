@@ -43,6 +43,18 @@ public static class RequestHandlerDI
                 Category.Requests.CreateSingleRequest,
                 Category.Responses.CreateSingleResponse>,
             Category.Handlers.CreateSingleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.UpdateSingleRequest,
+                Category.Responses.UpdateSingleResponse>,
+            Category.Handlers.UpdateSingleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.DeleteSingleRequest,
+                Category.Responses.DeleteSingleResponse>,
+            Category.Handlers.DeleteSingleHandler>();
 
         services.AddTransient<
             IRequestHandler<
