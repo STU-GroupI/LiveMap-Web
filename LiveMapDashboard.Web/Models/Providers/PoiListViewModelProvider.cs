@@ -1,48 +1,43 @@
-﻿using LiveMapDashboard.Web.Models.Poi;
+﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
+using LiveMapDashboard.Web.Models.Poi;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {
     public class PoiListViewModelProvider : IViewModelProvider<PoiListViewModel>
     {
-        public Task<PoiListViewModel> Provide()
-        {
-            var viewModel = new PoiListViewModel
-            {
-                Pois = new List<Poi.Poi>
-                {
-                    new Poi.Poi
-                    {
-                        Id = 1,
-                        Name = "POI 1",
-                        Description = "Description for POI 1",
-                        Latitude = 40.7128,
-                        Longitude = -74.0060
-                    },
-                    new Poi.Poi
-                    {
-                        Id = 2,
-                        Name = "POI 2",
-                        Description = "Description for POI 2",
-                        Latitude = 34.0522,
-                        Longitude = -118.2437
-                    },
-                    new Poi.Poi
-                    {
-                        Id = 3,
-                        Name = "POI 3",
-                        Description = "Description for POI 3",
-                        Latitude = 51.5074,
-                        Longitude = -0.1278
-                    },
-                }
-            };
+        private readonly IMapService _mapService;
+        private readonly IPointOfInterestService _pointOfInterestService;
 
-            return Task.FromResult(viewModel);
+        public PoiListViewModelProvider(IMapService mapService, IPointOfInterestService pointOfInterestService)
+        {
+            _mapService = mapService;
+            _pointOfInterestService = pointOfInterestService;
         }
 
-        public Task<PoiListViewModel> Hydrate(PoiListViewModel viewModel)
+        public async Task<PoiListViewModel> Provide()
         {
-            return Task.FromResult(viewModel);
+            var viewModel = new PoiListViewModel();
+
+            return await Hydrate(viewModel);
+        }
+
+        public async Task<PoiListViewModel> Hydrate(PoiListViewModel viewModel)
+        {
+            var mapsResult = await _mapService.Get(0, 1);
+            var map = mapsResult.Value?.FirstOrDefault();
+
+            var poisResult = await _pointOfInterestService.Get(map!.Id.ToString(), null, null);
+            var pois = poisResult.Value ?? [];
+
+            return viewModel with
+            {
+                Pois = pois.Select(poi => new PoiListEntryViewModel
+                {
+                    Id = poi.Id.ToString(),
+                    Name = poi.Title
+                }).ToList()
+            };
         }
     }
 }

@@ -8,7 +8,10 @@ public static class ConfigureViewModelProviders
     {
         return services
             .AddTransient<
-                IViewModelProvider<PoiCrudformViewModel>, 
-                PoiCrudformViewModelProvider>();
+                IViewModelProvider<PoiCrudformViewModel>,
+                PoiCrudformViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<PoiListViewModel>,
+                PoiListViewModelProvider>();
     }
 }

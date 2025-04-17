@@ -20,9 +20,15 @@ public class PointOfInterestHttpService : IPointOfInterestService
     {
         throw new NotImplementedException();
     }
-    public Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
+    public async Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
     {
-        throw new NotImplementedException();
+        // TODO: Implement
+        return await _backendApiService
+               .SendRequest<PointOfInterest>(new HttpRequestMessage
+               {
+                   Method = HttpMethod.Get,
+                   RequestUri = new Uri($"{_ENDPOINT}", UriKind.Relative)
+               });
     }
     public async Task<BackendApiHttpResponse<PointOfInterest>> CreateSingle(PointOfInterest poi)
     {

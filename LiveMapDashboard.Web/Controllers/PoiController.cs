@@ -11,10 +11,19 @@ namespace LiveMapDashboard.Web.Controllers
     public class PoiController : Controller
     {
         public async Task<IActionResult> Index(
-            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+            [FromServices] IViewModelProvider<PoiListViewModel> provider)
         {
             var viewModel = await provider.Provide();
             return View(viewModel);
+        }
+        
+        [HttpGet("form/{id}")]
+        public async Task<IActionResult> PoiForm(
+            [FromRoute] string? id,
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+        {
+            var viewModel = await provider.Provide();
+            return View("PoiForm", viewModel);
         }
 
         [HttpPost]
