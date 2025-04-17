@@ -29,6 +29,13 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         return Task.FromResult(pointOfInterest);
     }
 
+    public Task<PointOfInterest?> DeleteSingle(Guid id)
+    {
+        PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
+        pois.Remove(poi!);
+        return Task.FromResult(poi);
+    }
+
     public Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var pois = maps.Where(m => m.Id == mapId)
