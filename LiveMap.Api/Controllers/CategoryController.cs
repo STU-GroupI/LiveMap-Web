@@ -38,23 +38,7 @@ namespace LiveMap.Api.Controllers
             return Ok(response.Category);
         }
 
-        /// <summary>
-        /// Gets the categories
-        /// </summary>
-        /// <param name="skip">The amount of items to skip. The base is 0.</param>
-        /// <param name="take">The amount of items to take. The base is all.</param>
-        /// <returns>Returns the categories.</returns>
-        /// <response code="200">Successfully gets the categories.</response>
-        [HttpGet("")]
-        [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType<Category[]>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetMultiple(
-            [FromQuery] int? skip,
-            [FromQuery] int? take,
-            [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
-        {
-            var request = new GetMultipleRequest(skip, take);
+    /// <summary>
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
@@ -69,12 +53,12 @@ namespace LiveMap.Api.Controllers
         [FromBody] CreateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
     {
-        var poi = new Category()
+        var category = new Category()
         {
             CategoryName = webRequest.CategoryName,
         };
 
-        var request = new CreateSingleRequest(poi);
+        var request = new CreateSingleRequest(category);
 
         try
         {
@@ -109,6 +93,32 @@ namespace LiveMap.Api.Controllers
     }
 
     /// <summary>
+    /// Creates a new category
+    /// </summary>
+    /// <param name="category">The given category.</param>
+    /// <returns> The RFC with callback URL </returns>
+    /// <response code="201">Response with the created </response>
+    /// <response code="500">Something went very wrong</response>
+    [HttpPatch("{oldName}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+
+    public async Task<IActionResult> Patch(
+        [FromRoute] string oldName,
+        [FromBody] UpdateSingleCategoryWebRequest webRequest,
+        [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
+    {
+        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+        var response = await handler.Handle(request);
+
+        if (response.Success)
+            return Ok(new { oldName = response.oldname, newName = response.newname });
+
+        return NotFound("Category not found.");
+    }
+
+    /// <summary>
     /// Deletes a category by name.
     /// </summary>
     /// <param name="name">Name of the category to delete.</param>
@@ -134,7 +144,7 @@ namespace LiveMap.Api.Controllers
 
             return NoContent();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
