@@ -24,17 +24,6 @@ public class CategoryRepository : ICategoryRepository
         return category;
     }
 
-    public async Task<Category?> GetSingle(string name)
-    {
-        var category = await _context.Categories
-            .Where(c => c.CategoryName == name)
-            .FirstOrDefaultAsync();
-
-        if (category is null) return null;
-
-        return category;
-    }
-
     public async Task<ICollection<Category>> GetMultiple(string name, int? skip, int? take)
     {
         var query = _context.Categories.AsQueryable();

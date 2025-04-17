@@ -12,10 +12,7 @@ namespace LiveMap.Api.Controllers;
 [Route("api/category")]
 public class CategoryController : ControllerBase
 {
-
-
-
-        /// <summary>
+    /// <summary>
     /// Get a specific category.
     /// </summary>
     /// <param name="name">The name of the specified Category.</param>
@@ -42,7 +39,7 @@ public class CategoryController : ControllerBase
         return Ok(category);
     }
 
-        /// <summary>
+    /// <summary>
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
@@ -63,13 +60,8 @@ public class CategoryController : ControllerBase
         };
 
         var request = new CreateSingleRequest(category);
-            CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Category);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        CreateSingleResponse response = await handler.Handle(request);
+        return Created("", response.Category);
     }
 
     /// <summary>
@@ -88,7 +80,7 @@ public class CategoryController : ControllerBase
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(name, skip, take);
+        var request = new GetMultipleRequest(skip, take);
         var response = await handler.Handle(request);
         return Ok(response.Categories);
     }
@@ -109,10 +101,10 @@ public class CategoryController : ControllerBase
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-            var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
-            var response = await handler.Handle(request);
+        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+        var response = await handler.Handle(request);
 
-            return Ok(new { oldName = response.oldName, newName = response.newName });
+        return Ok(new { oldName = response.oldName, newName = response.newName });
     }
 
 
@@ -135,17 +127,14 @@ public class CategoryController : ControllerBase
         try
         {
             var response = await handler.Handle(request);
-
-            return Ok(response.Categories);
             if (!response.Success)
                 return NotFound("Category not found");
 
             return NoContent();
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
-
 }
