@@ -150,6 +150,7 @@ public async Task<bool> Update(string oldName, string newName)
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return false;
         }
     }

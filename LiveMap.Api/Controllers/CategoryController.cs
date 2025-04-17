@@ -107,7 +107,6 @@ public class CategoryController : ControllerBase
         return Ok(new { oldName = response.oldName, newName = response.newName });
     }
 
-
     /// <summary>
     /// Deletes a category by name.
     /// </summary>
