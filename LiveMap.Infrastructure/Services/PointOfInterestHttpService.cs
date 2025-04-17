@@ -38,8 +38,13 @@ public class PointOfInterestHttpService : IPointOfInterestService
     {
         throw new NotImplementedException();
     }
-    public Task<BackendApiHttpResponse> Delete(PointOfInterest poi)
+    public async Task<BackendApiHttpResponse<PointOfInterest>> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        return await _backendApiService
+            .SendRequest<PointOfInterest>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id}", UriKind.Relative)
+            });
     }
 }
