@@ -21,6 +21,8 @@ public class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSi
 
     public async Task<UpdateSingleResponse> Handle(UpdateSingleRequest request)
     {
-        return new(await _categoryRepository.Update(request.name));
+        var success = await _categoryRepository.Update(request.oldname, request.newname);
+        return new UpdateSingleResponse(request.oldname, request.newname, success);
+
     }
 }
