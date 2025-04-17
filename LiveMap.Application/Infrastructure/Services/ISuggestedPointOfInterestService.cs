@@ -5,5 +5,5 @@ namespace LiveMap.Application.Infrastructure.Services;
 
 public interface ISuggestedPointOfInterestService
 {
-    Task<BackendApiHttpResponse<DomainModels.SuggestedPointOfInterest[]>> Get(Guid mapId, int? skip, int? take);
+    Task<BackendApiHttpResponse<DomainModels.SuggestedPointOfInterest[]>> Get(Guid mapId, int? skip, int? take, bool? ascending);
 }

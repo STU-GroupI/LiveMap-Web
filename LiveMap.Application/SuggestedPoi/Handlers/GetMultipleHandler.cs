@@ -17,7 +17,7 @@ public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipl
     {
         return new GetMultipleResponse(
             await _suggestedPointOfInterestRepository.GetMultiple(
-                request.Id, request.Skip, request.Take
+                request.Id, request.Skip, request.Take, request.Ascending
                 ));
     }
 }
