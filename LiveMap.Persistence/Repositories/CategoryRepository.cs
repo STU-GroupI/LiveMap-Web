@@ -61,30 +61,54 @@ public class CategoryRepository : ICategoryRepository
         return result;
     }
 
-    public async Task<bool> Update(string name)
+public async Task<bool> Update(string oldName, string newName)
+{
+    // Start the transaction
+    await using var transaction = await _context.Database.BeginTransactionAsync();
+
+    try
     {
+        // Update PointsOfInterest and SuggestedPointsOfInterest records first
+        await _context.PointsOfInterest
+            .Where(poi => poi.CategoryName == oldName)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
+
+        await _context.SuggestedPointsOfInterest
+            .Where(poi => poi.CategoryName == oldName)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
+
+        // Find the category entity and update it
         var category = await _context.Categories
-            .Where(c => c.CategoryName == name)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(c => c.CategoryName == oldName);
 
-        if (category is null) return false;
-
-        var existingCategory = await _context.Categories
-            .Where(c => c.CategoryName == category.CategoryName)
-            .FirstOrDefaultAsync();
-
-        if (existingCategory != null)
+        if (category is null)
         {
-            existingCategory.CategoryName = category.CategoryName;
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        else
-        {
+            // Rollback if the category doesn't exist
+            await transaction.RollbackAsync();
             return false;
         }
+
+        // Update the category name
+        category.CategoryName = newName;
+
+        // Save changes to the category entity
+        await _context.SaveChangesAsync();
+
+        // Commit the transaction if everything is successful
+        await transaction.CommitAsync();
+        return true;
     }
+    catch (Exception e)
+    {
+        Console.WriteLine($"Error during update: {e.Message}");
+
+        // Rollback if something goes wrong
+        await transaction.RollbackAsync();
+        return false;
+    }
+}
+
+
 
     public async Task<bool> Delete(string name)
     {
@@ -105,24 +129,26 @@ public class CategoryRepository : ICategoryRepository
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
 
-        try{
+        try
+        {
+            await _context.PointsOfInterest.Where(poi => poi.CategoryName == name).ExecuteUpdateAsync(setters =>
+                setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
 
-        await _context.PointsOfInterest.ExecuteUpdateAsync(setters =>
-            setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
+            await _context.SuggestedPointsOfInterest.Where(poi => poi.CategoryName == name).ExecuteUpdateAsync(setters =>
+                setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
 
-        await _context.SuggestedPointsOfInterest.ExecuteUpdateAsync(setters =>
-            setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
+            _context.Categories.Remove(category);
 
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             // Commit transaction if all commands succeed, transaction will auto-rollback
             // when disposed if either commands fails
             await transaction.CommitAsync();
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return false;
         }
     }
