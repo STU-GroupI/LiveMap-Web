@@ -1,0 +1,22 @@
+@baseUrl = https://localhost:5006/api
+@basePath = category
+
+### ✅ Get all categories
+GET {{baseUrl}}/{{basePath}}
+Accept: application/json
+
+### 🔍 Get single category by name
+GET {{baseUrl}}/{{basePath}}/Technology
+Accept: application/json
+
+### ➕ Create new category
+POST {{baseUrl}}/{{basePath}}
+Content-Type: application/json
+
+{
+  "categoryName": "NewCategory"
+}
+
+### 🗑️ Delete category by name
+DELETE {{baseUrl}}/{{basePath}}/NewCategory
+Accept: application/json

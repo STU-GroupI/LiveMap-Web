@@ -69,7 +69,7 @@ public class CategoryController : ControllerBase
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Category);
         }
-        catch (Exception ex)
+        catch
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
@@ -121,9 +121,9 @@ public class CategoryController : ControllerBase
 
             return NoContent();
         }
-        catch
+        catch(Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 

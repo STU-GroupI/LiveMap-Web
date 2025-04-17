@@ -7,6 +7,6 @@ public interface ICategoryRepository
     public Task<Models.Category?> GetSingle(string name);
 
     public Task<ICollection<Models.Category>> GetMultiple(string name, int? skip, int? take);
-    public Task<bool> Update(Models.Category category);
-    public Task<bool> Delete(Models.Category category);
+    public Task<bool> Update(string name);
+    public Task<bool> Delete(string name);
 }
