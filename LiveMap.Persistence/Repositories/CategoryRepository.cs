@@ -61,32 +61,51 @@ public class CategoryRepository : ICategoryRepository
         return result;
     }
 
-    public async Task<bool> Update(Category category)
+    public async Task<bool> Update(string name)
     {
+        var category = await _context.Categories
+            .Where(c => c.CategoryName == name)
+            .FirstOrDefaultAsync();
+
+        if (category is null) return false;
+
         var existingCategory = await _context.Categories
             .Where(c => c.CategoryName == category.CategoryName)
             .FirstOrDefaultAsync();
 
         if (existingCategory != null)
         {
-        existingCategory.CategoryName = category.CategoryName;
+            existingCategory.CategoryName = category.CategoryName;
 
-        await _context.SaveChangesAsync();
-        return true;
+            await _context.SaveChangesAsync();
+            return true;
         }
-        else{
+        else
+        {
             return false;
         }
     }
 
-    public async Task<bool> Delete(Category category)
+    public async Task<bool> Delete(string name)
     {
+        var category = await _context.Categories
+            .Where(c => c.CategoryName == name)
+            .FirstOrDefaultAsync();
+
+        if (category is null) return false;
+
+        // We need to set the CategoryName to EMPTY for all PointsOfInterest and SuggestedPointsOfInterest
+        // before we can delete the category. This is because of the foreign key constraint in the database.
+        // We could also use a cascade delete, but this would delete all PointsOfInterest and SuggestedPointsOfInterest
+        // that are related to this category. We don't want that, so we set the CategoryName to EMPTY instead.
         // At this point may consider using Dapper instead. Every executeUpdate is a trip to the database.
         // In our case this doesn't matter to much since this isn't a very hot path, but if we are dealing
         // with a hot code path an this much back and forward db calling, consider using ExecuteSqlRawAsync
         // or Dapper instead.
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try{
 
         await _context.PointsOfInterest.ExecuteUpdateAsync(setters =>
             setters.SetProperty(poi => poi.CategoryName, Category.EMPTY));
@@ -96,15 +115,13 @@ public class CategoryRepository : ICategoryRepository
 
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
-        
-        try
-        {
+
             // Commit transaction if all commands succeed, transaction will auto-rollback
             // when disposed if either commands fails
             await transaction.CommitAsync();
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }

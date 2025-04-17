@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.Category.Handlers;
 
-public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest, DeleteSingleResponse>
+public class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSingleResponse>
 {
 
     private readonly ICategoryRepository _categoryRepository;
 
-    public DeleteSingleHandler(ICategoryRepository categoryRepository)
+    public UpdateSingleHandler(ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<DeleteSingleResponse> Handle(DeleteSingleRequest request)
+    public async Task<UpdateSingleResponse> Handle(UpdateSingleRequest request)
     {
-        return new(await _categoryRepository.Delete(request.name));
+        return new(await _categoryRepository.Update(request.name));
     }
 }

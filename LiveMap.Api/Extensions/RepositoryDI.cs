@@ -14,6 +14,10 @@ public static class RepositoryDI
         services.AddTransient<
             PointOfInterest.Persistance.IPointOfInterestRepository,
             PointOfInterestRepository>();
+        
+        services.AddTransient<
+            Category.Persistance.ICategoryRepository,
+            CategoryRepository>();
 
         services.AddTransient<
             Map.Persistance.IMapRepository,
