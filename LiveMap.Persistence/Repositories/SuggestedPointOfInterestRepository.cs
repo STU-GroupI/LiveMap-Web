@@ -51,6 +51,8 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
             .Include(spoi => spoi.RFC)
             .AsQueryable();
 
+        query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
+
         if (skip is int fromValue)
         {
             query = query.Skip(fromValue);
@@ -67,7 +69,6 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
             return [];
         }
 
-        int bp = 0;
         return result.Select(spoi => spoi.ToDomainSuggestedPointOfInterest()).ToList();
     }
 }
