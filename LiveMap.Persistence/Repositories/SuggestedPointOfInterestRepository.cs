@@ -58,7 +58,10 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
                     ? query.OrderBy(spoi => spoi.RFC.SubmittedOn)
                     : query.OrderByDescending(spoi => spoi.RFC.SubmittedOn);
             }
-            query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
+            else
+            {
+                query = query.OrderBy(spoi => spoi.RFC.SubmittedOn);
+            }
         }
 
         {

@@ -1,16 +1,23 @@
 ﻿using LiveMap.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace LiveMapDashboard.Web.Models.Suggestions;
 
 public sealed record PoiSuggestionsViewModel(
     Guid MapId,
+    int? Skip,
+    int? Take,
+    bool? Ascending,
     SuggestedPointOfInterest[] SuggestedPointOfInterests
     ) : IValidatableObject
 {
     public static PoiSuggestionsViewModel Empty =>
         new(
             MapId: Guid.Empty,
+            Skip: null,
+            Take: null,
+            Ascending: null,
             SuggestedPointOfInterests: []
             );
 

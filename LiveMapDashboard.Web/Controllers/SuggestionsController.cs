@@ -10,9 +10,12 @@ namespace LiveMapDashboard.Web.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Index(
             [FromRoute] string id,
+            [FromQuery] int? skip,
+            [FromQuery] int? take,
+            [FromQuery] bool? ascending,
             [FromServices] IViewModelProvider<PoiSuggestionsViewModel> provider)
         {
-            var viewModel = await provider.Hydrate(new PoiSuggestionsViewModel(Guid.Parse(id), []));
+            var viewModel = await provider.Hydrate(new PoiSuggestionsViewModel(Guid.Parse(id), skip, take, ascending, []));
             return View(viewModel);
         }
     }

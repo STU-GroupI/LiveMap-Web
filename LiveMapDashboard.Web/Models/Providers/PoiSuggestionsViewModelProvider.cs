@@ -15,7 +15,7 @@ namespace LiveMapDashboard.Web.Models.Providers
 
         public async Task<PoiSuggestionsViewModel> Hydrate(PoiSuggestionsViewModel viewModel)
         {
-            SuggestedPointOfInterest[] suggestions = (await _suggestedPoiService.Get(viewModel.MapId, null, null, null)).Value ?? [];
+            SuggestedPointOfInterest[] suggestions = (await _suggestedPoiService.Get(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? [];
 
             return viewModel with
             {
