@@ -70,4 +70,25 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         return result.Entity.ToDomainPointOfInterest();
     }
+
+    public async Task<PointOfInterest> DeleteSingle(Guid id)
+    {
+        SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
+            .Include(poi => poi.Category)
+            .Include(poi => poi.Status)
+            .Include(poi => poi.Map)
+            .Include(poi => poi.OpeningHours)
+            .Where(poi => poi.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (pointOfInterest is null)
+        {
+            throw new ArgumentException("Point of interest not found");
+        }
+
+        _context.PointsOfInterest.Remove(pointOfInterest);
+        await _context.SaveChangesAsync();
+        
+        return pointOfInterest.ToDomainPointOfInterest();
+    }
 }
