@@ -1,11 +1,5 @@
 ﻿using Bogus;
 using LiveMap.Domain.Models;
-using LiveMap.Persistence.DbModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMapDashboard.Tests.RfcTests;
 public static class TestDataGenerator
@@ -56,7 +50,7 @@ public static class TestDataGenerator
 
         var pickRandomGuid = (Faker f) =>
         {
-            if(random.Next(0, 12) % 3 == 0)
+            if (random.Next(0, 12) % 3 == 0)
             {
                 invalidGuid = true;
                 return f.Random.Guid();
@@ -96,8 +90,8 @@ public static class TestDataGenerator
     {
         List<Guid> guids = new List<Guid>();
         var faker = new Faker();
-        
-        for(int i = 0; i < amount; i++)
+
+        for (int i = 0; i < amount; i++)
         {
             guids.Add(faker.Random.Guid());
         }

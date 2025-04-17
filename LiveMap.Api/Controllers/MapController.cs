@@ -51,7 +51,7 @@ public class MapController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Map[]>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetMultipleForPark(
+    public async Task<IActionResult> GetMultiple(
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
@@ -63,7 +63,7 @@ public class MapController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> PostForPark(
+    public async Task<IActionResult> Patch(
         [FromRoute] string id,
         [FromBody] Coordinate[] coordinates,
         [FromServices] IRequestHandler<UpdateBorderRequest, UpdateBorderResponse> handler)

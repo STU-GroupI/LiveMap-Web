@@ -1,6 +1,6 @@
 [
   {
-    "Name": "New Profile",
+    "Name": "LaunchAll",
     "Projects": [
       {
         "Path": "LiveMapDashboard.Web\\LiveMapDashboard.Web.csproj",
