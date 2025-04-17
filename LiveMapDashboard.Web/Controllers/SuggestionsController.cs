@@ -1,24 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LiveMapDashboard.Web.Models.Providers;
+using LiveMapDashboard.Web.Models.Suggestions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LiveMapDashboard.Web.Controllers
 {
+    [Route("[controller]")]
     public class SuggestionsController : Controller
     {
-        private readonly ILogger<SuggestionsController> _logger;
-
-        public SuggestionsController(ILogger<SuggestionsController> logger)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Index(
+            [FromRoute] string id,
+            [FromServices] IViewModelProvider<PoiSuggestionsViewModel> provider)
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Single()
-        {
-            return View();
+            var viewModel = await provider.Hydrate(new PoiSuggestionsViewModel(Guid.Parse(id), []));
+            return View(viewModel);
         }
     }
 }
