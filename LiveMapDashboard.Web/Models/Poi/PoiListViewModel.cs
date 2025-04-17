@@ -2,6 +2,6 @@
 {
     public sealed record PoiListViewModel()
     {
-        // TODO: Add properties for the POI list view model
+        public List<Poi> Pois { get; init; } = new();
     }
 }

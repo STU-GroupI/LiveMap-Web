@@ -1,4 +1,4 @@
-﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Application.Infrastructure.Services;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
