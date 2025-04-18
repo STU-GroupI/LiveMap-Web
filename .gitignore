@@ -400,3 +400,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# PostCSS
+LiveMapDashboard.Web/wwwroot/css/styles.css

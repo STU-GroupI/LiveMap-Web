@@ -174,10 +174,6 @@ function deleteMap() {
         draw.delete(data.features[data.features.length - 1].id);
 
         document.activeElement.blur();
-        const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-        if (modal) {
-            modal.hide();
-        }
         onAreaChanged();
     } else {
         showAlert('error', 'Er zijn geen parkgrenzen om te verwijderen.');

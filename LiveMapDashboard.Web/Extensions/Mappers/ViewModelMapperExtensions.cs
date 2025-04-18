@@ -64,4 +64,9 @@ public static class ViewModelMapperExtensions
             SubmittedOn = default
         };
     }
+
+    public static List<SuggestedPointOfInterest> ToDomainSuggestedPointOfInterestList(this PoiSuggestionsViewModel vm)
+    {
+        return vm.SuggestedPointOfInterests.ToList();
+    }
 }

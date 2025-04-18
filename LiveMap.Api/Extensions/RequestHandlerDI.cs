@@ -60,6 +60,12 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
+                SuggestedPoi.Requests.GetMultipleRequest,
+                SuggestedPoi.Responses.GetMultipleResponse>,
+            SuggestedPoi.Handlers.GetMultipleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<                
                 Category.Requests.GetSingleRequest,
                 Category.Responses.GetSingleResponse>,
             Category.Handlers.GetSingleHandler>();

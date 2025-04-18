@@ -19,6 +19,7 @@
     "tailwindcss": "^4.1.3"
   },
   "dependencies": {
+    "@preline/theme-switch": "^3.0.0",
     "@tailwindcss/postcss": "^4.1.3",
     "preline": "^3.0.1"
   }
