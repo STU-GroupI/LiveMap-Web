@@ -112,4 +112,52 @@ public class PointOfInterestController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
+
+    /// <summary>
+    /// Creates a POI for the given request data
+    /// </summary>
+    /// <param name="request">The given request.</param>
+    /// <returns> The POI with callback URL </returns>
+    /// <response code="201">Response with the created POI</response>
+    /// <response code="500">Something went very wrong</response>
+    [HttpPatch()]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Patch(
+        [FromBody] UpdateSinglePoiWebRequest webRequest,
+        [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
+    {
+        PointOfInterest poi = new()
+        {
+            Id = Guid.Parse(webRequest.Id),
+            Title = webRequest.Title,
+            Description = webRequest.Description,
+            CategoryName = webRequest.CategoryName,
+            Coordinate = webRequest.Coordinate,
+            IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
+            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
+            {
+                DayOfWeek = oh.DayOfWeek,
+                Start = oh.Start,
+                End = oh.End,
+                Id = Guid.Empty,
+                PoiId = Guid.Empty,
+            }).ToList(),
+
+            MapId = Guid.Parse(webRequest.MapId),
+            StatusName = "Active",
+        };
+        var request = new CreateSingleRequest(poi);
+
+        try
+        {
+            CreateSingleResponse response = await handler.Handle(request);
+            return Created("", response.Poi);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
 }
