@@ -1,0 +1,34 @@
+﻿name: Tailwind CSS Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  tailwind-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Node Dependencies (in the web project)
+        run: npm ci
+        working-directory: ./LiveMapDashboard.Web
+
+      - name: Set RunTailwind to true for Tailwind build
+        run: echo "RunTailwind=true" >> $GITHUB_ENV
+
+      - name: Build Tailwind CSS
+        run: |
+          dotnet build

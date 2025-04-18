@@ -30,13 +30,13 @@ public static class MapperExtensions
             Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
-            StatusName = poi.StatusName
+            StatusName = poi.StatusName,
         };
         data.OpeningHours = poi.OpeningHours?.Select(oh => oh.ToOpeningHours(data)).ToList() ?? [];
         return data;
     }
 
-    public static OpeningHours ToOpeningHours(this SqlOpeningHours oh, PointOfInterest? poi)
+    public static OpeningHours ToOpeningHours(this SqlOpeningHours oh, PointOfInterest poi)
     {
         return new()
         {
@@ -44,7 +44,8 @@ public static class MapperExtensions
             DayOfWeek = oh.DayOfWeek,
             Start = oh.Start,
             End = oh.End,
-            PoiId = oh.PoiId
+            PoiId = oh.PoiId,
+            Poi = poi,
         };
     }
 
@@ -63,7 +64,7 @@ public static class MapperExtensions
             CategoryName = suggestedPoi.CategoryName,
             Category = suggestedPoi?.Category,
 
-            MapId = suggestedPoi.MapId,
+            MapId = suggestedPoi!.MapId,
             Map = suggestedPoi.Map?.ToDomainMap(),
 
             Coordinate = suggestedPoi.Position.ToDomainCoordinate(),
@@ -75,7 +76,7 @@ public static class MapperExtensions
 
         // If the rfc is not given, then we know it does not have its suggested PoI yet. When converting it to its domain format, we must
         // explicitly tell it to use our PoI value instead of the one that it will generate, or we will get a loop.
-        value.RFC = rfc is null ? suggestedPoi.RFC.ToDomainRequestForChange(value) : rfc;
+        value.RFC = rfc is null ? suggestedPoi?.RFC?.ToDomainRequestForChange(value) : rfc;
 
         return value;
     }
@@ -123,7 +124,7 @@ public static class MapperExtensions
 
             Category = category,
 
-            OpeningHours = pointOfInterest.OpeningHours.Select(oh => oh.ToSqlOpeningHours()).ToList()
+            OpeningHours = pointOfInterest.OpeningHours?.Select(oh => oh.ToSqlOpeningHours()).ToList() ?? []
         };
 
         sqlPoi.Map = map ?? pointOfInterest.Map?.ToSqlMap(sqlPoi);
@@ -133,22 +134,21 @@ public static class MapperExtensions
 
     public static SqlMap ToSqlMap(this Map map, SqlPointOfInterest? poi)
     {
-        var sqlMap = new SqlMap()
+        var sqlMap = new SqlMap
         {
             Id = map.Id,
             Name = map.Name,
             Border = map.Area.ToPolygon(),
-            Position = map.Coordinate.ToSqlPoint()
+            Position = map.Coordinate.ToSqlPoint(),
+            PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? []
         };
-
-        sqlMap.PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? [];
 
         return sqlMap;
     }
 
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
     {
-        return new SqlRequestForChange()
+        return new SqlRequestForChange
         {
             Id = requestForChange.Id,
             ApprovalStatus = requestForChange.ApprovalStatus,
@@ -157,6 +157,7 @@ public static class MapperExtensions
             SubmittedOn = requestForChange.SubmittedOn,
             PoiId = requestForChange.PoiId,
             Message = requestForChange.Message,
+            ApprovalStatusProp = new ApprovalStatus { Status = requestForChange.ApprovalStatus }
         };
     }
 
