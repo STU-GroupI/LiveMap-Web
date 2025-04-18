@@ -61,6 +61,13 @@ public class CategoryRepository : ICategoryRepository
         return result;
     }
 
+
+/*IMPORTANT NOTE:
+This Update method is merely a workaround for the fact that we cannot update a category name in the database,
+this is because of a foreign key constraint that prevents us from updating a category name in the database whatsoever.
+In this workaround, a new category is created and the old category is deleted. This is not ideal, but it works for now.
+Maybe use ids for the future...?
+*/
 public async Task<bool> Update(string oldName, string newName)
 {
     // Start the transaction
@@ -68,16 +75,7 @@ public async Task<bool> Update(string oldName, string newName)
 
     try
     {
-        // Update PointsOfInterest and SuggestedPointsOfInterest records first
-        await _context.PointsOfInterest
-            .Where(poi => poi.CategoryName == oldName)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
-
-        await _context.SuggestedPointsOfInterest
-            .Where(poi => poi.CategoryName == oldName)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
-
-        // Find the category entity and update it
+        // Find the category entity by old name
         var category = await _context.Categories
             .FirstOrDefaultAsync(c => c.CategoryName == oldName);
 
@@ -88,10 +86,30 @@ public async Task<bool> Update(string oldName, string newName)
             return false;
         }
 
-        // Update the category name
-        category.CategoryName = newName;
+        //Create a new category entity with the new name
+        Category newCategory = new Category
+        {
+            CategoryName = newName,
+        };
+
+        //Add the entity to the context
+        _context.Categories.Add(newCategory);
 
         // Save changes to the category entity
+        await _context.SaveChangesAsync();
+        
+        // Update PointsOfInterest and SuggestedPointsOfInterest records first
+        await _context.PointsOfInterest
+            .Where(poi => poi.CategoryName == oldName)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
+
+        await _context.SuggestedPointsOfInterest
+            .Where(poi => poi.CategoryName == oldName)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(poi => poi.CategoryName, newName));
+        
+        //Remove the old category
+        _context.Categories.Remove(category);
+
         await _context.SaveChangesAsync();
 
         // Commit the transaction if everything is successful
