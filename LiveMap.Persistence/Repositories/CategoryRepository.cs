@@ -69,12 +69,12 @@ In this workaround, a new category is created and the old category is deleted. T
 Maybe use ids for the future...?
 */
 public async Task<bool> Update(string oldName, string newName)
-{
-    // Start the transaction
+{  
+        // Start the transaction
     await using var transaction = await _context.Database.BeginTransactionAsync();
-
     try
     {
+
         // Find the category entity by old name
         var category = await _context.Categories
             .FirstOrDefaultAsync(c => c.CategoryName == oldName);
@@ -94,9 +94,6 @@ public async Task<bool> Update(string oldName, string newName)
 
         //Add the entity to the context
         _context.Categories.Add(newCategory);
-
-        // Save changes to the category entity
-        await _context.SaveChangesAsync();
         
         // Update PointsOfInterest and SuggestedPointsOfInterest records first
         await _context.PointsOfInterest
