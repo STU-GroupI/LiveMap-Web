@@ -68,7 +68,7 @@ namespace LiveMapDashboard.Web.Models.Providers
                     IsActive = true,
                     Start = $"{oh.Start.Hours}:{oh.Start.Minutes}",
                     End = $"{oh.End.Hours}:{oh.End.Minutes}"
-                }).ToList();
+                }).ToList(),
                 Categories = categories,
                 MapId = mapId.ToString(),
             };
