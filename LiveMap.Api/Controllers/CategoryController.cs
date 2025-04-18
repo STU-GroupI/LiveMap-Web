@@ -12,9 +12,6 @@ namespace LiveMap.Api.Controllers;
 [Route("api/category")]
 public class CategoryController : ControllerBase
 {
-
-
-
     /// <summary>
     /// Get a specific category.
     /// </summary>
@@ -30,16 +27,23 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-        var request = new GetSingleRequest(name);
-        GetSingleResponse response = await handler.Handle(request);
-
-        if (response.Category is null)
+        try
         {
-            return NotFound();
-        }
+            var request = new GetSingleRequest(name);
+            GetSingleResponse response = await handler.Handle(request);
 
-        var category = response.Category;
-        return Ok(category);
+            if (response.Category is null)
+            {
+                return NotFound();
+            }
+
+            var category = response.Category;
+            return Ok(category);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -69,9 +73,9 @@ public class CategoryController : ControllerBase
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Category);
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(500, ex.ToString());
         }
     }
 
@@ -91,9 +95,16 @@ public class CategoryController : ControllerBase
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(name, skip, take);
-        var response = await handler.Handle(request);
-        return Ok(response.Categories);
+        try
+        {
+            var request = new GetMultipleRequest(name, skip, take);
+            var response = await handler.Handle(request);
+            return Ok(response.Categories);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -113,13 +124,19 @@ public class CategoryController : ControllerBase
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
-        var response = await handler.Handle(request);
+        try
+        {
+            var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+            var response = await handler.Handle(request);
 
-        if (response.Success)
             return Ok(new { oldName = response.oldname, newName = response.newname });
 
-        return NotFound("Category not found.");
+
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -149,7 +166,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            return StatusCode(500, ex.ToString());
         }
     }
 
