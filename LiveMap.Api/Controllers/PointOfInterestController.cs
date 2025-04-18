@@ -126,7 +126,7 @@ public class PointOfInterestController : ControllerBase
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Patch(
         [FromBody] UpdateSinglePoiWebRequest webRequest,
-        [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
+        [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
         PointOfInterest poi = new()
         {
@@ -148,12 +148,12 @@ public class PointOfInterestController : ControllerBase
             MapId = Guid.Parse(webRequest.MapId),
             StatusName = "Active",
         };
-        var request = new CreateSingleRequest(poi);
+        var request = new UpdateSingleRequest(poi);
 
         try
         {
-            CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Poi);
+            UpdateSingleResponse response = await handler.Handle(request);
+            return Ok(response.Poi);
         }
         catch (Exception ex)
         {

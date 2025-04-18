@@ -73,7 +73,10 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
     public async Task<PointOfInterest?> Update(PointOfInterest pointOfInterest)
     {
-        var poi = await _context.PointsOfInterest.FindAsync(pointOfInterest.Id);
+        var poi = await _context.PointsOfInterest
+            .Include(poi => poi.OpeningHours)
+            .Where(poi => poi.Id == pointOfInterest.Id)
+            .FirstOrDefaultAsync();
 
         if (poi is null)
         {
