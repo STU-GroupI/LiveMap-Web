@@ -15,6 +15,6 @@ public class CreateSingleHandler : IRequestHandler<CreateSingleRequest, CreateSi
 
     public async Task<CreateSingleResponse> Handle(CreateSingleRequest request)
     {
-        return new(await _repo.CreatePointOfInterest(request.Poi));
+        return new(await _repo.Create(request.Poi));
     }
 }
