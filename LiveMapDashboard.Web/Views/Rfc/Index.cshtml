@@ -2,7 +2,7 @@
 @using LiveMapDashboard.Web.Models.Rfc
 @model RequestForChangeViewModel
 
-<div>
+<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
     <h1 class="text-4xl dark:text-white">Wijzigingsverzoeken</h1>
     <br />
 
@@ -15,167 +15,61 @@
 
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                             <thead>
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Type</th>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-500">
-                                        <button id="timeSort">
-                                            <div class="flex flex-row items-center">
-                                                <span class="uppercase">Tijd</span>
-                                                @if (Model.Ascending != null)
-                                                {
-                                                    if (Model.Ascending.Value)
-                                                    {
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg>
-                                                    }
-                                                    else
-                                                    {
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6" /></svg>
-                                                    }
-                                                }
-                                                else
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Type</th>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-500">
+                                    <button id="timeSort">
+                                        <div class="flex flex-row items-center">
+                                            <span class="uppercase">Tijd</span>
+                                            @if (Model.Ascending != null)
+                                            {
+                                                if (Model.Ascending.Value)
                                                 {
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg>
                                                 }
-                                            </div>
-                                        </button>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                @foreach (RequestForChange rfc in Model.Result.Items)
-                                {
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                            @if (rfc.PoiId == null)
-                                            {
-                                                <span>Wijzigingsverzoek</span>
+                                                else
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6" /></svg>
+                                                }
                                             }
                                             else
                                             {
-                                                <span>Nieuwe POI</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg>
                                             }
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                            @RequestForChangeViewModel.ToDateTime(rfc.SubmittedOn)
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                            <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Aanpassen</button>
-                                            <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400">Delete</button>
-                                        </td>
-                                    </tr>
-                                }
+                                        </div>
+                                    </button>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                            @foreach (RequestForChange rfc in Model.Result.Items)
+                            {
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        @if (rfc.PoiId == null)
+                                        {
+                                            <span>Wijzigingsverzoek</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Nieuwe POI</span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                        @RequestForChangeViewModel.ToDateTime(rfc.SubmittedOn)
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                        <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Aanpassen</button>
+                                        <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400">Delete</button>
+                                    </td>
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     </div>
-                    <div class="py-1 px-4">
-                        <nav class="flex items-center gap-x-1" aria-label="Pagination">
-                            <button type="button" id="toPreviousPage" class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex jusify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Previous">
-                                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m15 18-6-6 6-6"></path>
-                                </svg>
-                                <span class="sr-only">Previous</span>
-                            </button>
-
-                            <div class="flex items-center gap-x-1">
-
-                                @* if <= 5 dan loop 5x *@
-                                @if (Model.Result.TotalPages <= 5)
-                                {
-                                    for (int i = 0; i < Model.Result.TotalPages; i++)
-                                    {
-                                        if (i == Model.Result.CurrentPage - 1)
-                                        {
-                                            <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500" aria-current="page">
-                                                @i
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
-                                                @i
-                                            </button>
-                                        }
-                                    }
-                                }
-                                else if (Model.Result.CurrentPage >= Model.Result.TotalPages - 3)
-                                {
-                                    for (int i = 0; i < 5; i++)
-                                    {
-                                        if (i + 5 == Model.Result.CurrentPage)
-                                        {
-                                            <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500" aria-current="page">
-                                                @(i + 5)
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
-                                                @(i + 5)
-                                            </button>
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    @if (Model.Result.CurrentPage != 1)
-                                    {
-                                        for (int i = Model.Result.CurrentPage - 1; i < Model.Result.CurrentPage + 2; i++)
-                                        {
-                                            if (i == Model.Result.CurrentPage)
-                                            {
-                                                <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500" aria-current="page">
-                                                    @(i)
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
-                                                    @(i)
-                                                </button>
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < 3; i++)
-                                        {
-                                            if (i == Model.Result.CurrentPage - 1)
-                                            {
-                                                <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center bg-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500" aria-current="page">
-                                                    @(i + 1)
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button type="button" class="paginationClick min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
-                                                    @(i + 1)
-                                                </button>
-                                            }
-                                        }
-                                    }
-
-                                    <div class="inline-block">
-                                        <div class="group min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-400 p-2 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-500 dark:focus:bg-white/10">
-                                            <span class="text-xs">•••</span>
-                                        </div>
-                                    </div>
-
-                                    <button type="button" id="toLastPage" class="min-h-9.5 min-w-9.5 flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2 px-3 text-sm rounded-lg focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">@Model.Result.TotalPages</button>
-                                }
-                            </div>
-
-                            @if (Model.Result.CurrentPage != Model.Result.TotalPages)
-                            {
-                                <button type="button" id="toNextPage" class="min-h-9.5 min-w-9.5 py-2 px-2.5 inline-flex jusify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Next">
-                                    <span class="sr-only">Next</span>
-                                    <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="m9 18 6-6-6-6"></path>
-                                    </svg>
-                                </button>
-                            }
-                        </nav>
-                    </div>
+                    
+                    @await Html.PartialAsync("Table/_TablePagination")
                 }
                 else
                 {
