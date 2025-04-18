@@ -4,6 +4,9 @@ using Map = LiveMap.Application.Map;
 using Rfc = LiveMap.Application.RequestForChange;
 using SuggestedPoi = LiveMap.Application.SuggestedPoi;
 using Category = LiveMap.Application.Category;
+using LiveMap.Application.RequestForChange.Responses;
+using LiveMap.Application.RequestForChange.Requests;
+using LiveMap.Application.RequestForChange.Handlers;
 
 namespace LiveMap.Api.Extensions;
 public static class RequestHandlerDI
@@ -60,9 +63,9 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
-                SuggestedPoi.Requests.GetMultipleRequest,
-                SuggestedPoi.Responses.GetMultipleResponse>,
-            SuggestedPoi.Handlers.GetMultipleHandler>();
+                GetMultipleRequest,
+                GetMultipleResponse>,
+            GetMultipleHandler>();
 
         services.AddTransient<
             IRequestHandler<                

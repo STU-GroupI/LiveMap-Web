@@ -695,6 +695,9 @@
   .max-h-72 {
     max-height: calc(var(--spacing) * 72);
   }
+  .min-h-9\.5 {
+    min-height: calc(var(--spacing) * 9.5);
+  }
   .w-1\/2 {
     width: calc(1/2 * 100%);
   }
@@ -745,6 +748,9 @@
   }
   .max-w-full {
     max-width: 100%;
+  }
+  .min-w-9\.5 {
+    min-width: calc(var(--spacing) * 9.5);
   }
   .min-w-24 {
     min-width: calc(var(--spacing) * 24);
@@ -1129,6 +1135,9 @@
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
+  .px-2\.5 {
+    padding-inline: calc(var(--spacing) * 2.5);
+  }
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
   }
@@ -1319,6 +1328,9 @@
   }
   .text-blue-600 {
     color: var(--color-blue-600);
+  }
+  .text-gray-400 {
+    color: var(--color-gray-400);
   }
   .text-gray-500 {
     color: var(--color-gray-500);
@@ -1623,6 +1635,11 @@
       background-color: var(--color-gray-200);
     }
   }
+  .focus\:bg-gray-300 {
+    &:focus {
+      background-color: var(--color-gray-300);
+    }
+  }
   .focus\:bg-red-600 {
     &:focus {
       background-color: var(--color-red-600);
@@ -1834,6 +1851,11 @@
       background-color: var(--color-blue-500);
     }
   }
+  .dark\:bg-neutral-600 {
+    &:where(.dark, .dark *) {
+      background-color: var(--color-neutral-600);
+    }
+  }
   .dark\:bg-neutral-700 {
     &:where(.dark, .dark *) {
       background-color: var(--color-neutral-700);
@@ -1955,6 +1977,18 @@
       }
     }
   }
+  .dark\:hover\:bg-white\/10 {
+    &:where(.dark, .dark *) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: color-mix(in srgb, #fff 10%, transparent);
+          @supports (color: color-mix(in lab, red, red)) {
+            background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+          }
+        }
+      }
+    }
+  }
   .dark\:hover\:text-blue-400 {
     &:where(.dark, .dark *) {
       &:hover {
@@ -2000,6 +2034,13 @@
       }
     }
   }
+  .dark\:focus\:bg-neutral-500 {
+    &:where(.dark, .dark *) {
+      &:focus {
+        background-color: var(--color-neutral-500);
+      }
+    }
+  }
   .dark\:focus\:bg-neutral-600 {
     &:where(.dark, .dark *) {
       &:focus {
@@ -2018,6 +2059,16 @@
     &:where(.dark, .dark *) {
       &:focus {
         background-color: var(--color-neutral-800);
+      }
+    }
+  }
+  .dark\:focus\:bg-white\/10 {
+    &:where(.dark, .dark *) {
+      &:focus {
+        background-color: color-mix(in srgb, #fff 10%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+        }
       }
     }
   }
