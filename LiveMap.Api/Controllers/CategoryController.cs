@@ -15,10 +15,10 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Get a specific category.
     /// </summary>
-    /// <param name="name">The id of the specified Category.</param>
-    /// <returns>Returns the specified poi. </returns>
-    /// <response code="200">Successfully get the poi's.</response>
-    /// <response code="404">Poi not found.</response>
+    /// <param name="name">The name of the specified Category.</param>
+    /// <returns>Returns the specified category. </returns>
+    /// <response code="200">Successfully get the categories.</response>
+    /// <response code="404">Category not found.</response>
     [HttpGet("{name}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Map>(StatusCodes.Status200OK)]
@@ -27,8 +27,6 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-        try
-        {
             var request = new GetSingleRequest(name);
             GetSingleResponse response = await handler.Handle(request);
 
@@ -39,19 +37,14 @@ public class CategoryController : ControllerBase
 
             var category = response.Category;
             return Ok(category);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
     }
 
     /// <summary>
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
-    /// <returns> The RFC with callback URL </returns>
-    /// <response code="201">Response with the created </response>
+    /// <returns> The Category with callback URL </returns>
+    /// <response code="201">Response with the category created </response>
     /// <response code="500">Something went very wrong</response>
     [HttpPost()]
     [Produces(MediaTypeNames.Application.Json)]
@@ -67,16 +60,8 @@ public class CategoryController : ControllerBase
         };
 
         var request = new CreateSingleRequest(category);
-
-        try
-        {
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Category);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
     }
 
     /// <summary>
@@ -95,49 +80,33 @@ public class CategoryController : ControllerBase
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        try
-        {
             var request = new GetMultipleRequest(name, skip, take);
             var response = await handler.Handle(request);
             return Ok(response.Categories);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
     }
 
     /// <summary>
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
-    /// <returns> The RFC with callback URL </returns>
-    /// <response code="201">Response with the created </response>
+    /// <returns> The Category with callback URL </returns>
+    /// <response code="201">Response with the created category </response>
     /// <response code="500">Something went very wrong</response>
     [HttpPatch("{oldName}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
-
     public async Task<IActionResult> Patch(
         [FromRoute] string oldName,
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-        try
-        {
             var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
             var response = await handler.Handle(request);
 
-            return Ok(new { oldName = response.oldname, newName = response.newname });
-
-
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
+            return Ok(new { oldName = response.oldName, newName = response.newName });
     }
+
 
     /// <summary>
     /// Deletes a category by name.
@@ -155,8 +124,6 @@ public class CategoryController : ControllerBase
     {
         var request = new DeleteSingleRequest(name);
 
-        try
-        {
             var response = await handler.Handle(request);
 
             return Ok(response.Categories);
@@ -164,10 +131,5 @@ public class CategoryController : ControllerBase
                 return NotFound("Category not found");
 
             return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
     }
 }
