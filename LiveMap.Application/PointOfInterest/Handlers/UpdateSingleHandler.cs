@@ -1,9 +1,10 @@
 ﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Application.PointOfInterest.Requests;
+using LiveMap.Application.PointOfInterest.Responses;
 using System;
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
-internal class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSingleResponse>
+public class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSingleResponse>
 {
     private readonly IPointOfInterestRepository _repository;
 
