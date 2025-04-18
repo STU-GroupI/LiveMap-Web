@@ -1,6 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Models.Poi;
-using LiveMapDashboard.Web.Models.Suggestions;
+using LiveMapDashboard.Web.Models.Rfc;
 using NetTopologySuite.Simplify;
 using System.Runtime.CompilerServices;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
@@ -57,8 +57,8 @@ public static class ViewModelMapperExtensions
         };
     }
 
-    public static List<SuggestedPointOfInterest> ToDomainSuggestedPointOfInterestList(this PoiSuggestionsViewModel vm)
+    public static List<RequestForChange> ToDomainSuggestedPointOfInterestList(this RFCsViewModel vm)
     {
-        return vm.SuggestedPointOfInterests.ToList();
+        return [.. vm.RFCs];
     }
 }

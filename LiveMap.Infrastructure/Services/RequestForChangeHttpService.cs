@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Infrastructure.Services;
 
-public class SuggestedPointOfInterestHttpService : ISuggestedPointOfInterestService
+public class RequestForChangeHttpService : IRequestForChangeService
 {
-    private const string _ENDPOINT = "rfc/poisuggestion";
+    private const string _ENDPOINT = "rfc";
     private readonly IBackendApiHttpService _backendApiService;
 
-    public SuggestedPointOfInterestHttpService(IBackendApiHttpService backendApiHttpService)
+    public RequestForChangeHttpService(IBackendApiHttpService backendApiHttpService)
     {
         _backendApiService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<SuggestedPointOfInterest[]>> Get(Guid mapId, int? skip, int? take, bool? ascending)
+    public async Task<BackendApiHttpResponse<RequestForChange[]>> Get(Guid mapId, int? skip, int? take, bool? ascending)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}";
         var uri = new Uri($"{_ENDPOINT}/{mapId}?{query}", UriKind.Relative);
 
         return await _backendApiService
-            .SendRequest<SuggestedPointOfInterest[]>(new HttpRequestMessage
+            .SendRequest<RequestForChange[]>(new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri

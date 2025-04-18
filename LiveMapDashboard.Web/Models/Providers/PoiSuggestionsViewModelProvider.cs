@@ -1,32 +1,32 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
-using LiveMapDashboard.Web.Models.Suggestions;
+using LiveMapDashboard.Web.Models.Rfc;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {
-    public class PoiSuggestionsViewModelProvider : IViewModelProvider<PoiSuggestionsViewModel>
+    public class PoiSuggestionsViewModelProvider : IViewModelProvider<RFCsViewModel>
     {
-        private readonly ISuggestedPointOfInterestService _suggestedPoiService;
+        private readonly IRequestForChangeService _suggestedPoiService;
 
-        public PoiSuggestionsViewModelProvider(ISuggestedPointOfInterestService suggestedPoiService)
+        public PoiSuggestionsViewModelProvider(IRequestForChangeService suggestedPoiService)
         {
             _suggestedPoiService = suggestedPoiService;
         }
 
-        public async Task<PoiSuggestionsViewModel> Hydrate(PoiSuggestionsViewModel viewModel)
+        public async Task<RFCsViewModel> Hydrate(RFCsViewModel viewModel)
         {
-            SuggestedPointOfInterest[] suggestions = (await _suggestedPoiService.Get(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? [];
+            RequestForChange[] suggestions = (await _suggestedPoiService.Get(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? [];
 
             return viewModel with
             {
                 MapId = viewModel.MapId,
-                SuggestedPointOfInterests = suggestions
+                RFCs = suggestions
             };
         }
 
-        public async Task<PoiSuggestionsViewModel> Provide()
+        public async Task<RFCsViewModel> Provide()
         {
-            return await Hydrate(PoiSuggestionsViewModel.Empty);
+            return await Hydrate(RFCsViewModel.Empty);
         }
     }
 }

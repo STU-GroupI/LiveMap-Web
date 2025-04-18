@@ -2,23 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace LiveMapDashboard.Web.Models.Suggestions;
+namespace LiveMapDashboard.Web.Models.Rfc;
 
-public sealed record PoiSuggestionsViewModel(
+public sealed record RFCsViewModel(
     Guid MapId,
     int? Skip,
     int? Take,
     bool? Ascending,
-    SuggestedPointOfInterest[] SuggestedPointOfInterests
+    RequestForChange[] RFCs
     ) : IValidatableObject
 {
-    public static PoiSuggestionsViewModel Empty =>
+    public static RFCsViewModel Empty =>
         new(
             MapId: Guid.Empty,
             Skip: null,
             Take: null,
             Ascending: null,
-            SuggestedPointOfInterests: []
+            RFCs: []
             );
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
