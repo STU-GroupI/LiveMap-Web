@@ -27,16 +27,23 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-        var request = new GetSingleRequest(name);
-        GetSingleResponse response = await handler.Handle(request);
-
-        if (response.Category is null)
+        try
         {
-            return NotFound();
-        }
+            var request = new GetSingleRequest(name);
+            GetSingleResponse response = await handler.Handle(request);
 
-        var category = response.Category;
-        return Ok(category);
+            if (response.Category is null)
+            {
+                return NotFound();
+            }
+
+            var category = response.Category;
+            return Ok(category);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -133,7 +140,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            return StatusCode(500, ex.ToString());
         }
     }
 }
