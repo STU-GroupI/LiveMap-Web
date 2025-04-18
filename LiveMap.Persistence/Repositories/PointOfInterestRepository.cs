@@ -86,6 +86,19 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             throw new ArgumentException("Point of interest not found");
         }
 
+        List<SqlRequestForChange> requestForChanges = await _context.RequestsForChange
+            .Include(rfc => rfc.Poi)
+            .Include(rfc => rfc.SuggestedPoi)
+            .Where(rfc => rfc.PoiId == id)
+            .ToListAsync();
+
+        if (requestForChanges.Count > 0)
+        {
+            foreach(var requestForChange in requestForChanges)
+            {
+                _context.RequestsForChange.Remove(requestForChange);
+            }
+        }
         _context.PointsOfInterest.Remove(pointOfInterest);
         await _context.SaveChangesAsync();
         
