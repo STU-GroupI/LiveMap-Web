@@ -74,10 +74,6 @@ public class PointOfInterestRepository : IPointOfInterestRepository
     public async Task<PointOfInterest> DeleteSingle(Guid id)
     {
         SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
-            .Include(poi => poi.Category)
-            .Include(poi => poi.Status)
-            .Include(poi => poi.Map)
-            .Include(poi => poi.OpeningHours)
             .Where(poi => poi.Id == id)
             .FirstOrDefaultAsync();
 
@@ -87,8 +83,6 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         }
 
         List<SqlRequestForChange> requestForChanges = await _context.RequestsForChange
-            .Include(rfc => rfc.Poi)
-            .Include(rfc => rfc.SuggestedPoi)
             .Where(rfc => rfc.PoiId == id)
             .ToListAsync();
 
