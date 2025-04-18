@@ -1,4 +1,4 @@
 namespace LiveMap.Application.Category.Responses;
 using Domain.Models;
 
-public sealed record UpdateSingleResponse(string oldname, string newname, bool Success);
+public sealed record UpdateSingleResponse(string oldName, string newName, bool Success);
