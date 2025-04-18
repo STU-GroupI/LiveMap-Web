@@ -56,9 +56,4 @@ public static class ViewModelMapperExtensions
             StatusName = string.Empty,
         };
     }
-
-    public static List<RequestForChange> ToDomainSuggestedPointOfInterestList(this RFCsViewModel vm)
-    {
-        return [.. vm.RFCs];
-    }
 }

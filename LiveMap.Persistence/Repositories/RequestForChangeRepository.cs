@@ -1,8 +1,10 @@
 using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -27,8 +29,13 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return result.Entity.ToDomainRequestForChange();
     }
 
-    public async Task<ICollection<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
     {
+        if (take != null && take == 0)
+        {
+            take = 1;
+        }
+
         IQueryable<SqlRequestForChange>? query = null;
         try
         {
@@ -42,6 +49,8 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         {
             throw new Exception($"If you ever see this being called, some of your RFC data is corrupt");
         }
+
+        int totalCount = await query.CountAsync();
 
         //
         {
@@ -72,9 +81,9 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         var result = await query.ToListAsync();
         if (result is not { Count: > 0 })
         {
-            return [];
+            return new();
         }
 
-        return [.. result.Select(rfc => rfc.ToDomainRequestForChange())];
+        return new([.. result.Select(rfc => rfc.ToDomainRequestForChange())], take, skip, totalCount);
     }
 }

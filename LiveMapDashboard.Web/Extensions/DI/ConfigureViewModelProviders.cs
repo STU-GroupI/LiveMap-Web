@@ -11,7 +11,7 @@ public static class ConfigureViewModelProviders
                 IViewModelProvider<PoiCrudformViewModel>,
                 PoiCrudformViewModelProvider>()
             .AddTransient<
-                IViewModelProvider<RFCsViewModel>,
-                PoiSuggestionsViewModelProvider>();
+                IViewModelProvider<RequestForChangeViewModel>,
+                RequestForChangeViewModelProvider>();
     }
 }

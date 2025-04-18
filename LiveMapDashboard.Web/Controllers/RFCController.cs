@@ -2,6 +2,7 @@
 using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace LiveMapDashboard.Web.Controllers
             [FromQuery] int? skip,
             [FromQuery] int? take,
             [FromQuery] bool? ascending,
-            [FromServices] IViewModelProvider<RFCsViewModel> provider)
+            [FromServices] IViewModelProvider<RequestForChangeViewModel> provider)
         {
-            var viewModel = await provider.Hydrate(new RFCsViewModel(Guid.Parse(id), skip, take, ascending, []));
+            var viewModel = await provider.Hydrate(new RequestForChangeViewModel(Guid.Parse(id), skip, take, ascending, PaginatedResult<RequestForChange>.Default));
             return View(viewModel);
         }
     }

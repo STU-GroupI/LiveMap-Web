@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LiveMap.Domain.Pagination;
 
 namespace LiveMap.Application.RequestForChange.Responses;
 
-public sealed record GetMultipleResponse(ICollection<Domain.Models.RequestForChange> Rfc);
+public sealed record GetMultipleResponse(PaginatedResult<Domain.Models.RequestForChange> Rfc);

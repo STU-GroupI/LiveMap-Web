@@ -1,24 +1,25 @@
 ﻿using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace LiveMapDashboard.Web.Models.Rfc;
 
-public sealed record RFCsViewModel(
+public sealed record RequestForChangeViewModel(
     Guid MapId,
     int? Skip,
     int? Take,
     bool? Ascending,
-    RequestForChange[] RFCs
+    PaginatedResult<RequestForChange> Result
     ) : IValidatableObject
 {
-    public static RFCsViewModel Empty =>
+    public static RequestForChangeViewModel Empty =>
         new(
             MapId: Guid.Empty,
             Skip: null,
             Take: null,
             Ascending: null,
-            RFCs: []
+            Result: PaginatedResult<RequestForChange>.Default
             );
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

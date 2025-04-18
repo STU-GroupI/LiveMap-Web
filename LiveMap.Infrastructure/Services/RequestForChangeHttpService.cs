@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,13 @@ public class RequestForChangeHttpService : IRequestForChangeService
         _backendApiService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<RequestForChange[]>> Get(Guid mapId, int? skip, int? take, bool? ascending)
+    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> Get(Guid mapId, int? skip, int? take, bool? ascending)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}";
         var uri = new Uri($"{_ENDPOINT}/{mapId}?{query}", UriKind.Relative);
 
         return await _backendApiService
-            .SendRequest<RequestForChange[]>(new HttpRequestMessage
+            .SendRequest<PaginatedResult<RequestForChange>>(new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri
