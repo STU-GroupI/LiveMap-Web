@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.Category.Requests;
 
-public sealed record UpdateSingleRequest(string oldname, string newname);
+public sealed record UpdateSingleRequest(string oldName, string newName);
