@@ -1,5 +1,6 @@
 ﻿using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
+using LiveMapDashboard.Web.Models.Suggestions;
 
 namespace LiveMapDashboard.Web.Extensions.DI;
 public static class ConfigureViewModelProviders
@@ -12,6 +13,9 @@ public static class ConfigureViewModelProviders
                 PoiCrudformViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<PoiListViewModel>,
-                PoiListViewModelProvider>();
+                PoiListViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<PoiSuggestionsViewModel>,
+                PoiSuggestionsViewModelProvider>();
     }
 }
