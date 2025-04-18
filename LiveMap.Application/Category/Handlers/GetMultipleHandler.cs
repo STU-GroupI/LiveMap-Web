@@ -1,5 +1,4 @@
 using LiveMap.Application.Category.Persistance;
-using LiveMap.Application.Category.Persistance;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
 using System;

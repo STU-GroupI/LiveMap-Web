@@ -56,14 +56,14 @@ public class CategoryRepository : ICategoryRepository
 
         var result = await query.ToListAsync();
 
-        if (result is not { Count: > 0 }) return new List<Category>();
+        if (result is not { Count: > 0 }) return [];
 
         return result;
     }
 
 
 /*IMPORTANT NOTE:
-This Update method is merely a workaround for the fact that we cannot update a category name in the database,
+TODO: This Update method is merely a workaround for the fact that we cannot update a category name in the database,
 this is because of a foreign key constraint that prevents us from updating a category name in the database whatsoever.
 In this workaround, a new category is created and the old category is deleted. This is not ideal, but it works for now.
 Maybe use ids for the future...?
@@ -118,8 +118,6 @@ public async Task<bool> Update(string oldName, string newName)
     }
     catch (Exception e)
     {
-        Console.WriteLine($"Error during update: {e.Message}");
-
         // Rollback if something goes wrong
         await transaction.RollbackAsync();
         return false;
@@ -166,7 +164,6 @@ public async Task<bool> Update(string oldName, string newName)
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             return false;
         }
     }
