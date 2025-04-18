@@ -1,5 +1,6 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
+using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,7 @@ namespace LiveMapDashboard.Web.Models.Providers
 
             if(Guid.TryParse(viewModel.Id, out var poiId))
             {
-                return await HydrateWithPoi(poiId, categories, mapId);
+                return await HydrateWithPoi(viewModel, poiId, categories, mapId);
             }
 
             return viewModel with
@@ -63,12 +64,9 @@ namespace LiveMapDashboard.Web.Models.Providers
                 Coordinate = poi.Coordinate,
                 Description = poi.Description,
                 IsWheelchairAccessible = poi.IsWheelchairAccessible,
-                OpeningHours = poi.OpeningHours.Select(oh => new OpeningHoursViewModel()
-                {
-                    IsActive = true,
-                    Start = $"{oh.Start.Hours}:{oh.Start.Minutes}",
-                    End = $"{oh.End.Hours}:{oh.End.Minutes}"
-                }).ToList(),
+                OpeningHours = poi.OpeningHours
+                    .Select(oh => oh.ToViewModelOpeningHours())
+                    .ToArray(),
                 Categories = categories,
                 MapId = mapId.ToString(),
             };

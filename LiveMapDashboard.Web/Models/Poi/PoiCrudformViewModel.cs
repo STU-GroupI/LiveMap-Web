@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace LiveMapDashboard.Web.Models.Poi;
 
 public sealed record PoiCrudformViewModel(
-    string Id,
+    string? Id,
     string Title, 
     string Category, 
     string Description, 

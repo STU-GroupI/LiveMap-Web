@@ -3,7 +3,6 @@ using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using System.Net;
 
 namespace LiveMapDashboard.Web.Controllers
@@ -50,7 +49,7 @@ namespace LiveMapDashboard.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("index", await provider.Hydrate(viewModel));
+                return View("PoiForm", await provider.Hydrate(viewModel));
             }
 
             var poi = viewModel.ToDomainPointOfInterest();
@@ -74,7 +73,7 @@ namespace LiveMapDashboard.Web.Controllers
                 };
             }
 
-            return View("index", await provider.Hydrate(viewModel));
+            return View("PoiForm", await provider.Hydrate(viewModel));
         }
     }
 }
