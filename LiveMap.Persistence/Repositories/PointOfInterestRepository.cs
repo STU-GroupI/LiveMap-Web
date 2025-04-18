@@ -92,15 +92,27 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             .Where(rfc => rfc.PoiId == id)
             .ToListAsync();
 
-        if (requestForChanges.Count > 0)
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
         {
-            foreach(var requestForChange in requestForChanges)
+            if (requestForChanges.Count > 0)
             {
-                _context.RequestsForChange.Remove(requestForChange);
+                foreach (var requestForChange in requestForChanges)
+                {
+                    _context.RequestsForChange.Remove(requestForChange);
+                }
             }
+            _context.PointsOfInterest.Remove(pointOfInterest);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
         }
-        _context.PointsOfInterest.Remove(pointOfInterest);
-        await _context.SaveChangesAsync();
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
         
         return pointOfInterest.ToDomainPointOfInterest();
     }
