@@ -150,7 +150,6 @@ public class CategoryRepository : ICategoryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             return false;
         }
     }

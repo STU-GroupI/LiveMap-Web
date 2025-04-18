@@ -50,8 +50,8 @@ public class CategoryController : ControllerBase
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
-    /// <returns> The Category with callback URL </returns>
-    /// <response code="201">Response with the category created </response>
+    /// <returns> The RFC with callback URL </returns>
+    /// <response code="201">Response with the created </response>
     /// <response code="500">Something went very wrong</response>
     [HttpPost()]
     [Produces(MediaTypeNames.Application.Json)]
@@ -96,8 +96,8 @@ public class CategoryController : ControllerBase
     /// Creates a new category
     /// </summary>
     /// <param name="category">The given category.</param>
-    /// <returns> The Category with callback URL </returns>
-    /// <response code="201">Response with the created category </response>
+    /// <returns> The RFC with callback URL </returns>
+    /// <response code="201">Response with the created </response>
     /// <response code="500">Something went very wrong</response>
     [HttpPatch("{oldName}")]
     [Produces(MediaTypeNames.Application.Json)]
