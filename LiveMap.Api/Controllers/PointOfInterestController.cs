@@ -114,11 +114,11 @@ public class PointOfInterestController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a POI for the given request data
+    /// Updates a POI for the given request data
     /// </summary>
     /// <param name="request">The given request.</param>
-    /// <returns> The POI with callback URL </returns>
-    /// <response code="201">Response with the created POI</response>
+    /// <returns> Returns the updated POI </returns>
+    /// <response code="200">Response with the updated POI</response>
     /// <response code="500">Something went very wrong</response>
     [HttpPatch()]
     [Produces(MediaTypeNames.Application.Json)]
