@@ -22,7 +22,7 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         this.maps = maps;
     }
 
-    public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    public Task<PointOfInterest> Create(PointOfInterest pointOfInterest)
     {
         // :p
         pois.Add(pointOfInterest);

@@ -61,7 +61,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         return pointOfInterest.ToDomainPointOfInterest();
     }
 
-    public async Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    public async Task<PointOfInterest> Create(PointOfInterest pointOfInterest)
     {
         var poi = pointOfInterest.ToSqlPointOfInterest();
 
@@ -69,5 +69,47 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         await _context.SaveChangesAsync();
 
         return result.Entity.ToDomainPointOfInterest();
+    }
+
+    public async Task<PointOfInterest?> Update(PointOfInterest pointOfInterest)
+    {
+        var poi = await _context.PointsOfInterest.FindAsync(pointOfInterest.Id);
+
+        if (poi is null)
+        {
+            return null;
+        }
+
+        poi.Title = pointOfInterest.Title;
+        poi.Description = pointOfInterest.Description;
+        poi.CategoryName = pointOfInterest.CategoryName;
+        poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
+        poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;
+
+        foreach (var openingHour in poi.OpeningHours)
+        {
+            var data = pointOfInterest.OpeningHours.FirstOrDefault(oh =>
+                oh.DayOfWeek == openingHour.DayOfWeek);
+
+            if (data is null)
+            {
+                poi.OpeningHours.Add(openingHour);
+                continue;
+            }
+
+            data.Start = openingHour.Start;
+            data.End = openingHour.End;
+        }
+
+        foreach (var openingHour in poi.OpeningHours.Where(oh => !pointOfInterest.OpeningHours
+                .Any(oh2 => oh2.DayOfWeek == oh.DayOfWeek)))
+        {
+            poi.OpeningHours.Remove(openingHour);
+            _context.OpeningHours.Remove(openingHour);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return poi.ToDomainPointOfInterest();
     }
 }
