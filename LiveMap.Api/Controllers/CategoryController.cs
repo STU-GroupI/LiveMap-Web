@@ -6,26 +6,28 @@ using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace LiveMap.Api.Controllers
+namespace LiveMap.Api.Controllers;
+
+[ApiController]
+[Route("api/category")]
+public class CategoryController : ControllerBase
 {
-    [ApiController]
-    [Route("api/category")]
-    public class CategoryController : ControllerBase
+    /// <summary>
+    /// Get a specific category.
+    /// </summary>
+    /// <param name="name">The id of the specified Category.</param>
+    /// <returns>Returns the specified poi. </returns>
+    /// <response code="200">Successfully get the poi's.</response>
+    /// <response code="404">Poi not found.</response>
+    [HttpGet("{name}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(
+        [FromRoute] string name,
+        [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-        /// <summary>
-        /// Gets the specified category.
-        /// </summary>
-        /// <param name="name">The category name</param>
-        /// <returns>Returns the specified category. </returns>
-        /// <response code="200">Successfully get the category.</response>
-        /// <response code="404">Category not found.</response>
-        [HttpGet("{name}")]
-        [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType<Category>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get(
-            [FromRoute] string name,
-            [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
+        try
         {
             var request = new GetSingleRequest(name);
             GetSingleResponse response = await handler.Handle(request);
@@ -35,8 +37,14 @@ namespace LiveMap.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(response.Category);
+            var category = response.Category;
+            return Ok(category);
         }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
+    }
 
     /// <summary>
     /// Creates a new category
@@ -65,9 +73,9 @@ namespace LiveMap.Api.Controllers
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Category);
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(500, ex.ToString());
         }
     }
 
@@ -87,9 +95,16 @@ namespace LiveMap.Api.Controllers
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(name, skip, take);
-        var response = await handler.Handle(request);
-        return Ok(response.Categories);
+        try
+        {
+            var request = new GetMultipleRequest(name, skip, take);
+            var response = await handler.Handle(request);
+            return Ok(response.Categories);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -109,13 +124,19 @@ namespace LiveMap.Api.Controllers
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
-        var response = await handler.Handle(request);
+        try
+        {
+            var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+            var response = await handler.Handle(request);
 
-        if (response.Success)
             return Ok(new { oldName = response.oldname, newName = response.newname });
 
-        return NotFound("Category not found.");
+
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.ToString());
+        }
     }
 
     /// <summary>
@@ -146,7 +167,7 @@ namespace LiveMap.Api.Controllers
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            return StatusCode(500, ex.ToString());
         }
     }
 }
