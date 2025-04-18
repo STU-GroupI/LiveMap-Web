@@ -20,15 +20,17 @@ public class PointOfInterestHttpService : IPointOfInterestService
     {
         throw new NotImplementedException();
     }
+
     public async Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
     {
-        // TODO: Implement
+        string query = $"{nameof(mapId)}={mapId}&{nameof(skip)}={skip}&{nameof(take)}={take}";
+        Uri uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
         return await _backendApiService
-               .SendRequest<PointOfInterest>(new HttpRequestMessage
-               {
-                   Method = HttpMethod.Get,
-                   RequestUri = new Uri($"{_ENDPOINT}", UriKind.Relative)
-               });
+            .SendRequest<PointOfInterest[]>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = uri
+            });
     }
     public async Task<BackendApiHttpResponse<PointOfInterest>> CreateSingle(PointOfInterest poi)
     {
@@ -40,10 +42,12 @@ public class PointOfInterestHttpService : IPointOfInterestService
                 RequestUri = new Uri(_ENDPOINT, UriKind.Relative)
             });
     }
+
     public Task<BackendApiHttpResponse<PointOfInterest>> UpdateSingle(PointOfInterest poi)
     {
         throw new NotImplementedException();
     }
+
     public Task<BackendApiHttpResponse> Delete(PointOfInterest poi)
     {
         throw new NotImplementedException();

@@ -3,6 +3,7 @@ using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System.Net;
 
 namespace LiveMapDashboard.Web.Controllers
@@ -16,13 +17,25 @@ namespace LiveMapDashboard.Web.Controllers
             var viewModel = await provider.Provide();
             return View(viewModel);
         }
-        
+
         [HttpGet("form/{id}")]
         public async Task<IActionResult> PoiForm(
             [FromRoute] string? id,
             [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
         {
-            var viewModel = await provider.Provide();
+            if (!Guid.TryParse(id, out var poiId))
+            {
+                var back = HttpContext?.Request?.Headers?.ContainsKey("Referer") ?? false;
+                return back 
+                    ? Redirect(HttpContext.Request.Headers["Referer"]) 
+                    : RedirectToAction(nameof(Index));
+                    
+            }
+
+            var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
+            {
+                Id = id
+            });
             return View("PoiForm", viewModel);
         }
 
@@ -41,7 +54,10 @@ namespace LiveMapDashboard.Web.Controllers
             }
 
             var poi = viewModel.ToDomainPointOfInterest();
-            var result = await service.CreateSingle(poi);
+
+            var result = poi.Id == Guid.Empty || poi.Id.ToString() == string.Empty
+                ? await service.CreateSingle(poi)
+                : await service.UpdateSingle(poi);
 
             if (result.IsSuccess)
             {
