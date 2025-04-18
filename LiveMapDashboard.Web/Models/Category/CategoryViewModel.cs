@@ -11,25 +11,20 @@ public sealed record CategoryViewModel(
     /// <summary>
     /// The name of the category. Should correspond to a value stored in the database.
     /// </summary>
-    string CategoryName
+    int? Skip,
+    int? Take,
+    Category[] Categories
 ) : IValidatableObject
 {
     /// <summary>
     /// An empty view model instance with no category name.
     /// </summary>
-    public static CategoryViewModel Empty => new(string.Empty);
+    public static CategoryViewModel Empty => new(Skip: null,
+            Take: null, Categories: []);
 
-    /// <summary>
-    /// Ensures the category name is provided.
-    /// </summary>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrWhiteSpace(CategoryName))
-        {
-            yield return new ValidationResult(
-                "Category name is required.",
-                new[] { nameof(CategoryName) }
-            );
-        }
+        List<ValidationResult> results = [];
+        return results;
     }
 }

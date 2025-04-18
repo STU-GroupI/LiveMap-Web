@@ -1,15 +1,16 @@
 using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Models.Categories;
+using LiveMapDashboard.Web.Models.Suggestions;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace LiveMapDashboard.Web.Models.Providers;
 
-/// <summary>
-/// Provides <see cref="CategoryViewModel"/> instances by fetching domain categories via <see cref="ICategoryService"/>.
-/// </summary>
-public class CategoryViewModelProvider : IViewModelProvider<IEnumerable<CategoryViewModel>>
+public class CategoryViewModelProvider : IViewModelProvider<CategoryViewModel>
 {
     private readonly ICategoryService _categoryService;
 
@@ -18,27 +19,18 @@ public class CategoryViewModelProvider : IViewModelProvider<IEnumerable<Category
         _categoryService = categoryService;
     }
 
-    /// <summary>
-    /// Hydrates the incoming view model placeholder by loading all categories from the domain service.
-    /// </summary>
-    /// <param name="placeholder">An optional placeholder used to pass parameters (unused).</param>
-    /// <returns>A sequence of <see cref="CategoryViewModel"/> representing all available categories.</returns>
-    public async Task<IEnumerable<CategoryViewModel>> Hydrate(IEnumerable<CategoryViewModel> placeholder)
+    public async Task<CategoryViewModel> Hydrate(CategoryViewModel viewModel)
     {
-        // Fetch all domain categories
-        var domainCategories = await _categoryService.GetAllAsync();
+        Category[] categories = (await _categoryService.Get(viewModel.Skip, viewModel.Take)).Value ?? [];
 
-        // Map to view models
-        var viewModels = domainCategories
-            .Select(c => new CategoryViewModel(c.CategoryName))
-            .ToList();
-
-        return viewModels;
+        return viewModel with
+        {
+            Categories = categories
+        };
     }
 
-    /// <summary>
-    /// Provides a default list of categories by hydrating an empty placeholder.
-    /// </summary>
-    public Task<IEnumerable<CategoryViewModel>> Provide()
-        => Hydrate(Enumerable.Empty<CategoryViewModel>());
+    public async Task<CategoryViewModel> Provide()
+    {
+        return await Hydrate(CategoryViewModel.Empty);
+    }
 }

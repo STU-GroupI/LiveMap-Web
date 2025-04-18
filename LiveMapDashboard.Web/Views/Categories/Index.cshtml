@@ -1,7 +1,10 @@
+@using LiveMapDashboard.Web.Models.Suggestions
+@using LiveMap.Domain.Models
+
 <div class="flex flex-col">
     <div class="-m-1.5 overflow-x-auto">
         <div class="p-1.5 min-w-full inline-block align-middle">
-            @if (Model != null && Model.Any())
+            @if (Model.Categories.Length > 0)
             {
                 <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
@@ -12,7 +15,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                            @foreach (var category in Model)
+                            @foreach (Category category in Model.Categories)
                             {
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">

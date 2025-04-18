@@ -3,9 +3,11 @@ using LiveMap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Persistence.Repositories;
 public class CategoryRepository : ICategoryRepository
@@ -21,19 +23,28 @@ public class CategoryRepository : ICategoryRepository
     {
         var query = _context.Categories.AsQueryable();
 
-        if(skip is int skipValue)
         {
-            query = query.Skip(skipValue);
-        }
-        if (take is int takeValue)
-        {
-            query = query.Take(takeValue);
+            if (skip is int fromValue)
+            {
+                query = query.Skip(fromValue);
+            }
         }
 
-        return await query.ToArrayAsync();
+        if (take is int amountValue)
+        {
+            query = query.Take(amountValue);
+        }
+
+        var result = await query.ToListAsync();
+        if (result is not { Count: > 0 })
+        {
+            return [];
+        }
+
+        return result.ToArray();
     }
 
-    public async Task<Category?> GetSingle(string name)
+public async Task<Category?> GetSingle(string name)
     {
         return await _context.Categories.FindAsync(name);
     }
