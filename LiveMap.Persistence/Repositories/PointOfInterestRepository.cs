@@ -90,12 +90,9 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         try
         {
-            if (requestForChanges.Count > 0)
+            foreach (var requestForChange in requestForChanges)
             {
-                foreach (var requestForChange in requestForChanges)
-                {
-                    _context.RequestsForChange.Remove(requestForChange);
-                }
+                _context.RequestsForChange.Remove(requestForChange);
             }
             _context.PointsOfInterest.Remove(pointOfInterest);
             await _context.SaveChangesAsync();
