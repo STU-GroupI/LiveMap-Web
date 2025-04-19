@@ -4,15 +4,15 @@ using LiveMap.Application.PointOfInterest.Responses;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
-public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest, DeleteSingleResponse>
+public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest>
 {
     private readonly IPointOfInterestRepository _pointOfInterestRepository;
     public DeleteSingleHandler(IPointOfInterestRepository pointOfInterestRepository)
     {
         _pointOfInterestRepository = pointOfInterestRepository;
     }
-    public async Task<DeleteSingleResponse> Handle(DeleteSingleRequest request)
+    public async Task Handle(DeleteSingleRequest request)
     {
-        return new DeleteSingleResponse(await _pointOfInterestRepository.DeleteSingle(request.Id));
+        await _pointOfInterestRepository.DeleteSingle(request.Id);
     }
 }

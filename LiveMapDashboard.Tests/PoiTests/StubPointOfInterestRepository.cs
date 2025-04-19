@@ -29,7 +29,7 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         return Task.FromResult(pointOfInterest);
     }
 
-    public Task<PointOfInterest?> DeleteSingle(Guid id)
+    public Task DeleteSingle(Guid id)
     {
         PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
         pois.Remove(poi!);

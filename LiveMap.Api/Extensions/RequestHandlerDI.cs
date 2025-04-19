@@ -30,8 +30,7 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
-                PointOfInterest.Requests.DeleteSingleRequest,
-                PointOfInterest.Responses.DeleteSingleResponse>,
+                PointOfInterest.Requests.DeleteSingleRequest>,
             PointOfInterest.Handlers.DeleteSingleHandler>();
 
         services.AddTransient<

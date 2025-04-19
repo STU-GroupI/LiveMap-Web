@@ -71,7 +71,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         return result.Entity.ToDomainPointOfInterest();
     }
 
-    public async Task<PointOfInterest> DeleteSingle(Guid id)
+    public async Task DeleteSingle(Guid id)
     {
         SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
             .Where(poi => poi.Id == id)
@@ -107,7 +107,5 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             await transaction.RollbackAsync();
             throw;
         }
-        
-        return pointOfInterest.ToDomainPointOfInterest();
     }
 }

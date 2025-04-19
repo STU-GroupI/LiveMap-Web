@@ -38,10 +38,10 @@ public class PointOfInterestHttpService : IPointOfInterestService
     {
         throw new NotImplementedException();
     }
-    public async Task<BackendApiHttpResponse<PointOfInterest>> Delete(Guid id)
+    public async Task<BackendApiHttpResponse> Delete(Guid id)
     {
         return await _backendApiService
-            .SendRequest<PointOfInterest>(new HttpRequestMessage
+            .SendRequest(new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri($"{_ENDPOINT}/{id}", UriKind.Relative)

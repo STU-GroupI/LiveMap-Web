@@ -117,8 +117,8 @@ public class PointOfInterestController : ControllerBase
     /// Deletes a POI with the given id
     /// </summary>
     /// <param name="id">The id of the specified POI.</param>
-    /// <returns>Returns the specified poi. </returns>
-    /// <response code="200">Successfully get the poi's.</response>
+    /// <returns>Returns nothing. </returns>
+    /// <response code="204">Return empty response. </response>
     /// <response code="404">Poi not found.</response>
     [HttpDelete("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -126,18 +126,10 @@ public class PointOfInterestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(
         [FromRoute] string id,
-        [FromServices] IRequestHandler<DeleteSingleRequest, DeleteSingleResponse> handler)
+        [FromServices] IRequestHandler<DeleteSingleRequest> handler)
     {
         var request = new DeleteSingleRequest(Guid.Parse(id));
-        DeleteSingleResponse response = await handler.Handle(request);
-
-        if (response.PointOfInterest is null)
-        {
-            return NotFound();
-        }
-
-        var poi = response.PointOfInterest;
-        poi.Map = null!;
-        return Ok(poi);
+        await handler.Handle(request);
+        return NoContent();
     }
 }

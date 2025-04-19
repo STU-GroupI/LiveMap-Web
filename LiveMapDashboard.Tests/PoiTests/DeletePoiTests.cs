@@ -6,7 +6,7 @@ using Shouldly;
 namespace LiveMapDashboard.Tests.PoiTests;
 public class DeletePoiTests
 {
-    [Theory]
+/*    [Theory]
     [MemberData(nameof(GetValidPointOfInterest))]
     public async Task DeleteSingle_WithValidId_WhenPoIExists_ShouldReturnResponseWithPoI(
     PointOfInterest poi,
@@ -47,5 +47,5 @@ public class DeletePoiTests
         {
             yield return new object[] { poi, repository };
         }
-    }
+    }*/
 }
