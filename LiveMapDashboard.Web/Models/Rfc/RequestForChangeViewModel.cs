@@ -32,7 +32,7 @@ public sealed record RequestForChangeViewModel(
     {
         if (dateTime == null)
         {
-            return "Geen Datum";
+            return "No date was provided";
         }
         else
         {
