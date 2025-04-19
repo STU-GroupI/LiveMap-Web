@@ -120,17 +120,18 @@ public class PointOfInterestController : ControllerBase
     /// <returns> Returns the updated POI </returns>
     /// <response code="200">Response with the updated POI</response>
     /// <response code="500">Something went very wrong</response>
-    [HttpPatch()]
+    [HttpPatch("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Patch(
+        [FromRoute] string id,
         [FromBody] UpdateSinglePoiWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
         PointOfInterest poi = new()
         {
-            Id = Guid.Parse(webRequest.Id),
+            Id = Guid.Parse(id),
             Title = webRequest.Title,
             Description = webRequest.Description,
             CategoryName = webRequest.CategoryName,
