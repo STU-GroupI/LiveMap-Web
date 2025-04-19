@@ -7,9 +7,16 @@ public static class ConfigureViewModelProviders
 {
     public static IServiceCollection RegisterViewModelProviders(this IServiceCollection services)
     {
-        return services.AddTransient<
+        return services
+            .AddTransient<
                 IViewModelProvider<PoiCrudformViewModel>,
                 PoiCrudformViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<PoiListViewModel>,
+                PoiListViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<PoiSuggestionsViewModel>,
+                PoiSuggestionsViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<RequestForChangeViewModel>,
                 RequestForChangeViewModelProvider>();

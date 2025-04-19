@@ -38,6 +38,7 @@
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
+        <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="Coordinate.Latitude" />
         <input type="hidden" asp-for="Coordinate.Longitude" />
         <input type="hidden" asp-for="MapId" />
