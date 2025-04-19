@@ -100,8 +100,8 @@ public class PointOfInterestRepository : IPointOfInterestRepository
                 continue;
             }
 
-            data.Start = openingHour.Start;
-            data.End = openingHour.End;
+            openingHour.Start = data.Start;
+            openingHour.End = data.End;
         }
 
         foreach (var openingHour in poi.OpeningHours.Where(oh => !pointOfInterest.OpeningHours
