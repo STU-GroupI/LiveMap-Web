@@ -118,7 +118,7 @@ public class PointOfInterestController : ControllerBase
     /// </summary>
     /// <param name="id">The id of the specified POI.</param>
     /// <returns>Returns nothing. </returns>
-    /// <response code="204">Return empty response. </response>
+    /// <response code="204">No Content. </response>
     /// <response code="404">Poi not found.</response>
     [HttpDelete("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
