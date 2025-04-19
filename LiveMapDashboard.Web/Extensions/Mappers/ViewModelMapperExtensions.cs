@@ -1,6 +1,7 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Suggestion;
+using LiveMapDashboard.Web.Models.Suggestions;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMapDashboard.Web.Extensions.Mappers;
