@@ -31,7 +31,7 @@ public sealed record PoiSuggestionsViewModel(
     {
         if (dateTime == null)
         {
-            return "Geen Datum";
+            return "No date was provided";
         }
         else
         {
