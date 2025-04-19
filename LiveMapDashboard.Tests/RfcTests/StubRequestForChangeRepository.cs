@@ -24,4 +24,29 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
             SubmittedOn = DateTime.UtcNow,
         });
     }
+
+    public Task<RequestForChange> UpdateAsync(RequestForChange requestForChange)
+    {
+        var existingRfc = RequestsForChange.FirstOrDefault(r => r.Id == requestForChange.Id);
+
+        if (existingRfc == null)
+        {
+            // Add the RFC to the list if it doesn't exist (for test purposes)
+            requestForChange.SubmittedOn = DateTime.UtcNow; 
+            RequestsForChange.Add(requestForChange);
+            return Task.FromResult(requestForChange);
+        }
+
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovalStatus == "APPROVED" ? DateTime.UtcNow : requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+        
+        return Task.FromResult(existingRfc);
+    }
+
+    public Task<RequestForChange?> GetSingle(Guid id)
+    {
+        RequestForChange rfc = RequestsForChange.FirstOrDefault(r => r.Id == id);
+        return Task.FromResult(rfc);
+    }
 }
