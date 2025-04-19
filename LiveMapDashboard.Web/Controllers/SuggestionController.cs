@@ -25,7 +25,19 @@ namespace LiveMapDashboard.Web.Controllers
             [FromRoute] string id, 
             [FromServices] IViewModelProvider<SuggestionFormViewModel> provider)
         {
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var rfcId))
+            {
+                return BadRequest("Invalid RFC ID");
+            }
+
             var viewModel = await provider.Hydrate(SuggestionFormViewModel.EmptyWithId(id));
+
+            // If the RFC wasn't found
+            if (viewModel.RfcId == "No RFC was found")
+            {
+                return NotFound("RFC not found");
+            }
+
             return View("SuggestionForm", viewModel);
         }
 

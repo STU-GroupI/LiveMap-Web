@@ -44,9 +44,13 @@ public class RequestForChangeHttpService : IRequestForChangeService
         throw new NotImplementedException();
     }
 
-    public Task<BackendApiHttpResponse<RequestForChange>> Get(string name)
+    public async Task<BackendApiHttpResponse<RequestForChange>> Get(Guid id)
     {
-        throw new NotImplementedException();
+        return await _backendApiHttpService.SendRequest<RequestForChange>(new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri($"{_ENDPOINT}/{id}", UriKind.Relative)
+        });
     }
 
     public Task<BackendApiHttpResponse<RequestForChange[]>> Get(int? skip, int? take)

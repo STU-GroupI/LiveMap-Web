@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Infrastructure.Extensions;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -36,6 +37,7 @@ public class BackendApiHttpService : IBackendApiHttpService
                     );
                 }
                 string temp = await result.Content.ReadAsStringAsync();
+                Debug.WriteLine("GUPW is een goat: "+ temp);
                 TResult? data = await JsonSerializer.DeserializeAsync<TResult>(contentStream, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,

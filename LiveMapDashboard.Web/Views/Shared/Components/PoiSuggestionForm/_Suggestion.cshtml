@@ -1,17 +1,37 @@
 ﻿@using LiveMapDashboard.Web.Models.Suggestion;
 @model SuggestionFormViewModel
 
-<div class="p-4 relative z-10 bg-white border border-gray-200 rounded-xl md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
-    <div class="mb-2">
-        <div class="max-w-sm">
-            <label for="textarea-label" class="block text-sm font-medium mb-2">User request for change #@Model.RfcId</label>
-            <textarea id="textarea-label" class="py-2 px-3 sm:py-3 sm:px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                rows="3" 
-                placeholder="There was no message given..." 
-                disabled
-            >
-                @Model.Message
-            </textarea>
+<div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+    <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Gebruikers suggestie</h2>
+
+    <div class="space-y-4">
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
+            <p class="text-gray-800 dark:text-neutral-200">
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    @Model.Message
+                }
+                else
+                {
+                    <span class="text-gray-500 dark:text-neutral-400">No message provided</span>
+                }
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+            <form method="post" asp-controller="Suggestion" asp-action="Deny" class="w-full sm:w-auto">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="RfcId" />
+                <button type="submit" class="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-hidden focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-circle w-4 h-4"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg>
+                    Deny
+                </button>
+            </form>
+
+            <button type="submit" form="approvalForm" class="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle w-4 h-4"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                Approve
+            </button>
         </div>
     </div>
 </div>

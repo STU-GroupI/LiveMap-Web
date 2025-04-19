@@ -79,7 +79,49 @@ public class RequestForChangeController : ControllerBase
         
         UpdateSingleResponse response = await handler.Handle(request);
         
-        return Ok(response.Rfc);
-        
+        return Ok(response.Rfc);   
+    }
+
+    /// <summary>
+    /// Gets a single RFC by its ID
+    /// </summary>
+    /// <param name="id">The ID of the RFC to retrieve</param>
+    /// <returns>The requested RFC</returns>
+    /// <response code="200">RFC successfully retrieved</response>
+    /// <response code="404">RFC not found</response>
+    [HttpGet("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<RequestForChange>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(
+        [FromRoute] Guid id,
+        [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
+    {
+        var request = new GetSingleRequest(id);
+        GetSingleResponse response = await handler.Handle(request);
+
+        if(response.RequestForChange is null)
+        {
+            return NotFound();
+        }
+        var rfc = response.RequestForChange;
+        return Ok(rfc);
+        //try
+        //{
+        //    var request = new GetSingleRequest(id);
+        //    var response = await handler.Handle(request);
+
+        //    if (response.RequestForChange == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(response.RequestForChange);
+        //}
+        //catch (Exception ex)
+        //{
+        //    return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        //}
+
     }
 }

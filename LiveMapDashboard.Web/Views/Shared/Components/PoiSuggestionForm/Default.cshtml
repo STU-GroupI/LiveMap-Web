@@ -5,22 +5,12 @@
 <div class="max-w-12xl pt-2 px-4 sm:px-6 lg:px-6 mx-auto">
     <div class="flex justify-between">
         <a href="javascript:history.back()"
-           class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
-            Go Back
+           class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:text-blue-800">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left inline-block mr-1 w-4 h-4"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+            Terug
         </a>
-        <form method="post" asp-controller="Suggestion" asp-action="Deny">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="RfcId"/>
-            
-            <button type="submit" class="inline-flex items-center gap-x-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x-icon lucide-circle-x shrink-0 size-4"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                Deny
-            </button>
-        </form>
     </div>
-</div>
 
-<div class="max-w-12xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
     @if (ViewData["SuccessMessage"] != null)
     {
         <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
@@ -37,7 +27,7 @@
 </div>
 
 <div class="max-w-12xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    <form method="post" asp-controller="Suggestion" asp-action="Approve">
+    <form id="approvalForm" method="post" asp-controller="Suggestion" asp-action="Approve">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
@@ -55,18 +45,9 @@
             </div>
 
             <div>
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_LocationButton.cshtml", Model as PoiCrudformViewModel)
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml", Model as PoiCrudformViewModel)
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml", Model as PoiCrudformViewModel)
-            </div>
-        </div>
-
-        <div class="mt-2 py-4 relative z-10">
-            <div class="flex justify-end gap-3 w-100">
-                <button type="submit" class="inline-flex items-center gap-x-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus shrink-0 size-4"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                    Approve
-                </button>
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_LocationButton.cshtml")
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml")
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml")
             </div>
         </div>
     </form>

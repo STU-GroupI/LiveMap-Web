@@ -10,20 +10,33 @@ namespace LiveMapDashboard.Web.Models.Providers
         private readonly ISuggestedPoIService _suggestedPoiService;
         private readonly ICategoryService _categoryService;
         private readonly IMapService _mapService;
+        private readonly IRequestForChangeService _rfcService;
 
         public SuggestionFormViewModelProvider(
             ISuggestedPoIService suggestedPoiService,
             ICategoryService categoryService,
-            IMapService mapService)
+            IMapService mapService,
+            IRequestForChangeService rfcService)
         {
             _suggestedPoiService = suggestedPoiService;
             _categoryService = categoryService;
             _mapService = mapService;
+            _rfcService = rfcService;
+
         }
 
         public async Task<SuggestionFormViewModel> Hydrate(SuggestionFormViewModel viewModel)
         {
-            BackendApiHttpResponse<SuggestedPointOfInterest> suggestedPoiResult = 
+
+            // Get RFC data first
+            var rfcResponse = await _rfcService.Get(Guid.Parse(viewModel.RfcId));
+
+            if (!rfcResponse.IsSuccess || rfcResponse.Value == null)
+            {
+                return viewModel with { RfcId = "No RFC was found" };
+            }
+
+            BackendApiHttpResponse<SuggestedPointOfInterest> suggestedPoiResult =
                 await _suggestedPoiService.Get(Guid.Parse(viewModel.RfcId));
             BackendApiHttpResponse<Category[]> categoriesResult = await _categoryService.Get(null, null);
             BackendApiHttpResponse<Map[]> mapsResult = await _mapService.Get(null, null);

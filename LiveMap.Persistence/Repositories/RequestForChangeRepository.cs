@@ -56,7 +56,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     public async Task<RequestForChange?> GetSingle(Guid id)
     {
         SqlRequestForChange? requestForChange = await _context.RequestsForChange
-            .Include(rfc => rfc.Message)
+            .Include(rfc => rfc.Poi)
             .Where(r => r.Id == id)
             .FirstOrDefaultAsync();
 
