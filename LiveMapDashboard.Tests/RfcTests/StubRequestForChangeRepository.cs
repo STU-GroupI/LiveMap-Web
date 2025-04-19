@@ -1,5 +1,6 @@
 ﻿using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 
 namespace LiveMapDashboard.Tests.RfcTests;
 public class StubRequestForChangeRepository : IRequestForChangeRepository
@@ -23,5 +24,10 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             SubmittedOn = DateTime.UtcNow,
         });
+    }
+
+    public Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,25 +1,24 @@
 ﻿using LiveMap.Domain.Models;
-using LiveMap.Domain.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace LiveMapDashboard.Web.Models.Rfc;
+namespace LiveMapDashboard.Web.Models.Suggestion;
 
-public sealed record RequestForChangeViewModel(
+public sealed record PoiSuggestionsViewModel(
     Guid MapId,
     int? Skip,
     int? Take,
     bool? Ascending,
-    PaginatedResult<RequestForChange> Result
+    SuggestedPointOfInterest[] SuggestedPointOfInterests
     ) : IValidatableObject
 {
-    public static RequestForChangeViewModel Empty =>
+    public static PoiSuggestionsViewModel Empty =>
         new(
             MapId: Guid.Empty,
             Skip: null,
             Take: null,
             Ascending: null,
-            Result: PaginatedResult<RequestForChange>.Default
+            SuggestedPointOfInterests: []
             );
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
