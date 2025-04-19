@@ -62,9 +62,18 @@ public static class ViewModelMapperExtensions
     }
     public static List<OpeningHours> ToDomainOpeningHoursList(this ICollection<OpeningHoursViewModel> vm)
     {
-        return vm.Select((oh, index) => 
-            oh.ToDomainOpeningHours((DayOfWeek)(index == 0 ? 6 : index - 1)))
-            .ToList();
+
+        return vm
+            .Select((oh, index) => new
+            {
+                oh.IsActive,
+                Oh = oh.IsActive
+                        ? oh.ToDomainOpeningHours((DayOfWeek)(index))
+                        : null!,
+            })
+            .Where(item => item.IsActive)
+            .Select(item => item.Oh)
+            .ToList(); ;
     }
 
     public static PointOfInterest ToDomainPointOfInterest(this PoiCrudformViewModel viewModel)

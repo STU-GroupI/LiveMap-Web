@@ -29,6 +29,11 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         return Task.FromResult(pointOfInterest);
     }
 
+    public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var pois = maps.Where(m => m.Id == mapId)
@@ -57,5 +62,10 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
     {
         PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
         return Task.FromResult(poi);
+    }
+
+    public Task<PointOfInterest?> Update(PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
     }
 }

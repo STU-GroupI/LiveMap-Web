@@ -39,6 +39,35 @@ namespace LiveMapDashboard.Web.Models.Providers
             };
         }
 
+        private OpeningHoursViewModel[] NormalizeOpeningHours(List<OpeningHours> existingHours)
+        {
+            var allDays = Enum.GetValues<DayOfWeek>();
+
+            // Convert to dictionary for faster lookup
+            var existingDict = existingHours.ToDictionary(oh => oh.DayOfWeek, oh => oh);
+
+            var result = new List<OpeningHoursViewModel>();
+
+            foreach (var day in allDays)
+            {
+                if (existingDict.TryGetValue(day, out var existing))
+                {
+                    result.Add(existing.ToViewModelOpeningHours());
+                }
+                else
+                {
+                    result.Add(new OpeningHoursViewModel
+                    (
+                        Start: new TimeOnly(9, 0).ToString(),
+                        End: new TimeOnly(17, 0).ToString(),
+                        IsActive: false
+                    ));
+                }
+            }
+
+            return result.ToArray();
+        }
+
         private async Task<PoiCrudformViewModel> HydrateWithPoi(
             PoiCrudformViewModel viewModel,
             Guid poiId,
@@ -57,6 +86,10 @@ namespace LiveMapDashboard.Web.Models.Providers
             }
             PointOfInterest poi = poiResult.Value;
 
+            var openingHours = poi.OpeningHours
+                    .Select(oh => oh.ToViewModelOpeningHours())
+                    .ToArray();
+
             return viewModel with
             {
                 Title = poi.Title,
@@ -64,9 +97,7 @@ namespace LiveMapDashboard.Web.Models.Providers
                 Coordinate = poi.Coordinate,
                 Description = poi.Description,
                 IsWheelchairAccessible = poi.IsWheelchairAccessible,
-                OpeningHours = poi.OpeningHours
-                    .Select(oh => oh.ToViewModelOpeningHours())
-                    .ToArray(),
+                OpeningHours = this.NormalizeOpeningHours(poi.OpeningHours.ToList()),
                 Categories = categories,
                 MapId = mapId.ToString(),
             };
