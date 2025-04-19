@@ -18,7 +18,7 @@ namespace LiveMapDashboard.Web.Controllers
         }
 
         [HttpGet("form/{id}")]
-        public async Task<IActionResult> PoiForm(
+        public async Task<IActionResult> PoiUpdateForm(
             [FromRoute] string? id,
             [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
         {
@@ -34,6 +34,18 @@ namespace LiveMapDashboard.Web.Controllers
             var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
             {
                 Id = id
+            });
+
+            return View("PoiForm", viewModel);
+        }
+
+        [HttpGet("form")]
+        public async Task<IActionResult> PoiCreateForm(
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+        {
+            var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
+            {
+                Id = null
             });
             return View("PoiForm", viewModel);
         }
