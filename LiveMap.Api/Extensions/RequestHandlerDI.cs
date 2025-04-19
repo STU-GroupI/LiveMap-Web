@@ -60,6 +60,12 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
+                Rfc.Requests.GetSingleRequest,
+                Rfc.Responses.GetSingleResponse>,
+            Rfc.Handlers.GetSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
                 SuggestedPoi.Requests.CreateSingleRequest,
                 SuggestedPoi.Responses.CreateSingleResponse>,
             SuggestedPoi.Handlers.CreateSingleHandler>();

@@ -67,24 +67,19 @@ public class RequestForChangeController : ControllerBase
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler
         )
     {
-        try
-        {
-            var rfc = new RequestForChange()
-            {
-                Id = id,
-                ApprovalStatus = webRequest.ApprovalStatus,
-                ApprovedOn = webRequest.ApprovalStatus == ApprovalStatus.APPROVED ? DateTime.UtcNow : null,
-                SubmittedOn = DateTime.Now
-            };
-            
-            var request = new UpdateSingleRequest(rfc);
-            UpdateSingleResponse response = await handler.Handle(request);
-
-            return Ok(response.Rfc);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        var rfc = new RequestForChange() 
+        { 
+            Id = id, 
+            ApprovalStatus = webRequest.ApprovalStatus, 
+            ApprovedOn = webRequest.ApprovalStatus == ApprovalStatus.APPROVED ? DateTime.UtcNow : null, 
+            SubmittedOn = DateTime.Now
+        };
+        
+        var request = new UpdateSingleRequest(rfc); 
+        
+        UpdateSingleResponse response = await handler.Handle(request);
+        
+        return Ok(response.Rfc);
+        
     }
 }

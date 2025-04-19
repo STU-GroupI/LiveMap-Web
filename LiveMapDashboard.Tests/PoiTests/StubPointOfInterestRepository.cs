@@ -24,7 +24,6 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
 
     public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
     {
-        // :p
         pois.Add(pointOfInterest);
         return Task.FromResult(pointOfInterest);
     }
