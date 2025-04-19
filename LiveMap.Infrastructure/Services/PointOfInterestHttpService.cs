@@ -44,7 +44,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
             .SendRequest(new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,
-                RequestUri = new Uri($"{_ENDPOINT}/{id}", UriKind.Relative)
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
             });
     }
 }
