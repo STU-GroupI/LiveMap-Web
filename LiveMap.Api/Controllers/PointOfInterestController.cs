@@ -112,4 +112,24 @@ public class PointOfInterestController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
+
+    /// <summary>
+    /// Deletes a POI with the given id
+    /// </summary>
+    /// <param name="id">The id of the specified POI.</param>
+    /// <returns>Returns nothing. </returns>
+    /// <response code="204">No Content. </response>
+    /// <response code="404">Poi not found.</response>
+    [HttpDelete("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromRoute] string id,
+        [FromServices] IRequestHandler<DeleteSingleRequest> handler)
+    {
+        var request = new DeleteSingleRequest(Guid.Parse(id));
+        await handler.Handle(request);
+        return NoContent();
+    }
 }

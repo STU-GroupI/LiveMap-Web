@@ -33,6 +33,11 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
+                PointOfInterest.Requests.DeleteSingleRequest>,
+            PointOfInterest.Handlers.DeleteSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
                 Map.Requests.GetSingleRequest,
                 Map.Responses.GetSingleResponse>,
             Map.Handlers.GetSingleHandler>();

@@ -9,4 +9,6 @@ public interface IPointOfInterestRepository
     public Task<ICollection<Models.PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take);
 
     public Task<Models.PointOfInterest> CreatePointOfInterest(Models.PointOfInterest pointOfInterest);
+
+    public Task DeleteSingle(Guid id);
 }
