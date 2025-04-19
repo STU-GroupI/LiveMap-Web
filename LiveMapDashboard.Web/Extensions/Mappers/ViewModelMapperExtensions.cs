@@ -3,6 +3,7 @@ using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Suggestions;
 using NetTopologySuite.Simplify;
 using System.Runtime.CompilerServices;
+using System.Text;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMapDashboard.Web.Extensions.Mappers;
@@ -31,6 +32,34 @@ public static class ViewModelMapperExtensions
             End = toTime(vm.End),
         };
     }
+
+    public static OpeningHoursViewModel ToViewModelOpeningHours(this OpeningHours oh)
+    {
+        var convertTimeValueToString = (TimeSpan time) =>
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            if(time.Hours < 10)
+            {
+                sb.Append('0');
+            }
+            sb.Append(time.Hours);
+            sb.Append(':');
+            
+            if (time.Minutes < 10)
+            {
+                sb.Append('0');
+            }
+            sb.Append(time.Minutes);
+
+            return sb.ToString();
+        };
+
+        return new OpeningHoursViewModel(
+            IsActive: true,
+            Start: convertTimeValueToString(oh.Start),
+            End: convertTimeValueToString(oh.End));
+    }
     public static List<OpeningHours> ToDomainOpeningHoursList(this ICollection<OpeningHoursViewModel> vm)
     {
         return vm.Select((oh, index) => 
@@ -42,12 +71,14 @@ public static class ViewModelMapperExtensions
     {
         return new()
         {
+            Id = viewModel.Id is not null 
+                ? Guid.Parse(viewModel.Id) 
+                : Guid.Empty,
             Title = viewModel.Title,
             Category = null!,
             CategoryName = viewModel.Category,
             Coordinate = viewModel.Coordinate,
             Description = viewModel.Description,
-            Id = Guid.Empty,
             Map = null!,
             MapId = Guid.Parse(viewModel.MapId),
             OpeningHours = viewModel.OpeningHours.ToDomainOpeningHoursList(),
