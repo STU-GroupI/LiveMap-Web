@@ -3,6 +3,7 @@ using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Rfc;
 using NetTopologySuite.Simplify;
 using System.Runtime.CompilerServices;
+using System.Text;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMapDashboard.Web.Extensions.Mappers;
@@ -31,11 +32,48 @@ public static class ViewModelMapperExtensions
             End = toTime(vm.End),
         };
     }
+
+    public static OpeningHoursViewModel ToViewModelOpeningHours(this OpeningHours oh)
+    {
+        var convertTimeValueToString = (TimeSpan time) =>
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            if(time.Hours < 10)
+            {
+                sb.Append('0');
+            }
+            sb.Append(time.Hours);
+            sb.Append(':');
+            
+            if (time.Minutes < 10)
+            {
+                sb.Append('0');
+            }
+            sb.Append(time.Minutes);
+
+            return sb.ToString();
+        };
+
+        return new OpeningHoursViewModel(
+            IsActive: true,
+            Start: convertTimeValueToString(oh.Start),
+            End: convertTimeValueToString(oh.End));
+    }
     public static List<OpeningHours> ToDomainOpeningHoursList(this ICollection<OpeningHoursViewModel> vm)
     {
-        return vm.Select((oh, index) => 
-            oh.ToDomainOpeningHours((DayOfWeek)(index == 0 ? 6 : index - 1)))
-            .ToList();
+
+        return vm
+            .Select((oh, index) => new
+            {
+                oh.IsActive,
+                Oh = oh.IsActive
+                        ? oh.ToDomainOpeningHours((DayOfWeek)(index))
+                        : null!,
+            })
+            .Where(item => item.IsActive)
+            .Select(item => item.Oh)
+            .ToList(); ;
     }
 
     public static PointOfInterest ToDomainPointOfInterest(this PoiCrudformViewModel viewModel)

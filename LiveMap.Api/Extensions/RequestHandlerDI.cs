@@ -73,7 +73,7 @@ public static class RequestHandlerDI
             GetMultipleHandler>();
 
         services.AddTransient<
-            IRequestHandler<                
+            IRequestHandler<
                 Category.Requests.GetSingleRequest,
                 Category.Responses.GetSingleResponse>,
             Category.Handlers.GetSingleHandler>();
@@ -83,6 +83,11 @@ public static class RequestHandlerDI
                 Category.Requests.GetMultipleRequest,
                 Category.Responses.GetMultipleResponse>,
             Category.Handlers.GetMultipleHandler>();
+        services.AddTransient<
+            IRequestHandler<
+                PointOfInterest.Requests.UpdateSingleRequest,
+                PointOfInterest.Responses.UpdateSingleResponse>,
+            PointOfInterest.Handlers.UpdateSingleHandler>();
 
         return services;
     }
