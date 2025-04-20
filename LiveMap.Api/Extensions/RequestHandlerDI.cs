@@ -115,6 +115,12 @@ public static class RequestHandlerDI
                 PointOfInterest.Responses.UpdateSingleResponse>,
             PointOfInterest.Handlers.UpdateSingleHandler>();
 
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.CreateSingleRequest,
+                Category.Responses.CreateSingleResponse>,
+            Category.Handlers.CreateSingleHandler>();
+
         return services;
     }
 }

@@ -32,10 +32,10 @@ public class CategoryController : ControllerBase
             var request = new GetSingleRequest(name);
             GetSingleResponse response = await handler.Handle(request);
 
-            if (response.Category is null)
-            {
-                return NotFound();
-            }
+        if (response.Category is null)
+        {
+            return NotFound();
+        }
 
             var category = response.Category;
             return Ok(category);
@@ -53,7 +53,7 @@ public class CategoryController : ControllerBase
     /// <returns> The RFC with callback URL </returns>
     /// <response code="201">Response with the created </response>
     /// <response code="500">Something went very wrong</response>
-    [HttpPost()]
+    [HttpPost]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
@@ -82,7 +82,6 @@ public class CategoryController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<List<Category>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMultiple(
-        [FromQuery] string? name,
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
@@ -99,7 +98,7 @@ public class CategoryController : ControllerBase
     /// <returns> The RFC with callback URL </returns>
     /// <response code="201">Response with the created </response>
     /// <response code="500">Something went very wrong</response>
-    [HttpPatch("{oldName}")]
+    [HttpPut("{oldName}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
