@@ -1,7 +1,5 @@
 ﻿using Models = LiveMap.Domain.Models;
 
-namespace LiveMap.Application.Category.Persistance
-{
 public interface ICategoryRepository
 {
     public Task<Models.Category> Create(Models.Category category);

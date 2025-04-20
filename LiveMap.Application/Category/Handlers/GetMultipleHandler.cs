@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LiveMap.Application.Category.Handlers;
+
 public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipleResponse>
 {
     private readonly ICategoryRepository _categoryRepository;

@@ -25,25 +25,6 @@ public static class RequestHandlerDI
                 PointOfInterest.Responses.GetMultipleResponse>,
             PointOfInterest.Handlers.GetMultipleHandler>();
 
-        
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetSingleRequest,
-                Category.Responses.GetSingleResponse>,
-            Category.Handlers.GetSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetMultipleRequest,
-                Category.Responses.GetMultipleResponse>,
-            Category.Handlers.GetMultipleHandler>();
-        
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.CreateSingleRequest,
-                Category.Responses.CreateSingleResponse>,
-            Category.Handlers.CreateSingleHandler>();
-        
         services.AddTransient<
             IRequestHandler<
                 Category.Requests.UpdateSingleRequest,
