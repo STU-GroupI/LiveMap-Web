@@ -42,12 +42,14 @@ public static class ViewModelMapperExtensions
     {
         return new()
         {
+            Id = viewModel.Id is not null 
+                ? Guid.Parse(viewModel.Id) 
+                : Guid.Empty,
             Title = viewModel.Title,
             Category = null!,
             CategoryName = viewModel.Category,
             Coordinate = viewModel.Coordinate,
             Description = viewModel.Description,
-            Id = Guid.Empty,
             Map = null!,
             MapId = Guid.Parse(viewModel.MapId),
             OpeningHours = viewModel.OpeningHours.ToDomainOpeningHoursList(),

@@ -17,6 +17,33 @@ namespace LiveMapDashboard.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpPost("delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(
+            [FromServices] IPointOfInterestService service,
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
+            PoiCrudformViewModel viewModel)
+        {
+            var poi = viewModel.ToDomainPointOfInterest();
+            var result = await service.Delete(poi.Id);
+
+            if (result.IsSuccess)
+            {
+                ViewData["SuccessMessage"] = "The point of interest and its contents where successfully deleted!";
+                return View("index", await provider.Provide());
+            }
+            
+            ViewData["ErrorMessage"] = result.StatusCode switch
+            {
+                HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
+                HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
+                HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
+                _ => "Something went wrong while trying to contact the application. Please try again later"
+            };
+            
+            return View("index", await provider.Hydrate(viewModel));
+        }
+
         [HttpPost]
         [Route("")]
         [ValidateAntiForgeryToken]
