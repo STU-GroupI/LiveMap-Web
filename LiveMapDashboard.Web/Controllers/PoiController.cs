@@ -1,4 +1,4 @@
-﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Application.Infrastructure.Services;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
@@ -11,10 +11,43 @@ namespace LiveMapDashboard.Web.Controllers
     public class PoiController : Controller
     {
         public async Task<IActionResult> Index(
-            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+            [FromServices] IViewModelProvider<PoiListViewModel> provider)
         {
             var viewModel = await provider.Provide();
             return View(viewModel);
+        }
+
+        [HttpGet("form/{id}")]
+        public async Task<IActionResult> PoiUpdateForm(
+            [FromRoute] string? id,
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+        {
+            if (!Guid.TryParse(id, out var poiId))
+            {
+                var back = HttpContext?.Request?.Headers?.ContainsKey("Referer") ?? false;
+                return back 
+                    ? Redirect(HttpContext.Request.Headers["Referer"]) 
+                    : RedirectToAction(nameof(Index));
+                    
+            }
+
+            var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
+            {
+                Id = id
+            });
+
+            return View("PoiForm", viewModel);
+        }
+
+        [HttpGet("form")]
+        public async Task<IActionResult> PoiCreateForm(
+            [FromServices] IViewModelProvider<PoiCrudformViewModel> provider)
+        {
+            var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
+            {
+                Id = null
+            });
+            return View("PoiForm", viewModel);
         }
 
         [HttpPost]
@@ -28,11 +61,14 @@ namespace LiveMapDashboard.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("index", await provider.Hydrate(viewModel));
+                return View("PoiForm", await provider.Hydrate(viewModel));
             }
 
             var poi = viewModel.ToDomainPointOfInterest();
-            var result = await service.CreateSingle(poi);
+
+            var result = poi.Id == Guid.Empty || poi.Id.ToString() == string.Empty
+                ? await service.CreateSingle(poi)
+                : await service.UpdateSingle(poi);
 
             if (result.IsSuccess)
             {
@@ -49,7 +85,7 @@ namespace LiveMapDashboard.Web.Controllers
                 };
             }
 
-            return View("index", await provider.Hydrate(viewModel));
+            return View("PoiForm", await provider.Hydrate(viewModel));
         }
     }
 }

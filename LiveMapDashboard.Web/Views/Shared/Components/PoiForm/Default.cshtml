@@ -3,8 +3,7 @@
 
 <div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
     <div class="flex justify-between">
-        <a href="javascript:history.back()"
-           class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
+        <a asp-controller="Poi" asp-action="Index" class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
             Go Back
         </a>
         <form method="delete" asp-controller="poi" asp-action="delete">
@@ -38,6 +37,7 @@
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
+        <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="Coordinate.Latitude" />
         <input type="hidden" asp-for="Coordinate.Longitude" />
         <input type="hidden" asp-for="MapId" />
