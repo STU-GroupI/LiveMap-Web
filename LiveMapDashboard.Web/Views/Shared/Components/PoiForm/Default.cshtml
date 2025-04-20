@@ -5,7 +5,7 @@
     <div class="flex justify-between">
         @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBack.cshtml")
 
-        @if (Model.Id != string.Empty)
+        @if (!string.IsNullOrEmpty(Model.Id))
         {
             @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Delete.cshtml", Model)
         }
@@ -41,7 +41,7 @@
         <input type="hidden" asp-for="Coordinate.Longitude" />
         <input type="hidden" asp-for="MapId" />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml")
             
             <div>
@@ -53,12 +53,22 @@
         
         <div class="mt-2 py-4 relative z-10">
             <div class="flex justify-end gap-3 w-full">
-                <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" onclick="confirmLeave()">
-                    Cancel
-                </div>
+                @if (!string.IsNullOrEmpty(Model.Id))
+                {
+                    <a asp-controller="Poi" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Cancel
+                    </a>
+                }
+                else
+                {
+                    <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+                        Cancel
+                    </a>   
+                }
+                
                 <button type="submit"
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Save
+                    @(!string.IsNullOrEmpty(Model.Id) ? "Update" : "Create")
                 </button>
             </div>
         </div>
