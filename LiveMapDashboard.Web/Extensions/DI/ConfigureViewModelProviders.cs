@@ -1,4 +1,5 @@
-﻿using LiveMapDashboard.Web.Models.Poi;
+﻿using LiveMapDashboard.Web.Models.Category;
+using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
 using LiveMapDashboard.Web.Models.Suggestion;
@@ -15,11 +16,13 @@ public static class ConfigureViewModelProviders
             .AddTransient<
                 IViewModelProvider<PoiListViewModel>,
                 PoiListViewModelProvider>()
-            //.AddTransient<
-            //    IViewModelProvider<PoiSuggestionsViewModel>,
-            //    PoiSuggestionsViewModelProvider>()
+            .AddTransient<IViewModelProvider<CategoryListViewModel>,
+                CategoryListViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<RequestForChangeViewModel>,
-                RequestForChangeViewModelProvider>();
+                RequestForChangeViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<CategoryCrudFormViewModel>,
+                CategoryCrudFormViewModelProvider>();
     }
 }

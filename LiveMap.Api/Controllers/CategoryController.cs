@@ -102,15 +102,15 @@ public class CategoryController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Patch(
+    public async Task<IActionResult> Put(
         [FromRoute] string oldName,
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+        var request = new UpdateSingleRequest(oldName, webRequest.CategoryName);
         var response = await handler.Handle(request);
 
-        return Ok(new { oldName = response.oldName, newName = response.newName });
+        return Ok(new Category { CategoryName = response.NewName});
     }
 
     /// <summary>

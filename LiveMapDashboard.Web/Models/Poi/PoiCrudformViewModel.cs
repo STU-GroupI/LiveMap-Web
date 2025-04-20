@@ -1,10 +1,9 @@
-﻿using LiveMap.Application.Infrastructure.Services;
-using LiveMap.Domain.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace LiveMapDashboard.Web.Models.Poi;
+using Models = LiveMap.Domain.Models;
+
 
 public sealed record PoiCrudformViewModel(
     string? Id,
@@ -13,9 +12,9 @@ public sealed record PoiCrudformViewModel(
     string Description, 
     bool IsWheelchairAccessible,
     string MapId, 
-    Coordinate Coordinate,
+    Models.Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
-    Category[]? Categories) : IValidatableObject
+    Models.Category[]? Categories) : IValidatableObject
 {
     public static PoiCrudformViewModel Empty => 
         new PoiCrudformViewModel(
