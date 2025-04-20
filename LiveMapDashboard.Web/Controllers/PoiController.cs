@@ -29,7 +29,7 @@ namespace LiveMapDashboard.Web.Controllers
 
             if (result.IsSuccess)
             {
-                ViewData["SuccessMessage"] = "Your request was successfully processed!";
+                ViewData["SuccessMessage"] = "The point of interest and its contents where successfully deleted!";
                 return View("index", await provider.Provide());
             }
             
