@@ -24,17 +24,6 @@ public class CategoryRepository : ICategoryRepository
         return category;
     }
 
-    public async Task<Category?> GetSingle(string name)
-    {
-        var category = await _context.Categories
-            .Where(c => c.CategoryName == name)
-            .FirstOrDefaultAsync();
-
-        if (category is null) return null;
-
-        return category;
-    }
-
     public async Task<ICollection<Category>> GetMultiple(string name, int? skip, int? take)
     {
         var query = _context.Categories.AsQueryable();
@@ -63,10 +52,10 @@ public class CategoryRepository : ICategoryRepository
 
 
     /*IMPORTANT NOTE:
-    TODO: This Update method is merely a workaround for the fact that we cannot update a category name in the database,
-    this is because of a foreign key constraint that prevents us from updating a category name in the database whatsoever.
-    In this workaround, a new category is created and the old category is deleted. This is not ideal, but it works for now.
-    Maybe use ids for the future...?
+        TODO: This Update method is merely a workaround for the fact that we cannot update a category name in the database,
+        this is because of a foreign key constraint that prevents us from updating a category name in the database whatsoever.
+        In this workaround, a new category is created and the old category is deleted. This is not ideal, but it works for now.
+        Maybe use ids for the future...?
     */
     public async Task<bool> Update(string oldName, string newName)
     {
@@ -94,6 +83,8 @@ public class CategoryRepository : ICategoryRepository
 
             //Add the entity to the context
             _context.Categories.Add(newCategory);
+            
+            await _context.SaveChangesAsync();
 
             // Update PointsOfInterest and SuggestedPointsOfInterest records first
             await _context.PointsOfInterest
@@ -108,9 +99,8 @@ public class CategoryRepository : ICategoryRepository
             _context.Categories.Remove(category);
 
             await _context.SaveChangesAsync();
-
-            // Commit the transaction if everything is successful
             await transaction.CommitAsync();
+
             return true;
         }
         catch (Exception e)
@@ -120,8 +110,6 @@ public class CategoryRepository : ICategoryRepository
             return false;
         }
     }
-
-
 
     public async Task<bool> Delete(string name)
     {

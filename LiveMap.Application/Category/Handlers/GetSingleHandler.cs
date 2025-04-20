@@ -21,6 +21,6 @@ public class GetSingleHandler : IRequestHandler<GetSingleRequest, GetSingleRespo
 
     public async Task<GetSingleResponse> Handle(GetSingleRequest request)
     {
-        return new GetSingleResponse(await _categoryRepository.GetSingle(request.name));
+        return new GetSingleResponse(await _categoryRepository.GetSingle(request.Name));
     }
 }

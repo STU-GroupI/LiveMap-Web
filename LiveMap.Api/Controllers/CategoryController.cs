@@ -27,16 +27,16 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-            var request = new GetSingleRequest(name);
-            GetSingleResponse response = await handler.Handle(request);
+        var request = new GetSingleRequest(name);
+        GetSingleResponse response = await handler.Handle(request);
 
-            if (response.Category is null)
-            {
-                return NotFound();
-            }
+        if (response.Category is null)
+        {
+            return NotFound();
+        }
 
-            var category = response.Category;
-            return Ok(category);
+        var category = response.Category;
+        return Ok(category);
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class CategoryController : ControllerBase
     /// <returns> The Category with callback URL </returns>
     /// <response code="201">Response with the category created </response>
     /// <response code="500">Something went very wrong</response>
-    [HttpPost()]
+    [HttpPost]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
@@ -60,8 +60,8 @@ public class CategoryController : ControllerBase
         };
 
         var request = new CreateSingleRequest(category);
-            CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Category);
+        CreateSingleResponse response = await handler.Handle(request);
+        return Created("", response.Category);
     }
 
     /// <summary>
@@ -75,14 +75,13 @@ public class CategoryController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<List<Category>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMultiple(
-        [FromQuery] string? name,
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-            var request = new GetMultipleRequest(name, skip, take);
-            var response = await handler.Handle(request);
-            return Ok(response.Categories);
+        var request = new GetMultipleRequest(skip, take);
+        var response = await handler.Handle(request);
+        return Ok(response.Categories);
     }
 
     /// <summary>
@@ -92,7 +91,7 @@ public class CategoryController : ControllerBase
     /// <returns> The Category with callback URL </returns>
     /// <response code="201">Response with the created category </response>
     /// <response code="500">Something went very wrong</response>
-    [HttpPatch("{oldName}")]
+    [HttpPut("{oldName}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<(string, Category)>(StatusCodes.Status201Created)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
@@ -101,10 +100,10 @@ public class CategoryController : ControllerBase
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-            var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
-            var response = await handler.Handle(request);
+        var request = new UpdateSingleRequest(oldName, webRequest.NewCategoryName);
+        var response = await handler.Handle(request);
 
-            return Ok(new { oldName = response.oldName, newName = response.newName });
+        return Ok(response.newName);
     }
 
 
@@ -123,14 +122,12 @@ public class CategoryController : ControllerBase
         [FromServices] IRequestHandler<DeleteSingleRequest, DeleteSingleResponse> handler)
     {
         var request = new DeleteSingleRequest(name);
+        var response = await handler.Handle(request);
 
-            var response = await handler.Handle(request);
+        if (!response.Success)
+            return NotFound("Category not found");
 
-            return Ok(response.Categories);
-            if (!response.Success)
-                return NotFound("Category not found");
-
-            return NoContent();
+        return NoContent();
     }
 
 }

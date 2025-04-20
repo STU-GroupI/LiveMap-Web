@@ -91,6 +91,12 @@ public static class RequestHandlerDI
                 Category.Responses.GetMultipleResponse>,
             Category.Handlers.GetMultipleHandler>();
 
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.CreateSingleRequest,
+                Category.Responses.CreateSingleResponse>,
+            Category.Handlers.CreateSingleHandler>();
+
         return services;
     }
 }
