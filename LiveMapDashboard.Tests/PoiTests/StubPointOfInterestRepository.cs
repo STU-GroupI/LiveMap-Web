@@ -71,4 +71,9 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
     {
         throw new NotImplementedException();
     }
+
+    Task<bool> IPointOfInterestRepository.DeleteSingle(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }
