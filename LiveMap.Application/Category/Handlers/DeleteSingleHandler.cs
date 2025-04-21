@@ -1,7 +1,6 @@
-﻿using LiveMap.Application.Category.Persistance;
+using LiveMap.Application.Category.Persistance;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
-using LiveMap.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +9,18 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.Category.Handlers;
 
-public class GetSingleHandler : IRequestHandler<GetSingleRequest, GetSingleResponse>
+public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest, DeleteSingleResponse>
 {
+
     private readonly ICategoryRepository _categoryRepository;
 
-    public GetSingleHandler(ICategoryRepository categoryRepository)
+    public DeleteSingleHandler(ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<GetSingleResponse> Handle(GetSingleRequest request)
+    public async Task<DeleteSingleResponse> Handle(DeleteSingleRequest request)
     {
-        return new GetSingleResponse(await _categoryRepository.GetSingle(request.Name));
+        return new(await _categoryRepository.Delete(request.name));
     }
 }
