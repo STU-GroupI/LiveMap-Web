@@ -1,36 +1,34 @@
 ﻿@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
 
-<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+<div class="max-w-10xl px-4 mx-auto">
     <div class="flex justify-between">
-        <a asp-controller="category" asp-action="index" class="bg-transparent hover:bg-transparent px-4 py-2 text-blue-500 hover:bg-blue-600">
-            Go Back
-        </a>
-        <form method="delete" asp-controller="category" asp-action="delete">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="@nameof(Model.CategoryName)" value="@Model.CategoryName"/>
-            <button type="submit"
-            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                Delete
-            </button>
-        </form>
+        @await Html.PartialAsync("Components/CategoryForm/_GoBack", Model)
+        
+        @if (Model.CategoryName != "" && Model.CategoryName is not null)
+        {
+            @await Html.PartialAsync("Components/CategoryForm/_Delete", Model)
+        }
     </div>
 </div>
 
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    @if (ViewData["SuccessMessage"] != null)
-    {
-        <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-            @ViewData["SuccessMessage"]
-        </div>
-    }
+@if (ViewData["SuccessMessage"] != null || ViewData["ErrorMessage"] != null)
+{
+    <div class="max-w-10xl px-4 mx-auto">
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
 
-    @if (ViewData["ErrorMessage"] != null)
-    {
-        <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-            @ViewData["ErrorMessage"]
-        </div>
-    }
-</div>
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+    </div>  
+}
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
     <form method="post" asp-controller="category" asp-action="submit">
@@ -39,43 +37,49 @@
 
         <input type="hidden" name="@nameof(Model.CategoryName)" asp-for="CategoryName" />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="flex flex-col gap-6">
+            <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
                 <div class="mb-2">
                     <label for="newValue" class="block mb-2 text-sm font-medium">
                         Category name
                     </label>
+                    
                     @{
-                        string placeHolder = Model.CategoryName != "" && Model.CategoryName is not null 
-                            ? Model.CategoryName 
+                        string placeHolder = Model.CategoryName != "" && Model.CategoryName is not null
+                            ? Model.CategoryName
                             : "Some Name";
                     }
-                    <input type="text" asp-for="NewValue" name="@nameof(Model.NewValue)" id="newValue"
+                    
+                    <input type="text" asp-for="NewValue" name="@nameof(Model.NewValue)"
+                           id="newValue"
                            class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                           placeholder="@placeHolder" />
+                           placeholder="@placeHolder"
+                           value="@Model.CategoryName"/>
                     <span asp-validation-for="NewValue" class="text-sm text-red-600 mt-2"></span>
                 </div>
             </div>
         </div>
 
         <div class="mt-2 py-4 relative z-10">
-            <div class="flex justify-end gap-3 w-100">
-                <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" onclick="confirmLeave()">
-                    Cancel
-                </div>
-                <button type="submit"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <div class="flex justify-end gap-3 w-full">
+
+                @if (Model.CategoryName != "" && Model.CategoryName is not null)
+                {
+                    <a asp-controller="Category" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center">
+                        Cancel
+                    </a>
+                }
+                else
+                {
+                    <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center" data-hs-overlay="#go-back-alert">
+                        Cancel
+                    </div>
+                }
+
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-center">
                     Save
                 </button>
             </div>
         </div>
     </form>
 </div>
-
-<script>
-    function confirmLeave() {
-        if (confirm("Are you sure you want to leave this page?")) {
-            window.location.href = "javascript:history.back()";
-        }
-    }
-</script>
