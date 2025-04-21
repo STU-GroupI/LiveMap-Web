@@ -178,7 +178,11 @@ public class PointOfInterestController : ControllerBase
         [FromServices] IRequestHandler<DeleteSingleRequest> handler)
     {
         var request = new DeleteSingleRequest(Guid.Parse(id));
-        await handler.Handle(request);
+        var result = await handler.Handle(request);
+        if(!result)
+        {
+            return NotFound();
+        }
         return NoContent();
     }
 }

@@ -147,8 +147,13 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         }
         catch (Exception e)
         {
+            // Thomas: 
+            // Currently, we can do it this way. But if an exception is thrown within the scope
+            // of an active transaction, it is automagically rolled back. Thats why you don't
+            // see me do it in the cascading delete of the suggested POI's
+            
             await transaction.RollbackAsync();
-            return false;
+            throw;
         }
     }
 }
