@@ -116,7 +116,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         return poi.ToDomainPointOfInterest();
     }
 
-    public async Task DeleteSingle(Guid id)
+    public async Task<bool> DeleteSingle(Guid id)
     {
         SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
             .Where(poi => poi.Id == id)
@@ -124,7 +124,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         if (pointOfInterest is null)
         {
-            throw new ArgumentException("Point of interest not found");
+            return false;
         }
 
         List<SqlRequestForChange> requestForChanges = await _context.RequestsForChange
@@ -143,11 +143,12 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
+            return true;
         }
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            throw;
+            return false;
         }
     }
 }

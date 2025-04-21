@@ -12,5 +12,5 @@ public interface IPointOfInterestRepository
 
     public Task<Models.PointOfInterest?> Update(Models.PointOfInterest pointOfInterest);
     
-    public Task DeleteSingle(Guid id);
+    public Task<bool> DeleteSingle(Guid id);
 }

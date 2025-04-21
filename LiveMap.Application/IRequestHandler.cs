@@ -6,5 +6,5 @@ public interface IRequestHandler<TRequest, TResponse>
 
 public interface IRequestHandler<TRequest>
 {
-    public Task Handle(TRequest request);
+    public Task<bool> Handle(TRequest request);
 }
