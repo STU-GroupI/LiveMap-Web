@@ -60,8 +60,13 @@ public class PointOfInterestHttpService : IPointOfInterestService
             });
     }
 
-    public Task<BackendApiHttpResponse> Delete(PointOfInterest poi)
+    public async Task<BackendApiHttpResponse> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            });
     }
 }

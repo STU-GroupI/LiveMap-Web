@@ -1,4 +1,4 @@
-﻿using LiveMap.Application;
+using LiveMap.Application;
 using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
 using Rfc = LiveMap.Application.RequestForChange;
@@ -36,6 +36,11 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
+                PointOfInterest.Requests.DeleteSingleRequest>,
+            PointOfInterest.Handlers.DeleteSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
                 Category.Requests.GetSingleRequest,
                 Category.Responses.GetSingleResponse>,
             Category.Handlers.GetSingleHandler>();
@@ -63,7 +68,6 @@ public static class RequestHandlerDI
                 Category.Requests.DeleteSingleRequest,
                 Category.Responses.DeleteSingleResponse>,
             Category.Handlers.DeleteSingleHandler>();
-
 
         services.AddTransient<
             IRequestHandler<

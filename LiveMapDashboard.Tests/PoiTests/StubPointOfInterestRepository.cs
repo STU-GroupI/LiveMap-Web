@@ -13,6 +13,7 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         this.pois = pois;
         maps = new List<Map>();
     }
+    
     public StubPointOfInterestRepository(List<Map> maps)
     {
         this.pois = maps
@@ -29,9 +30,11 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         return Task.FromResult(pointOfInterest);
     }
 
-    public Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    public Task DeleteSingle(Guid id)
     {
-        throw new NotImplementedException();
+        PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
+        pois.Remove(poi!);
+        return Task.FromResult(poi);
     }
 
     public Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)

@@ -115,4 +115,45 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         return poi.ToDomainPointOfInterest();
     }
+
+    public async Task<bool> DeleteSingle(Guid id)
+    {
+        SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
+            .Where(poi => poi.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (pointOfInterest is null)
+        {
+            return false;
+        }
+
+        List<SqlRequestForChange> requestForChanges = await _context.RequestsForChange
+            .Where(rfc => rfc.PoiId == id)
+            .ToListAsync();
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var requestForChange in requestForChanges)
+            {
+                _context.RequestsForChange.Remove(requestForChange);
+            }
+            _context.PointsOfInterest.Remove(pointOfInterest);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            // Thomas: 
+            // Currently, we can do it this way. But if an exception is thrown within the scope
+            // of an active transaction, it is automagically rolled back. Thats why you don't
+            // see me do it in the cascading delete of the suggested POI's
+            
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
 }
