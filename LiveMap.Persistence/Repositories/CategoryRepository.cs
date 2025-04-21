@@ -24,33 +24,6 @@ public class CategoryRepository : ICategoryRepository
         return category;
     }
 
-    public async Task<ICollection<Category>> GetMultiple(string name, int? skip, int? take)
-    {
-        var query = _context.Categories.AsQueryable();
-
-        if (name is not null)
-        {
-            query = query.Where(c => c.CategoryName.Contains(name));
-        }
-
-        if (skip is int fromValue)
-        {
-            query = query.Skip(fromValue);
-        }
-
-        if (take is int amountValue)
-        {
-            query = query.Take(amountValue);
-        }
-
-        var result = await query.ToListAsync();
-
-        if (result is not { Count: > 0 }) return [];
-
-        return result;
-    }
-
-
     /*IMPORTANT NOTE:
         TODO: This Update method is merely a workaround for the fact that we cannot update a category name in the database,
         this is because of a foreign key constraint that prevents us from updating a category name in the database whatsoever.
@@ -165,12 +138,18 @@ public class CategoryRepository : ICategoryRepository
         {
             query = query.Take(takeValue);
         }
+        query = query.Where(value => value.CategoryName != Category.EMPTY);
 
         return await query.ToArrayAsync();
     }
 
     public async Task<Category?> GetSingle(string name)
     {
+        if(name == Category.EMPTY)
+        {
+            return null;
+        }
+
         return await _context.Categories.FindAsync(name);
     }
 }

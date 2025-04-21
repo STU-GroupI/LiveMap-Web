@@ -1,5 +1,6 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
+using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Models.Category;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ public class CategoryController : Controller
             return View("CategoryForm", await provider.Hydrate(viewModel));
         }
 
-        BackendApiHttpResponse<Models.Category> response = viewModel switch
+        BackendApiHttpResponse<Models.Category> result = viewModel switch
         {
             var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
                 => await categoryService.UpdateSingle(
@@ -53,7 +54,9 @@ public class CategoryController : Controller
                     new() { CategoryName = viewModel.NewValue })
         };
 
-        return View("CategoryForm", await provider.Hydrate(viewModel));
+        this.BuildResponseMessageForRedirect(result);
+
+        return RedirectToAction("index");
     }
 
     [Route("delete")]
@@ -69,6 +72,8 @@ public class CategoryController : Controller
         }
 
         var result = await categoryService.Delete(new() { CategoryName = categoryName });
+
+        this.BuildResponseMessageForRedirect(result, this.CreateMessageDictionary());
 
         return RedirectToAction("index");
     }
