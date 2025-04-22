@@ -4,5 +4,10 @@
 @await Component.InvokeAsync("PoiForm", Model)
 
 @section Scripts {
+    <script>
+        const map = MapFactory.createMap('map', [4.729, 52.045], 15);
+    </script>
+    
+    <script src="~/js/map/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
     <partial name="_ValidationScriptsPartial" />
 }

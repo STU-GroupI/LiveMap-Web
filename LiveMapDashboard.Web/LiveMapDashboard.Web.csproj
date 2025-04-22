@@ -31,6 +31,10 @@
     <ProjectReference Include="..\LiveMap.Persistence\LiveMap.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\js\park-place-markers-maplibre.js" />
+  </ItemGroup>
+
   <Target Name="BuildTailwind" BeforeTargets="Build">
     <Exec Command="npm run build:css" />
   </Target>
