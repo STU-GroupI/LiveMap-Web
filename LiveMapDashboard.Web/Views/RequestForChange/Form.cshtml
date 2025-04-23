@@ -3,11 +3,11 @@
 
 <div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
     <div class="flex justify-between">
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBack.cshtml")
+        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBack.cshtml", Model.CrudformViewModel)
 
         @if (!string.IsNullOrEmpty(Model.CrudformViewModel.Id))
         {
-            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Delete.cshtml", Model)
+            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Delete.cshtml", Model.CrudformViewModel)
         }
     </div>
 </div>
@@ -42,12 +42,12 @@
         <input type="hidden" asp-for="CrudformViewModel.MapId" />
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml")
+            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml", Model.CrudformViewModel)
             
             <div>
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_LocationButton.cshtml")
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml")
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml")
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_LocationButton.cshtml", Model.CrudformViewModel)
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml", Model.CrudformViewModel)
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml", Model.CrudformViewModel)
             </div>
         </div>
         
@@ -74,3 +74,8 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script src="~/js/map/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
