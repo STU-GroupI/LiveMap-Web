@@ -101,7 +101,6 @@ function placeMarkerOnMap(){
     centerOnMap(); // Center the map on the new marker
 }
 
-
 document.getElementById('applyLocationButton').addEventListener('click', () => {
     if (!clickedLngLat) {
         showAlert('warning', 'Klik eerst op de kaart om een locatie te selecteren.');
@@ -113,4 +112,15 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
     showAlert('success', 'Coördinaten zijn toegepast.');
 });
 
+map.on('load', () => {
+    const long = parseFloat(document.getElementById('Coordinate_Longitude').value.replace(',', '.'))
+    const lat = parseFloat(document.getElementById('Coordinate_Latitude').value.replace(',', '.'))
 
+    if ((long && lat) && (long !== 0 && lat !== 0)) {
+        const clampedLong = Math.max(Math.min(long, 90), -90);
+        const clampedLat = Math.max(Math.min(lat, 90), -90);
+
+        clickedLngLat = {lng: clampedLong, lat: clampedLat};
+        placeMarkerOnMap();
+    }
+});

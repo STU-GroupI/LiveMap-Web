@@ -82,4 +82,28 @@ public class RequestForChangeController : ControllerBase
         return Ok(response.Rfc);
         
     }
+
+    /// <summary>
+    /// Gets all Suggested POI's for a map
+    /// </summary>
+    /// <param name="id">Map ID</param>
+    /// <returns>The Suggested POI's</returns>
+    /// <response code="200">Successfully get the suggested poi's.</response>
+    /// <response code="404">Map not found.</response>
+    [HttpGet("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(
+        [FromRoute] string id,
+        [FromQuery] int? skip,
+        [FromQuery] int? take,
+        [FromQuery] bool? ascending,
+        [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
+    {
+        var request = new GetMultipleRequest(Guid.Parse(id), skip, take, ascending);
+        var response = await handler.Handle(request);
+
+        return Ok(response.Rfc);
+    }
 }

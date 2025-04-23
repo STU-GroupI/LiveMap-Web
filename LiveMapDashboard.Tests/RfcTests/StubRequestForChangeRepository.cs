@@ -1,5 +1,6 @@
 ﻿using LiveMap.Application.RequestForChange.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 
 namespace LiveMapDashboard.Tests.RfcTests;
 public class StubRequestForChangeRepository : IRequestForChangeRepository
@@ -48,5 +49,10 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
     {
         RequestForChange rfc = RequestsForChange.FirstOrDefault(r => r.Id == id);
         return Task.FromResult(rfc);
+    }
+
+    public Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    {
+        throw new NotImplementedException();
     }
 }

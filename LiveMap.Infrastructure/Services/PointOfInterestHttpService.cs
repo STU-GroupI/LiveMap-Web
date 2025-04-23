@@ -3,6 +3,7 @@ using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using System.Text;
 using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Infrastructure.Services;
 public class PointOfInterestHttpService : IPointOfInterestService
@@ -16,13 +17,26 @@ public class PointOfInterestHttpService : IPointOfInterestService
         _backendApiService = backendApiService;
     }
 
-    public Task<BackendApiHttpResponse<PointOfInterest>> Get(Guid id)
+    public async Task<BackendApiHttpResponse<PointOfInterest>> Get(Guid id)
     {
-        throw new NotImplementedException();
+        return await _backendApiService
+            .SendRequest<PointOfInterest>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            });
     }
-    public Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
+
+    public async Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
     {
-        throw new NotImplementedException();
+        string query = $"{nameof(mapId)}={mapId}&{nameof(skip)}={skip}&{nameof(take)}={take}";
+        Uri uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
+        return await _backendApiService
+            .SendRequest<PointOfInterest[]>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = uri
+            });
     }
     public async Task<BackendApiHttpResponse<PointOfInterest>> CreateSingle(PointOfInterest poi)
     {
@@ -34,12 +48,25 @@ public class PointOfInterestHttpService : IPointOfInterestService
                 RequestUri = new Uri(_ENDPOINT, UriKind.Relative)
             });
     }
-    public Task<BackendApiHttpResponse<PointOfInterest>> UpdateSingle(PointOfInterest poi)
+
+    public async Task<BackendApiHttpResponse<PointOfInterest>> UpdateSingle(PointOfInterest poi)
     {
-        throw new NotImplementedException();
+        return await _backendApiService
+            .SendRequest<PointOfInterest>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Patch,
+                Content = new StringContent(JsonSerializer.Serialize(poi), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri($"{_ENDPOINT}/{poi.Id.ToString()}", UriKind.Relative)
+            });
     }
-    public Task<BackendApiHttpResponse> Delete(PointOfInterest poi)
+
+    public async Task<BackendApiHttpResponse> Delete(Guid id)
     {
-        throw new NotImplementedException();
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            });
     }
 }

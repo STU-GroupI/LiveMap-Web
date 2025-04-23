@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Bogus.DataSets;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using NetTopologySuite;
@@ -69,8 +70,16 @@ public static class DevelopmentSeeder
         var openingHoursTracked = new List<SqlOpeningHours>(openingHours);
         var getOpeningHours = (Faker f) =>
         {
-            var hours = openingHoursTracked.Take(7).ToList();
-            openingHoursTracked.RemoveAll(oh => hours.Contains(oh));
+            var hours = openingHoursTracked
+                .GroupBy(oh => oh.DayOfWeek)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (var hour in hours)
+            {
+                openingHoursTracked.Remove(hour);
+            }
+
             return hours;
         };
 
@@ -100,8 +109,7 @@ public static class DevelopmentSeeder
         return new Faker<SqlOpeningHours>()
             .RuleFor(oh => oh.Id, f => f.Random.Guid())
             .RuleFor(oh => oh.Start, f => f.Date.Between(DateTime.Today.AddHours(8), DateTime.Today.AddHours(13)).TimeOfDay)
-            .RuleFor(oh => oh.End, f => f.Date.Between(DateTime.Today.AddHours(13), DateTime.Today.AddHours(22)).TimeOfDay)
-            .RuleFor(oh => oh.DayOfWeek, f => f.PickRandom<DayOfWeek>());
+            .RuleFor(oh => oh.End, f => f.Date.Between(DateTime.Today.AddHours(13), DateTime.Today.AddHours(22)).TimeOfDay);
     }
 
     private static Faker<SqlRequestForChange> GetRequestForChangeFaker(
@@ -206,6 +214,7 @@ public static class DevelopmentSeeder
             new() { CategoryName = "Trash bin" },
             new() { CategoryName = "Parking" },
             new() { CategoryName = "Entertainment" },
+            new() { CategoryName = Category.EMPTY },
         ];
 
         List<PointOfInterestStatus> poiStatuses = [
@@ -222,6 +231,16 @@ public static class DevelopmentSeeder
 
         List<SqlMap> maps = GetMapFaker().Generate(3);
         List<SqlOpeningHours> openingHours = GetOpeningHoursFaker().Generate(7 * 50);
+
+        foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+        {
+            int skip = ((int)day) * 50;
+            
+            foreach (var hour in openingHours.Skip(skip).Take(50))
+            {
+                hour.DayOfWeek = day;
+            }
+        }
 
         List<SqlPointOfInterest> pointsOfInterest = GetPointOfInterestFaker(
             maps: maps,

@@ -1,0 +1,42 @@
+﻿using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+namespace LiveMapDashboard.Web.Models.Rfc;
+
+public sealed record RequestForChangeViewModel(
+    Guid MapId,
+    int? Skip,
+    int? Take,
+    bool? Ascending,
+    PaginatedResult<RequestForChange> Result
+    ) : IValidatableObject
+{
+    public static RequestForChangeViewModel Empty =>
+        new(
+            MapId: Guid.Empty,
+            Skip: null,
+            Take: null,
+            Ascending: null,
+            Result: PaginatedResult<RequestForChange>.Default
+            );
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        List<ValidationResult> results = [];
+        return results;
+    }
+
+    public static string ToDateTime(DateTime? dateTime)
+    {
+        if (dateTime == null)
+        {
+            return "No date was provided";
+        }
+        else
+        {
+            return dateTime.Value.ToString("d MMMM yyyy HH:mm", new System.Globalization.CultureInfo("nl-nl"));
+        }
+    }
+}
