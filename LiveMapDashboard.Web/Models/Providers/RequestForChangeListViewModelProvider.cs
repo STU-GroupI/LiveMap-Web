@@ -16,7 +16,7 @@ namespace LiveMapDashboard.Web.Models.Providers
 
         public async Task<RequestForChangeListViewModel> Hydrate(RequestForChangeListViewModel viewModel)
         {
-            PaginatedResult<RequestForChange> result = (await _rfcService.Get(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? PaginatedResult<RequestForChange>.Default;
+            PaginatedResult<RequestForChange> result = (await _rfcService.GetMultiple(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? PaginatedResult<RequestForChange>.Default;
 
             return viewModel with
             {

@@ -75,7 +75,7 @@ public static class MapperExtensions
 
         // If the rfc is not given, then we know it does not have its suggested PoI yet. When converting it to its domain format, we must
         // explicitly tell it to use our PoI value instead of the one that it will generate, or we will get a loop.
-        value.RFC = rfc is null ? suggestedPoi.RFC.ToDomainRequestForChange(value) : rfc;
+        value.RFC = rfc is null ? suggestedPoi.RFC?.ToDomainRequestForChange(value) : rfc;
 
         return value;
     }

@@ -6,5 +6,6 @@ namespace LiveMap.Application.Infrastructure.Services;
 
 public interface IRequestForChangeService
 {
-    Task<BackendApiHttpResponse<PaginatedResult<DomainModels.RequestForChange>>> Get(Guid mapId, int? skip, int? take, bool? ascending);
+    Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Get(Guid id);
+    Task<BackendApiHttpResponse<PaginatedResult<DomainModels.RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending);
 }

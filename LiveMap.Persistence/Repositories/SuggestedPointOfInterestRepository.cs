@@ -43,4 +43,10 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
 
         return response;
     }
+
+    public async Task<SuggestedPointOfInterest?> ReadSingle(Guid id)
+    {
+        return (await _context.SuggestedPointsOfInterest.FirstOrDefaultAsync(x => x.Id == id))
+            ?.ToDomainSuggestedPointOfInterest() ?? null;
+    }
 }

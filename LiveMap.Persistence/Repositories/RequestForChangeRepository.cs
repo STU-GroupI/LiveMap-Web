@@ -60,11 +60,10 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     public async Task<RequestForChange?> GetSingle(Guid id)
     {
         SqlRequestForChange? requestForChange = await _context.RequestsForChange
-            .Include(rfc => rfc.Message)
             .Where(r => r.Id == id)
             .FirstOrDefaultAsync();
 
-        return requestForChange.ToDomainRequestForChange();
+        return requestForChange?.ToDomainRequestForChange() ?? null;
     }
 
     public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)

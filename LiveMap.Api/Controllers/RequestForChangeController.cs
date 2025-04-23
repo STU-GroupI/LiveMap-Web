@@ -5,6 +5,7 @@ using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
 using LiveMap.Api.Models;
 using LiveMap.Application;
+using LiveMap.Domain.Pagination;
 
 namespace LiveMap.Api.Controllers;
 
@@ -84,26 +85,48 @@ public class RequestForChangeController : ControllerBase
     }
 
     /// <summary>
-    /// Gets all Suggested POI's for a map
+    /// Gets the Suggested POI
     /// </summary>
-    /// <param name="id">Map ID</param>
-    /// <returns>The Suggested POI's</returns>
-    /// <response code="200">Successfully get the suggested poi's.</response>
-    /// <response code="404">Map not found.</response>
+    /// <param name="id">RFC ID</param>
+    /// <returns>The Suggested RFC</returns>
+    /// <response code="200">Successfully get the RFC's.</response>
+    /// <response code="404">Resource not found</response>
     [HttpGet("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType<RequestForChange>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(
         [FromRoute] string id,
+        [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
+    {
+        var request = new GetSingleRequest(Guid.Parse(id));
+        var response = await handler.Handle(request);
+
+        return Ok(response.RequestForChange);
+    }
+
+    /// <summary>
+    /// Gets all Suggested POI's for a map
+    /// </summary>
+    /// <param name="mapId">Map ID</param>
+    /// <returns>The Suggested POI's</returns>
+    /// <response code="200">Successfully get the suggested poi's.</response>
+    /// <response code="404">Map not found.</response>
+    [HttpGet("")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<PaginatedResult<RequestForChange>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(
+        [FromQuery] string mapId,
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromQuery] bool? ascending,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(Guid.Parse(id), skip, take, ascending);
+        var request = new GetMultipleRequest(Guid.Parse(mapId), skip, take, ascending);
         var response = await handler.Handle(request);
 
         return Ok(response.Rfc);
     }
+
 }

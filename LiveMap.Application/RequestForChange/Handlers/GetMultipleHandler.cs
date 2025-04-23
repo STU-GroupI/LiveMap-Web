@@ -17,7 +17,7 @@ public class GetMultipleHandler : IRequestHandler<GetMultipleRequest, GetMultipl
     {
         return new GetMultipleResponse(
             await _requestForChangeRepository.GetMultiple(
-                request.Id, request.Skip, request.Take, request.Ascending
+                request.MapId, request.Skip, request.Take, request.Ascending
                 ));
     }
 }

@@ -23,6 +23,9 @@ public static class ConfigureViewModelProviders
                 RequestForChangeListViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<CategoryCrudFormViewModel>,
-                CategoryCrudFormViewModelProvider>();
+                CategoryCrudFormViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<RequestForChangeFormViewModel>,
+                RequestForChangeFormViewModelProvider>();
     }
 }

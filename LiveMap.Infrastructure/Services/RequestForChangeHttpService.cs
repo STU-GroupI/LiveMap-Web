@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMap.Infrastructure.Services;
 
@@ -20,10 +21,22 @@ public class RequestForChangeHttpService : IRequestForChangeService
         _backendApiService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> Get(Guid mapId, int? skip, int? take, bool? ascending)
+    public async Task<BackendApiHttpResponse<RequestForChange>> Get(Guid id)
     {
-        var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}";
-        var uri = new Uri($"{_ENDPOINT}/{mapId}?{query}", UriKind.Relative);
+        var uri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative);
+
+        return await _backendApiService
+            .SendRequest<RequestForChange>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = uri
+            });
+    }
+
+    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending)
+    {
+        var query = $"{nameof(mapId)}={mapId.ToString()}&{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}";
+        var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
 
         return await _backendApiService
             .SendRequest<PaginatedResult<RequestForChange>>(new HttpRequestMessage
