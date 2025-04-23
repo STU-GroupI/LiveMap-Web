@@ -86,9 +86,9 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
         }
         PointOfInterest poi = poiResult.Value;
 
-        var openingHours = poi.OpeningHours
+        var openingHours = poi.OpeningHours?
                 .Select(oh => oh.ToViewModelOpeningHours())
-                .ToArray();
+                .ToArray() ?? [];
 
         return viewModel with
         {
@@ -97,7 +97,7 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
             Coordinate = poi.Coordinate,
             Description = poi.Description,
             IsWheelchairAccessible = poi.IsWheelchairAccessible,
-            OpeningHours = this.NormalizeOpeningHours(poi.OpeningHours.ToList()),
+            OpeningHours = this.NormalizeOpeningHours(poi.OpeningHours?.ToList() ?? []),
             Categories = categories,
             MapId = mapId.ToString(),
         };

@@ -8,7 +8,7 @@ public sealed class SuggestedPointOfInterest
     public required string Description { get; set; }
     public required Coordinate Coordinate { get; set; }
 
-    public string? CategoryName { get; set; }
+    public required string CategoryName { get; set; }
     public Category? Category { get; set; }
 
     public required Guid MapId { get; set; }

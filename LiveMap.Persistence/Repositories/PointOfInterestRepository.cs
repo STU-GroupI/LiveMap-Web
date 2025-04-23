@@ -91,7 +91,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         foreach (var openingHour in poi.OpeningHours)
         {
-            var data = pointOfInterest.OpeningHours.FirstOrDefault(oh =>
+            var data = pointOfInterest.OpeningHours?.FirstOrDefault(oh =>
                 oh.DayOfWeek == openingHour.DayOfWeek);
 
             if (data is null)
@@ -104,8 +104,8 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             openingHour.End = data.End;
         }
 
-        foreach (var openingHour in poi.OpeningHours.Where(oh => !pointOfInterest.OpeningHours
-                .Any(oh2 => oh2.DayOfWeek == oh.DayOfWeek)))
+        foreach (var openingHour in poi.OpeningHours
+            .Where(oh => !(pointOfInterest.OpeningHours?.Any(oh2 => oh2.DayOfWeek == oh.DayOfWeek) ?? !false)))
         {
             poi.OpeningHours.Remove(openingHour);
             _context.OpeningHours.Remove(openingHour);
@@ -145,7 +145,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             await transaction.CommitAsync();
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Thomas: 
             // Currently, we can do it this way. But if an exception is thrown within the scope
