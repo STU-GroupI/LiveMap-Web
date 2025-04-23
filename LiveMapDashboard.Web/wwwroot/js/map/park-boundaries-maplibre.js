@@ -94,7 +94,7 @@ function centerOnMap() {
     console.log(draw.getAll().features);
     const features = draw.getAll().features;
     if (features.length === 0) {
-        showAlert('error', 'Er zijn geen parkgrenzen gezet.');
+        showAlert('error', 'There are no park boundaries yet.');
         return;
     }
 
@@ -146,14 +146,14 @@ function getMap() {
                         onAreaChanged();
                     })
                     .catch(error => {
-                        showAlert('error', 'Kan parkgrenzen niet ophalen.');
+                        showAlert('error', 'Cannot fetch park boundaries.');
                     });
             })
             .catch(error => {
-                showAlert('error', 'Kan parkgrenzen niet ophalen.');
+                showAlert('error', 'Cannot fetch park boundaries.');
             });
     } catch (error) {
-        showAlert('error', 'Kan parkgrenzen niet ophalen.');
+        showAlert('error', 'Cannot fetch park boundaries.');
     }
 }
 
@@ -165,14 +165,14 @@ function deleteMap() {
         document.activeElement.blur();
         onAreaChanged();
     } else {
-        showAlert('error', 'Er zijn geen parkgrenzen om te verwijderen.');
+        showAlert('error', 'There are no park boundaries to delete.');
     }
 }
 
 function saveMap() {
     const features = draw.getAll().features;
     if (features.length === 0) {
-        showAlert('warning', 'Er zijn geen parkgrenzen om op te slaan.');
+        showAlert('warning', 'There are no park boundaries to save.');
         return;
     }
 
@@ -188,7 +188,7 @@ function saveMap() {
     })
         .catch(error => {
             console.log(error);
-            showAlert('error', 'Kan park grenzen niet opslaan.');
+            showAlert('error', 'Cannot save park boundaries.');
         });
 }
 
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasDrawing() === false) {
             draw.changeMode('draw_polygon');  // Enable drawing polygon mode
         } else {
-            showAlert('info', 'Er is al een park grens op de kaart.');
+            showAlert('info', 'There is a park boundary already present.');
         }
     });
 
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#latitudeInput').value
             ]);
         } catch (error) {
-            showAlert('warning', 'Coordinaten zijn niet geldig.');
+            showAlert('warning', 'Coordinates are invalid.');
         }
     });
 
