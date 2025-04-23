@@ -32,6 +32,11 @@ public sealed record PoiCrudformViewModel(
     {
         var results = new List<ValidationResult>();
 
+        if (string.IsNullOrWhiteSpace(Title))
+        {
+            results.Add(new ValidationResult("The Title field is required", new[] { nameof(Title) }));
+        }
+
         if (!string.IsNullOrWhiteSpace(Title) && !Regex.IsMatch(Title, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
         {
             results.Add(new ValidationResult("Title can only contain alphanumeric characters and basic symbols.", new[] { nameof(Title) }));
@@ -40,6 +45,11 @@ public sealed record PoiCrudformViewModel(
         if (string.IsNullOrWhiteSpace(MapId) || !Guid.TryParse(MapId, out _))
         {
             results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(MapId) }));
+        }
+
+        if (Coordinate.Latitude == 0 && Coordinate.Longitude == 0)
+        {
+            results.Add(new ValidationResult("A valid location must be added.", new[] { nameof(Coordinate) }));
         }
 
         if (OpeningHours != null)
