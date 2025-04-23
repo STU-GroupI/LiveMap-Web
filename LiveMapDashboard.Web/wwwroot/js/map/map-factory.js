@@ -50,7 +50,16 @@ const MapFactory = (() => {
     }
 
     function addGeocoder(map) {
-        map.addControl(new MaplibreGeocoder(geocoderApi, { maplibregl }));
+        const geocoder = new MaplibreGeocoder(geocoderApi, { maplibregl, marker: false });
+
+        geocoder.on('result', (event) => {
+            const searchInput = document.querySelector('.maplibregl-ctrl-geocoder input');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+        });
+
+        map.addControl(geocoder);
     }
 
     function createMap(containerId, center = [4.729, 52.045], zoom = 15) {
