@@ -10,5 +10,5 @@ public class OpeningHours
     public required TimeSpan End { get; set; }
 
     public required Guid PoiId { get; set; }
-    public PointOfInterest Poi { get; set; }
+    public PointOfInterest? Poi { get; set; }
 }

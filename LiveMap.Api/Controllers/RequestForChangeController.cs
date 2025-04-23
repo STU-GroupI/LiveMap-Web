@@ -30,6 +30,7 @@ public class RequestForChangeController : ControllerBase
     {
         var rfc = new RequestForChange()
         {
+            Id = Guid.Empty,
             Message = webRequest.Message,
             PoiId = webRequest.PoiId,
             ApprovalStatus = string.Empty,
@@ -43,7 +44,7 @@ public class RequestForChangeController : ControllerBase
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Rfc);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
