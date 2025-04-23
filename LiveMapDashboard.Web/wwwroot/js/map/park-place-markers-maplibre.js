@@ -1,24 +1,14 @@
 import * as turf from 'https://esm.sh/@turf/turf@7.1.0';
 
-const MAPBOX_RASTER_URL = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
-
 MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
 MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
-const map = new maplibregl.Map({
-    container: 'map',
-    style: MAPBOX_RASTER_URL,
-    center: [4.729, 52.045],
-    zoom: 15,
-    dragRotate: false,
-    pitchWithRotate: false,
-});
+const map = MapFactory.createMap('map', [4.729, 52.045], 15);
 
 //Prevent the map from zooming in when double clicking
 map.doubleClickZoom.disable();
-
 
 const markers = []; // To keep track of added markers
 let clickedLngLat = null; // To store the clicked coordinates
