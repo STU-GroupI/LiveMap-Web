@@ -5,16 +5,16 @@ using LiveMapDashboard.Web.Models.Rfc;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {
-    public class RequestForChangeViewModelProvider : IViewModelProvider<RequestForChangeViewModel>
+    public class RequestForChangeListViewModelProvider : IViewModelProvider<RequestForChangeListViewModel>
     {
         private readonly IRequestForChangeService _rfcService;
 
-        public RequestForChangeViewModelProvider(IRequestForChangeService rfcService)
+        public RequestForChangeListViewModelProvider(IRequestForChangeService rfcService)
         {
             _rfcService = rfcService;
         }
 
-        public async Task<RequestForChangeViewModel> Hydrate(RequestForChangeViewModel viewModel)
+        public async Task<RequestForChangeListViewModel> Hydrate(RequestForChangeListViewModel viewModel)
         {
             PaginatedResult<RequestForChange> result = (await _rfcService.Get(viewModel.MapId, viewModel.Skip, viewModel.Take, viewModel.Ascending)).Value ?? PaginatedResult<RequestForChange>.Default;
 
@@ -25,9 +25,9 @@ namespace LiveMapDashboard.Web.Models.Providers
             };
         }
 
-        public async Task<RequestForChangeViewModel> Provide()
+        public async Task<RequestForChangeListViewModel> Provide()
         {
-            return await Hydrate(RequestForChangeViewModel.Empty);
+            return await Hydrate(RequestForChangeListViewModel.Empty);
         }
     }
 }

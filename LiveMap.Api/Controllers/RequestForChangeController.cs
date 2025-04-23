@@ -65,7 +65,7 @@ public class RequestForChangeController : ControllerBase
         [FromBody] UpdateSingleRfcWebRequest webRequest,
         [FromRoute] Guid id,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler
-        )
+)
     {
         var rfc = new RequestForChange() 
         { 
