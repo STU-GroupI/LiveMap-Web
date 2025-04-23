@@ -49,8 +49,8 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
 
         var crudFormViewModel = poiResult switch
         {
-            { IsSuccess: true, Value: PointOfInterest poi } => await _crudViewModelProvider.Provide()
-                with
+            { IsSuccess: true, Value: PointOfInterest poi } when poi.OpeningHours is { Count: > 0 } =>
+                await _crudViewModelProvider.Provide() with
                 {
                     Id = poi.Id.ToString(),
                     MapId = poi.MapId.ToString(),
@@ -61,8 +61,22 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
                     IsWheelchairAccessible = poi.IsWheelchairAccessible,
                     OpeningHours = poi.OpeningHours.Select(oh => oh.ToViewModelOpeningHours()).ToArray(),
                 },
-            _ when suggestedPoi is not null => await _crudViewModelProvider.Provide()
-                with
+
+            { IsSuccess: true, Value: PointOfInterest poi } =>
+                await _crudViewModelProvider.Provide() with
+                {
+                    Id = poi.Id.ToString(),
+                    MapId = poi.MapId.ToString(),
+                    Title = poi.Title,
+                    Description = poi.Description,
+                    Category = poi.CategoryName,
+                    Coordinate = poi.Coordinate,
+                    IsWheelchairAccessible = poi.IsWheelchairAccessible,
+                    // OpeningHours is omitted here
+                },
+
+            _ when suggestedPoi is not null =>
+                await _crudViewModelProvider.Provide() with
                 {
                     Id = suggestedPoi.Id.ToString(),
                     MapId = suggestedPoi.MapId.ToString(),
@@ -71,7 +85,9 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
                     Category = suggestedPoi.CategoryName,
                     Coordinate = suggestedPoi.Coordinate,
                     IsWheelchairAccessible = suggestedPoi.IsWheelchairAccessible,
-                }
+                },
+
+            _ => throw new NullReferenceException("Either the suggested POI or the referenced POI must be set.")
         };
 
         return new RequestForChangeFormViewModel(rfc, crudFormViewModel);

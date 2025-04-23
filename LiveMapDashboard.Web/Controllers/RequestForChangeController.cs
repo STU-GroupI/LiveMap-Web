@@ -16,7 +16,7 @@ namespace LiveMapDashboard.Web.Controllers
             [FromServices] IViewModelProvider<RequestForChangeFormViewModel> provider)
         {
             var viewModel = new RequestForChangeFormViewModel(
-                Rfc: new() { Id = Guid.Parse(id), SubmittedOn = default }, 
+                Rfc: new() { Id = Guid.Parse(id), SubmittedOn = default, ApprovalStatus = string.Empty }, 
                 CrudformViewModel: PoiCrudformViewModel.Empty);
 
             return View("form", await provider.Hydrate(viewModel));
