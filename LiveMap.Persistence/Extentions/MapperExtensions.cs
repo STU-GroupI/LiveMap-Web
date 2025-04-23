@@ -61,17 +61,16 @@ public static class MapperExtensions
             Title = suggestedPoi.Title,
             IsWheelchairAccessible = suggestedPoi.IsWheelchairAccessible,
 
-            CategoryName = suggestedPoi.CategoryName,
-            Category = suggestedPoi?.Category,
+            CategoryName = suggestedPoi.CategoryName ?? Category.EMPTY,
+            Category = suggestedPoi.Category,
 
-            MapId = suggestedPoi!.MapId,
+            MapId = suggestedPoi.MapId,
             Map = suggestedPoi.Map?.ToDomainMap(),
 
             Coordinate = suggestedPoi.Position.ToDomainCoordinate(),
             Description = suggestedPoi.Description,
 
-            RFCId = suggestedPoi.RFCId,
-            RFC = null!
+            RFCId = suggestedPoi.RFCId
         };
 
         // If the rfc is not given, then we know it does not have its suggested PoI yet. When converting it to its domain format, we must

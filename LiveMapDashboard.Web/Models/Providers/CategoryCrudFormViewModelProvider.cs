@@ -3,9 +3,9 @@
 namespace LiveMapDashboard.Web.Models.Providers;
 public class CategoryCrudFormViewModelProvider : IViewModelProvider<CategoryCrudFormViewModel>
 {
-    public async Task<CategoryCrudFormViewModel> Hydrate(CategoryCrudFormViewModel viewModel)
+    public Task<CategoryCrudFormViewModel> Hydrate(CategoryCrudFormViewModel viewModel)
     {
-        return viewModel;
+        return Task.FromResult(viewModel);
     }
 
     public async Task<CategoryCrudFormViewModel> Provide()

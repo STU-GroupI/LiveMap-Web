@@ -6,5 +6,5 @@ public class Map
     public required Coordinate[] Area { get; set; }
     public required Coordinate Coordinate { get; set; }
 
-    public virtual required ICollection<PointOfInterest> PointOfInterests { get; set; }
+    public virtual ICollection<PointOfInterest>? PointOfInterests { get; set; }
 }

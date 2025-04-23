@@ -11,7 +11,7 @@ public class SqlRequestForChange
     public Guid? SuggestedPoiId { get; set; }
     public SqlSuggestedPointOfInterest? SuggestedPoi { get; set; }
 
-    public required ApprovalStatus ApprovalStatusProp { get; set; }
+    public ApprovalStatus? ApprovalStatusProp { get; set; }
     public required string ApprovalStatus { get; set; }
 
     public string? Message { get; set; }

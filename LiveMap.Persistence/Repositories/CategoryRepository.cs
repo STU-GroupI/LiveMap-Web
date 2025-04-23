@@ -76,7 +76,7 @@ public class CategoryRepository : ICategoryRepository
 
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // Rollback if something goes wrong
             await transaction.RollbackAsync();
@@ -120,7 +120,7 @@ public class CategoryRepository : ICategoryRepository
             await transaction.CommitAsync();
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return false;
         }

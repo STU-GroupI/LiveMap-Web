@@ -9,5 +9,5 @@ public class SqlMap
     public required Polygon Border { get; set; }
     public required Point Position { get; set; }
 
-    public virtual required ICollection<SqlPointOfInterest> PointOfInterests { get; set; }
+    public virtual ICollection<SqlPointOfInterest> PointOfInterests { get; set; } = [];
 }

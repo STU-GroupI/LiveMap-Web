@@ -157,7 +157,7 @@ public class PointOfInterestController : ControllerBase
             UpdateSingleResponse response = await handler.Handle(request);
             return Ok(response.Poi);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }

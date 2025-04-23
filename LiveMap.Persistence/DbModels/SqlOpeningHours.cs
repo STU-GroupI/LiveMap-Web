@@ -9,5 +9,5 @@ public class SqlOpeningHours
     public required TimeSpan End { get; set; }
 
     public required Guid PoiId { get; set; }
-    public required SqlPointOfInterest Poi { get; set; }
+    public SqlPointOfInterest? Poi { get; set; }
 }

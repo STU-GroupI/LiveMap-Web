@@ -11,13 +11,13 @@ public class SqlSuggestedPointOfInterest
     public required Point Position { get; set; }
 
     public string? CategoryName { get; set; }
-    public required Category Category { get; set; }
+    public Category? Category { get; set; }
 
     public required bool IsWheelchairAccessible { get; set; } = false;
 
     public required Guid MapId { get; set; }
-    public required SqlMap Map { get; set; }
+    public SqlMap? Map { get; set; }
 
     public Guid? RFCId { get; set; }
-    public required SqlRequestForChange? RFC { get; set; }
+    public SqlRequestForChange? RFC { get; set; }
 }
