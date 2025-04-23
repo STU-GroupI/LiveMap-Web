@@ -1,21 +1,26 @@
 ﻿using LiveMap.Application.Category.Persistance;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
+using LiveMap.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LiveMap.Application.Category.Handlers
+namespace LiveMap.Application.Category.Handlers;
+
+public class GetSingleHandler : IRequestHandler<GetSingleRequest, GetSingleResponse>
 {
-    public class GetSingleHandler : IRequestHandler<GetSingleRequest, GetSingleResponse>
+    private readonly ICategoryRepository _categoryRepository;
+
+    public GetSingleHandler(ICategoryRepository categoryRepository)
     {
-        private readonly ICategoryRepository _repository;
+        _categoryRepository = categoryRepository;
+    }
 
-        public GetSingleHandler(ICategoryRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<GetSingleResponse> Handle(GetSingleRequest request)
-        {
-            return new(await _repository.GetSingle(request.Name));
-        }
+    public async Task<GetSingleResponse> Handle(GetSingleRequest request)
+    {
+        return new GetSingleResponse(await _categoryRepository.GetSingle(request.Name));
     }
 }

@@ -61,7 +61,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         return pointOfInterest.ToDomainPointOfInterest();
     }
 
-    public async Task<PointOfInterest> CreatePointOfInterest(PointOfInterest pointOfInterest)
+    public async Task<PointOfInterest> Create(PointOfInterest pointOfInterest)
     {
         var poi = pointOfInterest.ToSqlPointOfInterest();
 
@@ -69,5 +69,91 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         await _context.SaveChangesAsync();
 
         return result.Entity.ToDomainPointOfInterest();
+    }
+
+    public async Task<PointOfInterest?> Update(PointOfInterest pointOfInterest)
+    {
+        var poi = await _context.PointsOfInterest
+            .Include(poi => poi.OpeningHours)
+            .Where(poi => poi.Id == pointOfInterest.Id)
+            .FirstOrDefaultAsync();
+
+        if (poi is null)
+        {
+            return null;
+        }
+
+        poi.Title = pointOfInterest.Title;
+        poi.Description = pointOfInterest.Description;
+        poi.CategoryName = pointOfInterest.CategoryName;
+        poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
+        poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;
+
+        foreach (var openingHour in poi.OpeningHours)
+        {
+            var data = pointOfInterest.OpeningHours.FirstOrDefault(oh =>
+                oh.DayOfWeek == openingHour.DayOfWeek);
+
+            if (data is null)
+            {
+                poi.OpeningHours.Add(openingHour);
+                continue;
+            }
+
+            openingHour.Start = data.Start;
+            openingHour.End = data.End;
+        }
+
+        foreach (var openingHour in poi.OpeningHours.Where(oh => !pointOfInterest.OpeningHours
+                .Any(oh2 => oh2.DayOfWeek == oh.DayOfWeek)))
+        {
+            poi.OpeningHours.Remove(openingHour);
+            _context.OpeningHours.Remove(openingHour);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return poi.ToDomainPointOfInterest();
+    }
+
+    public async Task<bool> DeleteSingle(Guid id)
+    {
+        SqlPointOfInterest? pointOfInterest = await _context.PointsOfInterest
+            .Where(poi => poi.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (pointOfInterest is null)
+        {
+            return false;
+        }
+
+        List<SqlRequestForChange> requestForChanges = await _context.RequestsForChange
+            .Where(rfc => rfc.PoiId == id)
+            .ToListAsync();
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var requestForChange in requestForChanges)
+            {
+                _context.RequestsForChange.Remove(requestForChange);
+            }
+            _context.PointsOfInterest.Remove(pointOfInterest);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            // Thomas: 
+            // Currently, we can do it this way. But if an exception is thrown within the scope
+            // of an active transaction, it is automagically rolled back. Thats why you don't
+            // see me do it in the cascading delete of the suggested POI's
+            
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

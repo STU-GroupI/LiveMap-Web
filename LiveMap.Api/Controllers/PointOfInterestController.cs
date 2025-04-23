@@ -113,4 +113,77 @@ public class PointOfInterestController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
+    
+    /// <summary>
+    /// Updates a POI for the given request data
+    /// </summary>
+    /// <param name="request">The given request.</param>
+    /// <returns> Returns the updated POI </returns>
+    /// <response code="200">Response with the updated POI</response>
+    /// <response code="500">Something went very wrong</response>
+    [HttpPatch("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Patch(
+        [FromRoute] string id,
+        [FromBody] UpdateSinglePoiWebRequest webRequest,
+        [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
+    {
+        PointOfInterest poi = new()
+        {
+            Id = Guid.Parse(id),
+            Title = webRequest.Title,
+            Description = webRequest.Description,
+            CategoryName = webRequest.CategoryName,
+            Coordinate = webRequest.Coordinate,
+            IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
+            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
+            {
+                DayOfWeek = oh.DayOfWeek,
+                Start = oh.Start,
+                End = oh.End,
+                Id = Guid.Empty,
+                PoiId = Guid.Empty,
+            }).ToList(),
+
+            MapId = Guid.Parse(webRequest.MapId),
+            StatusName = "Active",
+        };
+        var request = new UpdateSingleRequest(poi);
+
+        try
+        {
+            UpdateSingleResponse response = await handler.Handle(request);
+            return Ok(response.Poi);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
+    
+    /// <summary>
+    /// Deletes a POI with the given id
+    /// </summary>
+    /// <param name="id">The id of the specified POI.</param>
+    /// <returns>Returns nothing. </returns>
+    /// <response code="204">No Content. </response>
+    /// <response code="404">Poi not found.</response>
+    [HttpDelete("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<PointOfInterest>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromRoute] string id,
+        [FromServices] IRequestHandler<DeleteSingleRequest> handler)
+    {
+        var request = new DeleteSingleRequest(Guid.Parse(id));
+        var result = await handler.Handle(request);
+        if(!result)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
 }

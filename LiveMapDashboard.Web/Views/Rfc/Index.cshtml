@@ -1,0 +1,83 @@
+﻿@using LiveMap.Domain.Models
+@using LiveMapDashboard.Web.Models.Rfc
+@model RequestForChangeViewModel
+
+<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+    <h1 class="text-4xl dark:text-white">Wijzigingsverzoeken</h1>
+    <br />
+
+    <div class="flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+            <div class="p-1.5 min-w-full inline-block align-middle">
+                @if (Model.Result.TotalCount > 0)
+                {
+                    <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
+
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Type</th>
+                                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-neutral-500">
+                                    <button id="timeSort">
+                                        <div class="flex flex-row items-center">
+                                            <span class="uppercase">Tijd</span>
+                                            @if (Model.Ascending != null)
+                                            {
+                                                if (Model.Ascending.Value)
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg>
+                                                }
+                                                else
+                                                {
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6" /></svg>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg>
+                                            }
+                                        </div>
+                                    </button>
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                            @foreach (RequestForChange rfc in Model.Result.Items)
+                            {
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                        @if (rfc.PoiId == null)
+                                        {
+                                            <span>Wijzigingsverzoek</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Nieuwe POI</span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                        @RequestForChangeViewModel.ToDateTime(rfc.SubmittedOn)
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                        <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">Aanpassen</button>
+                                        <button type="button" class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    @await Html.PartialAsync("Table/_TablePagination")
+                }
+                else
+                {
+                    <p class="dark:text-white">Er zijn geen request for changes</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/suggestions.js" asp-append-version="true" type="module"></script>

@@ -1,4 +1,4 @@
-﻿using LiveMap.Application;
+using LiveMap.Application;
 using PointOfInterest = LiveMap.Application.PointOfInterest;
 using Map = LiveMap.Application.Map;
 using Rfc = LiveMap.Application.RequestForChange;
@@ -21,12 +21,53 @@ public static class RequestHandlerDI
                 PointOfInterest.Requests.GetMultipleRequest,
                 PointOfInterest.Responses.GetMultipleResponse>,
             PointOfInterest.Handlers.GetMultipleHandler>();
-
+        
         services.AddTransient<
             IRequestHandler<
                 PointOfInterest.Requests.CreateSingleRequest,
                 PointOfInterest.Responses.CreateSingleResponse>,
             PointOfInterest.Handlers.CreateSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
+                PointOfInterest.Requests.UpdateSingleRequest,
+                PointOfInterest.Responses.UpdateSingleResponse>,
+            PointOfInterest.Handlers.UpdateSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
+                PointOfInterest.Requests.DeleteSingleRequest>,
+            PointOfInterest.Handlers.DeleteSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.GetSingleRequest,
+                Category.Responses.GetSingleResponse>,
+            Category.Handlers.GetSingleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.GetMultipleRequest,
+                Category.Responses.GetMultipleResponse>,
+            Category.Handlers.GetMultipleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.CreateSingleRequest,
+                Category.Responses.CreateSingleResponse>,
+            Category.Handlers.CreateSingleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.UpdateSingleRequest,
+                Category.Responses.UpdateSingleResponse>,
+            Category.Handlers.UpdateSingleHandler>();
+        
+        services.AddTransient<
+            IRequestHandler<
+                Category.Requests.DeleteSingleRequest,
+                Category.Responses.DeleteSingleResponse>,
+            Category.Handlers.DeleteSingleHandler>();
 
         services.AddTransient<
             IRequestHandler<
@@ -54,21 +95,15 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
+                Rfc.Requests.GetMultipleRequest,
+                Rfc.Responses.GetMultipleResponse>,
+            Rfc.Handlers.GetMultipleHandler>();
+
+        services.AddTransient<
+            IRequestHandler<
                 SuggestedPoi.Requests.CreateSingleRequest,
                 SuggestedPoi.Responses.CreateSingleResponse>,
             SuggestedPoi.Handlers.CreateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetSingleRequest,
-                Category.Responses.GetSingleResponse>,
-            Category.Handlers.GetSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetMultipleRequest,
-                Category.Responses.GetMultipleResponse>,
-            Category.Handlers.GetMultipleHandler>();
 
         return services;
     }
