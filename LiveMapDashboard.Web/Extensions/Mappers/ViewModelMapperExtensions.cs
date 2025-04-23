@@ -30,6 +30,7 @@ public static class ViewModelMapperExtensions
             DayOfWeek = dayOfWeek,
             Start = toTime(vm.Start),
             End = toTime(vm.End),
+            Poi = null!,
         };
     }
 

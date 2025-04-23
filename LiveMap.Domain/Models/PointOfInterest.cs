@@ -18,5 +18,5 @@ public class PointOfInterest
     public required Guid MapId { get; set; }
     public Map? Map { get; set; }
 
-    public virtual ICollection<OpeningHours> OpeningHours { get; set; }
+    public virtual ICollection<OpeningHours>? OpeningHours { get; set; }
 }

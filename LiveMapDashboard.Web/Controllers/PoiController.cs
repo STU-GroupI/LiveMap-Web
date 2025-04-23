@@ -25,8 +25,12 @@ namespace LiveMapDashboard.Web.Controllers
             if (!Guid.TryParse(id, out var poiId))
             {
                 var back = HttpContext?.Request?.Headers?.ContainsKey("Referer") ?? false;
+
+                string backValue = back 
+                    ? HttpContext!.Request.Headers["Referer"].ToString() 
+                    : string.Empty;
                 return back 
-                    ? Redirect(HttpContext.Request.Headers["Referer"]) 
+                    ? Redirect(backValue) 
                     : RedirectToAction(nameof(Index));
                     
             }

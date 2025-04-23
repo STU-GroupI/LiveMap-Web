@@ -52,7 +52,7 @@ public class GetPoiTests
         var actualResult = await handler.Handle(request);
 
         // Assert
-        actualResult.PointsOfInterests.Count().ShouldBe(map.PointOfInterests.Count());
+        actualResult.PointsOfInterests.Count().ShouldBe(map.PointOfInterests!.Count());
     }
 
     [Theory]
@@ -63,7 +63,7 @@ public class GetPoiTests
         StubPointOfInterestRepository repository)
     {
         // Arrange
-        var expectedPois = map.PointOfInterests.Skip(skip).ToList();
+        var expectedPois = map.PointOfInterests!.Skip(skip).ToList();
         var request = new GetMultipleRequest(map.Id, skip, null);
         var handler = new GetMultipleHandler(repository);
 
@@ -83,7 +83,7 @@ public class GetPoiTests
         StubPointOfInterestRepository repository)
     {
         // Arrange
-        var expectedPois = map.PointOfInterests.Skip(skip).Take(take).ToList();
+        var expectedPois = map.PointOfInterests!.Skip(skip).Take(take).ToList();
         var request = new GetMultipleRequest(map.Id, skip, take);
         var handler = new GetMultipleHandler(repository);
 
