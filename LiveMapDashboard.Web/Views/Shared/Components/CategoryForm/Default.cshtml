@@ -3,7 +3,7 @@
 <div class="max-w-10xl px-4 mx-auto">
     <div class="flex justify-between">
         @await Html.PartialAsync("Components/CategoryForm/_GoBack", Model)
-        
+
         @if (Model.CategoryName != "" && Model.CategoryName is not null)
         {
             @await Html.PartialAsync("Components/CategoryForm/_Delete", Model)
@@ -27,7 +27,7 @@
                 @ViewData["ErrorMessage"]
             </div>
         }
-    </div>  
+    </div>
 }
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
@@ -43,26 +43,49 @@
                     <label for="newValue" class="block mb-2 text-sm font-medium">
                         Category name
                     </label>
-                    
+
                     @{
                         string placeHolder = Model.CategoryName != "" && Model.CategoryName is not null
-                            ? Model.CategoryName
-                            : "Some Name";
+                        ? Model.CategoryName
+                        : "Some Name";
                     }
-                    
+
                     <input type="text" asp-for="NewValue" name="@nameof(Model.NewValue)"
                            id="newValue"
                            class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                            placeholder="@placeHolder"
-                           value="@Model.CategoryName"/>
+                           value="@Model.CategoryName" />
                     <span asp-validation-for="NewValue" class="text-sm text-red-600 mt-2"></span>
+                </div>
+            </div>
 
-                    <input type="text" asp-for="IconName" name="@nameof(Model.IconName)"
-                           id="iconName"
-                           class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none mt-4"
-                           placeholder="Icon name"
-                           value="@Model.IconName" />
-                    <span asp-validation-for="IconName" class="text-sm text-red-600 mt-2"></span>
+            <!-- 🔍 Icon Search Block -->
+            <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
+                <label asp-for="IconName" class="block mb-2 text-sm font-medium">
+                    Select icon
+                </label>
+
+                @{
+                    string placeholder = Model.IconName != "" && Model.IconName is not null
+                    ? Model.IconName
+                    : "Search a Material Icon...";
+                }
+
+                <input type="text"
+                       id="iconSearchInput"
+                       class="border px-2 py-2 rounded w-full text-sm"
+                       placeholder="@placeholder" />
+
+                <input type="hidden"
+                       asp-for="IconName"
+                       name="@nameof(Model.IconName)"
+                       id="iconNameField"
+                       value="@Model.IconName" />
+
+                <span asp-validation-for="IconName" class="text-sm text-red-600 mt-2"></span>
+
+                <div id="iconSearchResults"
+                     class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded p-2 bg-white dark:bg-neutral-900 shadow-inner text-sm">
                 </div>
             </div>
         </div>
