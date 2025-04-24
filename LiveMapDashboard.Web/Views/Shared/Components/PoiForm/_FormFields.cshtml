@@ -8,8 +8,8 @@
         <label for="title" class="block mb-2 text-sm font-medium dark:text-white">
             Title
         </label>
-        
-        <input type="text" asp-for="Title" name="title" id="title"
+
+        <input type="text" asp-for="Title" id="title"
                class="border py-2.5 sm:py-3 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                placeholder="Title" />
         <span asp-validation-for="Title" class="text-sm text-red-600 mt-2"></span>
@@ -55,7 +55,7 @@
         <label for="description" class="block mb-2 text-sm font-medium dark:text-white">
             Description
         </label>
-        
+
         <textarea asp-for="Description" id="description"
                   class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                   rows="3" placeholder="Description">
