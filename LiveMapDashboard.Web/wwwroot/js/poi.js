@@ -3,16 +3,23 @@
     const previewImage = document.querySelector('#previewImage');
     const previewImageError = document.querySelector('#imagePreviewError');
 
-    previewImageError.hidden = true;
-    previewImage.src = imageInput.value;
+    handlePreview(imageInput, previewImage, previewImageError);
 
     imageInput.addEventListener('change', () => {
-        previewImageError.hidden = true;
-        previewImage.src = imageInput.value;
+        handlePreview(imageInput, previewImage, previewImageError);
     });
 
     previewImage.onerror = () => {
-        previewImage.src = '';
+        if (!previewImage.src || previewImage.src.endsWith('blank') || previewImage.src === window.location.href) {
+            return;
+        }
+        previewImage.hidden = true;
         previewImageError.hidden = false;
     };
 });
+
+function handlePreview(imageInput, previewImage, previewImageError) {
+    previewImageError.hidden = true;
+    previewImage.hidden = false;
+    previewImage.src = imageInput.value;
+}
