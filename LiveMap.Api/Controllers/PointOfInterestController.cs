@@ -88,13 +88,14 @@ public class PointOfInterestController : ControllerBase
             CategoryName = webRequest.CategoryName,
             Coordinate = webRequest.Coordinate,
             IsWheelchairAccessible = webRequest.IsWheelchairAccessible,
-            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours()
+            OpeningHours = webRequest.OpeningHours.Select(oh => new OpeningHours
             {
                 DayOfWeek = oh.DayOfWeek,
                 Start = oh.Start,
                 End = oh.End,
                 Id = Guid.Empty,
                 PoiId = Guid.Empty,
+                Poi = null!,
             }).ToList(),
 
             MapId = Guid.Parse(webRequest.MapId),
@@ -107,7 +108,7 @@ public class PointOfInterestController : ControllerBase
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Poi);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
@@ -156,7 +157,7 @@ public class PointOfInterestController : ControllerBase
             UpdateSingleResponse response = await handler.Handle(request);
             return Ok(response.Poi);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }

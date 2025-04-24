@@ -3,7 +3,7 @@
 namespace LiveMap.Persistence.DbModels;
 public class SqlRequestForChange
 {
-    public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
     public Guid? PoiId { get; set; }
     public SqlPointOfInterest? Poi { get; set; }
@@ -11,7 +11,7 @@ public class SqlRequestForChange
     public Guid? SuggestedPoiId { get; set; }
     public SqlSuggestedPointOfInterest? SuggestedPoi { get; set; }
 
-    public ApprovalStatus ApprovalStatusProp { get; set; }
+    public ApprovalStatus? ApprovalStatusProp { get; set; }
     public required string ApprovalStatus { get; set; }
 
     public string? Message { get; set; }
