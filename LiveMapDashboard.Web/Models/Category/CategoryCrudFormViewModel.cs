@@ -1,3 +1,3 @@
 ﻿namespace LiveMapDashboard.Web.Models.Category;
 
-public record CategoryCrudFormViewModel(string? CategoryName, string NewValue);
+public record CategoryCrudFormViewModel(string? CategoryName, string NewValue, string IconName);
