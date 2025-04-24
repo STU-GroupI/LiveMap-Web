@@ -1,4 +1,6 @@
-﻿namespace LiveMap.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace LiveMap.Domain.Models;
 public class Category
 {
     public const string STORE = "Store";
@@ -9,4 +11,7 @@ public class Category
     public const string ENTERTAINMENT = "Entertainment";
     public const string EMPTY = "Empty";
     public required string CategoryName { get; set; }
+    
+    [NotMapped]
+    public bool? InUse { get; set; }
 }

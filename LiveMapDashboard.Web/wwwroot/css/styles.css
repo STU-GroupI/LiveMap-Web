@@ -1166,6 +1166,9 @@
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
   }
+  .px-1\.5 {
+    padding-inline: calc(var(--spacing) * 1.5);
+  }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
@@ -1963,6 +1966,14 @@
   .dark\:bg-neutral-950 {
     &:where(.dark, .dark *) {
       background-color: var(--color-neutral-950);
+    }
+  }
+  .dark\:bg-red-500\/10 {
+    &:where(.dark, .dark *) {
+      background-color: color-mix(in srgb, oklch(63.7% 0.237 25.331) 10%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-red-500) 10%, transparent);
+      }
     }
   }
   .dark\:bg-red-700 {
