@@ -36,6 +36,11 @@ public class CategoryRepository : ICategoryRepository
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
+            if(string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(iconName))
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
 
             // Find the category entity by old name
             var category = await _context.Categories
@@ -52,8 +57,9 @@ public class CategoryRepository : ICategoryRepository
             Category newCategory = new Category
             {
                 CategoryName = newName,
-                IconName = iconName ?? category.IconName,
+                IconName = string.IsNullOrWhiteSpace(iconName) ? category.IconName : iconName,
             };
+
 
             //Add the entity to the context
             _context.Categories.Add(newCategory);
