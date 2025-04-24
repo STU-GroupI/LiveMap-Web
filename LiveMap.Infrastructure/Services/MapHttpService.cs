@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 
 namespace LiveMap.Infrastructure.Services;
 public class MapHttpService : IMapService
@@ -33,13 +34,13 @@ public class MapHttpService : IMapService
             });
     }
 
-    public async Task<BackendApiHttpResponse<Map[]>> Get(int? skip, int? take)
+    public async Task<BackendApiHttpResponse<PaginatedResult<Map>>> Get(int? skip, int? take)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
 
         return await _backendApiService
-            .SendRequest<Map[]>(new HttpRequestMessage
+            .SendRequest<PaginatedResult<Map>>(new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri
