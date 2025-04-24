@@ -1,5 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
@@ -20,6 +21,16 @@ namespace LiveMapDashboard.Web.Controllers
                 CrudformViewModel: PoiCrudformViewModel.Empty);
 
             return View("form", await provider.Hydrate(viewModel));
+        }
+
+        [HttpPost("approvalFormSubmit")]
+        public IActionResult ApprovalFormSubmit(RequestForChangeFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid) 
+            {
+                return View("form", viewModel);
+            }
+            return Ok(viewModel);
         }
 
         [HttpGet("")]
