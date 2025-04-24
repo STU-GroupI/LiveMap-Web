@@ -3,6 +3,7 @@ using LiveMap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,9 +37,8 @@ public class CategoryRepository : ICategoryRepository
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            if(string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(iconName))
+            if (string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(iconName))
             {
-                await transaction.RollbackAsync();
                 return false;
             }
 
@@ -57,14 +57,8 @@ public class CategoryRepository : ICategoryRepository
             Category newCategory = new Category
             {
                 CategoryName = newName,
-                IconName = string.IsNullOrWhiteSpace(iconName) ? category.IconName : iconName,
+                IconName = iconName,
             };
-
-
-            //Add the entity to the context
-            _context.Categories.Add(newCategory);
-            
-            await _context.SaveChangesAsync();
 
             // Update PointsOfInterest and SuggestedPointsOfInterest records first
             await _context.PointsOfInterest
@@ -79,6 +73,13 @@ public class CategoryRepository : ICategoryRepository
             _context.Categories.Remove(category);
 
             await _context.SaveChangesAsync();
+
+
+            //Add the entity to the context
+            _context.Categories.Add(newCategory);
+            
+            await _context.SaveChangesAsync();
+
             await transaction.CommitAsync();
 
             return true;

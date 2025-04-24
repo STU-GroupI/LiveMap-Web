@@ -29,7 +29,9 @@ public class CategoryController : Controller
         [FromRoute] string? name,
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, string.Empty)));
+        var categoryService = HttpContext.RequestServices.GetService<ICategoryService>();
+        var category = await categoryService?.Get(name);
+        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, category.Value.IconName)));
     }
 
 
