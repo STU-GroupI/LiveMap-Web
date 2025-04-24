@@ -9,4 +9,5 @@ public class Category
     public const string ENTERTAINMENT = "Entertainment";
     public const string EMPTY = "Empty";
     public required string CategoryName { get; set; }
+    public string IconName { get; set; } = string.Empty;
 }

@@ -30,7 +30,7 @@ public class CategoryRepository : ICategoryRepository
         In this workaround, a new category is created and the old category is deleted. This is not ideal, but it works for now.
         Maybe use ids for the future...?
     */
-    public async Task<bool> Update(string oldName, string newName)
+    public async Task<bool> Update(string oldName, string newName, string iconName)
     {
         // Start the transaction
         await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -52,6 +52,7 @@ public class CategoryRepository : ICategoryRepository
             Category newCategory = new Category
             {
                 CategoryName = newName,
+                IconName = iconName ?? category.IconName,
             };
 
             //Add the entity to the context
