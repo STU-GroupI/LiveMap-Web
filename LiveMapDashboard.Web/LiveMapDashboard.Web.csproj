@@ -31,10 +31,6 @@
     <ProjectReference Include="..\LiveMap.Persistence\LiveMap.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="Views\Shared\Layouts\_DeleteModalLayout.cshtml" />
-  </ItemGroup>
-
   <Target Name="BuildTailwind" BeforeTargets="Build">
     <Exec Command="npm run build:css" />
   </Target>
