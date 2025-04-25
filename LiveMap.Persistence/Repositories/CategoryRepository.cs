@@ -46,6 +46,16 @@ public class CategoryRepository : ICategoryRepository
             var category = await _context.Categories
                 .FirstOrDefaultAsync(c => c.CategoryName == oldName);
 
+            if (oldName == newName)
+            {
+                // Just update icon name
+                category.IconName = iconName;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return true;
+            }
+
             if (category is null)
             {
                 // Rollback if the category doesn't exist
@@ -60,6 +70,11 @@ public class CategoryRepository : ICategoryRepository
                 IconName = iconName,
             };
 
+            //Add the entity to the context
+            _context.Categories.Add(newCategory);
+
+            await _context.SaveChangesAsync();
+
             // Update PointsOfInterest and SuggestedPointsOfInterest records first
             await _context.PointsOfInterest
                 .Where(poi => poi.CategoryName == oldName)
@@ -72,12 +87,6 @@ public class CategoryRepository : ICategoryRepository
             //Remove the old category
             _context.Categories.Remove(category);
 
-            await _context.SaveChangesAsync();
-
-
-            //Add the entity to the context
-            _context.Categories.Add(newCategory);
-            
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
