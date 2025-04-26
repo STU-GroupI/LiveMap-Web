@@ -1,98 +1,88 @@
 ﻿@model LiveMapDashboard.Web.Models.Poi.PoiListViewModel
 
-<div class="py-4 flex justify-end">
-    <a asp-controller="Poi" asp-action="PoiCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        New Point Of Interest
-    </a>
-</div>
-
-@if (ViewData["SuccessMessage"] != null || ViewData["ErrorMessage"] != null)
-{
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    @if (ViewData["SuccessMessage"] != null)
-    {
-    <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-        @ViewData["SuccessMessage"]
-    </div>
-    }
-
-    @if (ViewData["ErrorMessage"] != null)
-    {
-    <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-        @ViewData["ErrorMessage"]
-    </div>
-    }
-</div>
+@{
+    Layout = "~/Views/Shared/Layouts/_DefaultLayout.cshtml";
 }
 
-<div class="flex flex-col">
-    <div class="-m-1.5 overflow-x-auto">
-        <div class="p-1.5 min-w-full inline-block align-middle">
-            <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                    <thead>
-                    <tr>
-                        <th scope="col"
-                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                            Id
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                            Name
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                            Action
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                    @foreach (
-                        var poi in Model.Pois)
-                    {
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                @poi.Id
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                @poi.Name
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                <a asp-action="form" asp-controller="Poi" asp-route-id="@poi.Id"
-                                   class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
-                                    Edit
-                                </a>
+@section TopBarActions
+{
+    <div class="py-4 flex justify-end">
+        <a asp-controller="Poi" asp-action="PoiCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            New Point Of Interest
+        </a>
+    </div>    
+}
 
-                                <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@poi.Id" data-hs-overlay="#delete-alert-@poi.Id">
-                                    Delete
-                                </button>
-                            </td>
+@section Content
+{
+    <div class="flex flex-col">
+        <div class="-m-1.5 overflow-x-auto">
+            <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                        <thead>
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Id
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Name
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                Action
+                            </th>
                         </tr>
-                    }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                        @foreach (var poi in Model.Pois)
+                        {
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                    @poi.Id
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                    @poi.Name
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                    <a asp-action="form" asp-controller="Poi" asp-route-id="@poi.Id"
+                                       class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
+                                        Edit
+                                    </a>
+
+                                    <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@poi.Id" data-hs-overlay="#delete-alert-@poi.Id">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@foreach (
-    var deleteModal in Model.Pois.Select(poi => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
-        {
-          ModalId = $"delete-alert-{poi.Id}",
-          ModalTitle = $"Delete Point Of Interest: {poi.Name}",
-          FormMethod = "post",
-          FormController = "Poi",
-          FormAction = "Delete",
-          WarningMessage = "Permanently remove the point of interest and all of its contents from the map. This action is not reversible, so please continue with caution.",
-          DangerMessage = null,
-          HiddenInputs = new Dictionary<string, string>
-          {
-              { "Id", poi.Id }
-          }
-        }
+    @foreach (
+        var deleteModal in Model.Pois.Select(poi => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
+            {
+                ModalId = $"delete-alert-{poi.Id}",
+                ModalTitle = $"Delete Point Of Interest: {poi.Name}",
+                FormMethod = "post",
+                FormController = "Poi",
+                FormAction = "Delete",
+                WarningMessage = "Permanently remove the point of interest and all of its contents from the map. This action is not reversible, so please continue with caution.",
+                DangerMessage = null,
+                HiddenInputs = new Dictionary<string, string>
+                {
+                    { "Id", poi.Id }
+                }
+            }
+        )
     )
-)
-{
-    @await Html.PartialAsync("~/Views/Shared/Components/PoiList/_DeleteModal.cshtml", deleteModal)
+    {
+        @await Html.PartialAsync("~/Views/Shared/Components/PoiList/_DeleteModal.cshtml", deleteModal)
+    }
 }

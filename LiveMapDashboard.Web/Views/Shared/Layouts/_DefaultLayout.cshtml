@@ -1,9 +1,5 @@
-﻿@model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
-
-<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
-    <div class="flex justify-between">
-        @await RenderSectionAsync("TopBarActions", required: false)
-    </div>
+﻿<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+    @await RenderSectionAsync("TopBarActions", required: false)
 </div>
 
 @if (ViewData["SuccessMessage"] != null)
@@ -23,8 +19,5 @@
 }
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        @await RenderSectionAsync("GridLeftContent", required: false)
-        @await RenderSectionAsync("GridRightContent", required: false)
-    </div>
+    @await RenderSectionAsync("Content", required: false)
 </div>
