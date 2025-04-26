@@ -23,4 +23,9 @@
         </label>
         <label for="@fullFieldName" class="text-sm text-gray-700 dark:text-white">@labelText</label>
     </div>
+
+    @if (ViewData.ModelState.TryGetValue(fieldName ?? "", out var entry) && entry.Errors.Count > 0)
+    {
+        <span class="text-sm text-red-600 mt-2">@entry.Errors[0].ErrorMessage</span>
+    }
 </div>

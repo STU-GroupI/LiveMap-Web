@@ -25,5 +25,8 @@
         }
     </select>
 
-    <span asp-validation-for="@fullFieldName" class="text-sm text-red-600 mt-2"></span>
+    @if (ViewData.ModelState.TryGetValue(fieldName ?? "", out var entry) && entry.Errors.Count > 0)
+    {
+        <span class="text-sm text-red-600 mt-2">@entry.Errors[0].ErrorMessage</span>
+    }
 </div>
