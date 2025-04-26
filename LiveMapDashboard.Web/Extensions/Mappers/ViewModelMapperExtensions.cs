@@ -87,6 +87,7 @@ public static class ViewModelMapperExtensions
             Title = viewModel.Title,
             Category = null!,
             CategoryName = viewModel.Category,
+            Image = viewModel.Image,
             Coordinate = viewModel.Coordinate,
             Description = viewModel.Description,
             Map = null!,

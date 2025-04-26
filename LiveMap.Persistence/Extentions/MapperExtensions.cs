@@ -30,6 +30,7 @@ public static class MapperExtensions
             Map = poi.Map?.ToDomainMap() ?? null,
             Status = poi.Status,
             Title = poi.Title,
+            Image = poi.Image,
             StatusName = poi.StatusName,
         };
         data.OpeningHours = poi.OpeningHours?.Select(oh => oh.ToOpeningHours(data)).ToList() ?? [];
@@ -111,6 +112,7 @@ public static class MapperExtensions
         {
             Id = pointOfInterest.Id,
             Title = pointOfInterest.Title,
+            Image = pointOfInterest.Image,
             Description = pointOfInterest.Description,
             CategoryName = pointOfInterest.CategoryName,
 
