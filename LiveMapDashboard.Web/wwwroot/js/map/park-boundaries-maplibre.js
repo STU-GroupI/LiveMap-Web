@@ -101,7 +101,10 @@ function centerOnMap() {
     }
 
     const coordinates = features[0].geometry.coordinates[0];
-    map.setCenter(getCenterOfCoordinates(coordinates));
+    const center = getCenterOfCoordinates(coordinates);
+    
+    map.setCenter(center);
+    window.mapCenter = new maplibregl.Marker().setLngLat(center);
 }
 
 function getCenterOfCoordinates(coordinates) {
@@ -180,6 +183,7 @@ function saveMap() {
 
     // Save Map
     const coordinates = features[0].geometry.coordinates[0];
+    window.mapCenter = new maplibregl.Marker().setLngLat(coordinates);
 
     fetch(`${BACKEND_URL}${API_PATH}/${mapId}`, {
         method: "PATCH",

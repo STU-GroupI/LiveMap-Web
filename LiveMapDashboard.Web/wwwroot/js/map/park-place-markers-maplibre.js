@@ -62,6 +62,8 @@ function placeMarkerOnMap() {
         .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
         .addTo(map);
 
+    window.mapCenter = marker;
+    
     // Store the marker in the markers array
     markers.push(marker);
     centerOnMap(); // Center the map on the new marker
