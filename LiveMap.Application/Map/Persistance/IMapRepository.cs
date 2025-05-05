@@ -11,6 +11,6 @@ public interface IMapRepository
 
     public Task<bool> UpdateMapBorder(Guid id, Models.Coordinate[] coords);
 
-    public Task<bool> Update(Models.Map map);
+    public Task<Models.Map?> Update(Models.Map map);
 }
 

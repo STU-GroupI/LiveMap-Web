@@ -125,7 +125,6 @@ public class MapController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType<Map>(StatusCodes.Status200OK)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
-    //TODO: Combine with previous Patch for Borders
     public async Task<IActionResult> Patch(
         [FromRoute] string id,
         [FromBody] UpdateSingleMapWebRequest webRequest,
@@ -143,13 +142,7 @@ public class MapController : ControllerBase
         try
         {
             UpdateSingleResponse response = await handler.Handle(request);
-
-            if (!response.Succeeded)
-            {
-                return NotFound(id);
-            }
-
-            return NoContent();
+            return Ok(response.map);
         }
         catch (Exception)
         {

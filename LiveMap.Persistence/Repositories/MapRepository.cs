@@ -102,7 +102,7 @@ public class MapRepository : IMapRepository
         return true;
     }
 
-    public async Task<bool> Update(Map map)
+    public async Task<Map?> Update(Map map)
     {
         var newMap = await _context.Maps
             .Include(m => m.PointOfInterests)
@@ -111,7 +111,7 @@ public class MapRepository : IMapRepository
 
         if (newMap is null)
         {
-            return false;
+            return null;
         }
         
         newMap.Name = map.Name;
@@ -133,6 +133,6 @@ public class MapRepository : IMapRepository
 
         await _context.SaveChangesAsync();
 
-        return true;
+        return newMap.ToDomainMap();
     }
 }
