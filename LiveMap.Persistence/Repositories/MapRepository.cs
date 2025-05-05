@@ -57,7 +57,7 @@ public class MapRepository : IMapRepository
 
     public async Task<Map> CreateAsync(Map map)
     {
-        var newMap = map.ToSqlMap(null);
+        var newMap = map.ToSqlMap();
 
         var result = await _context.Maps.AddAsync(newMap);
         await _context.SaveChangesAsync();
@@ -114,8 +114,13 @@ public class MapRepository : IMapRepository
         }
         
         newMap.Name = map.Name;
-        newMap.Position = map.Coordinate.ToSqlPoint();
+        newMap.Bounds = map.Bounds.ToPolygon();
         newMap.Border = map.Area.ToPolygon();
+
+        if(map.ImageUrl is not null)
+        {
+            newMap.ImageUrl = map.ImageUrl;
+        }
 
         await _context.SaveChangesAsync();
 

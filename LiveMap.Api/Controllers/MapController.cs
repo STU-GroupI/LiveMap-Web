@@ -82,8 +82,9 @@ public class MapController : ControllerBase
         {
             Id = Guid.Empty,
             Name = webRequest.Name,
-            Coordinate = webRequest.Coordinate,
-            Area = webRequest.Area
+            Bounds = webRequest.Bounds,
+            Area = webRequest.Area,
+            ImageUrl = webRequest.ImageUrl
         };
         var request = new CreateSingleRequest(map);
 
@@ -134,8 +135,9 @@ public class MapController : ControllerBase
         {
             Id = Guid.Parse(id),
             Name = webRequest.Name,
-            Coordinate = webRequest.Coordinate,
-            Area = webRequest.Area
+            Bounds = webRequest.Bounds,
+            Area = webRequest.Area,
+            ImageUrl = webRequest.ImageUrl
         };
         var request = new UpdateSingleRequest(map);
 

@@ -5,5 +5,6 @@ namespace LiveMap.Api.Models.Map;
 public sealed record CreateSingleMapWebRequest(
     string Name,
     Coordinate[] Area,
-    Coordinate Coordinate
+    Coordinate[] Bounds,
+    string? ImageUrl = null
 );

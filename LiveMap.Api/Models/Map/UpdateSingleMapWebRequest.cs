@@ -6,5 +6,6 @@ public sealed record UpdateSingleMapWebRequest(
     string Id,
     string Name,
     Coordinate[] Area,
-    Coordinate Coordinate
+    Coordinate[] Bounds,
+    string? ImageUrl = null
 );
