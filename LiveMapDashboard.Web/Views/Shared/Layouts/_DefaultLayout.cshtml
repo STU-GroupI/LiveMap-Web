@@ -1,0 +1,23 @@
+﻿<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+    @await RenderSectionAsync("TopBarActions", required: false)
+</div>
+
+@if (ViewData["SuccessMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["SuccessMessage"]?.ToString() ?? "Your changes have been saved successfully!",
+        Type = ToastType.Success
+    })
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["ErrorMessage"]?.ToString() ?? "An error occurred while processing your request.",
+        Type = ToastType.Error
+    })
+}
+
+<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+    @await RenderSectionAsync("Content", required: false)
+</div>

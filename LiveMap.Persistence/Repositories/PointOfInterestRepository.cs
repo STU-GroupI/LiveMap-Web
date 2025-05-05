@@ -90,6 +90,9 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
         poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;
 
+        // Track opening hours to remove
+        var openingHoursToRemove = new List<SqlOpeningHours>();
+        
         foreach (var openingHour in poi.OpeningHours)
         {
             var data = pointOfInterest.OpeningHours?.FirstOrDefault(oh =>
@@ -97,19 +100,39 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
             if (data is null)
             {
-                poi.OpeningHours.Add(openingHour);
-                continue;
+                openingHoursToRemove.Add(openingHour);
             }
-
-            openingHour.Start = data.Start;
-            openingHour.End = data.End;
+            else
+            {
+                openingHour.Start = data.Start;
+                openingHour.End = data.End;
+            }
         }
 
-        foreach (var openingHour in poi.OpeningHours
-            .Where(oh => !(pointOfInterest.OpeningHours?.Any(oh2 => oh2.DayOfWeek == oh.DayOfWeek) ?? !false)))
+        foreach (var openingHour in openingHoursToRemove)
         {
             poi.OpeningHours.Remove(openingHour);
             _context.OpeningHours.Remove(openingHour);
+        }
+
+        // Add new opening hours directly
+        foreach (var newOpeningHour in pointOfInterest.OpeningHours ?? Enumerable.Empty<OpeningHours>())
+        {
+            if (poi.OpeningHours.Any(oh => oh.DayOfWeek == newOpeningHour.DayOfWeek))
+            {
+                continue;
+            }
+            
+            var newSqlOpeningHour = new SqlOpeningHours
+            {
+                Id = Guid.NewGuid(),
+                DayOfWeek = newOpeningHour.DayOfWeek,
+                Start = newOpeningHour.Start,
+                End = newOpeningHour.End,
+                PoiId = poi.Id
+            };
+            poi.OpeningHours.Add(newSqlOpeningHour);
+            _context.OpeningHours.Add(newSqlOpeningHour);
         }
 
         await _context.SaveChangesAsync();
