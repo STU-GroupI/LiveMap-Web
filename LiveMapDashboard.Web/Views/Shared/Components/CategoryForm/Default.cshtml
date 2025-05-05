@@ -1,18 +1,72 @@
-﻿@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
+﻿@using LiveMapDashboard.Web.Models.Modal
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
 
 @{
     Layout = "~/Views/Shared/Layouts/_DefaultLayout.cshtml";
+    
+    const string leaveChangesModalId = "modal-leave-changes";
+    var leaveChangesModalModel = new LeaveChangesModalViewModel
+    {
+        ModalId = leaveChangesModalId,
+        ModalTitle = "Leave changes",
+        ModalMessage = "Are you sure you would like to abandon your changes?",
+    };
+
+    var deleteModalId = $"delete-poi-{Model.CategoryName?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = !string.IsNullOrEmpty(Model.CategoryName) ? new DeleteModalViewModel
+    {
+        ModalId = deleteModalId,
+        ModalTitle = $"Delete Category: {Model.CategoryName}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        DangerMessage = Model.IsUsed == true
+            ? "This category is in use by other points of interest. Removing it will update related points of interest to have the default category of 'empty'."
+            : null,
+        FormController = "Category",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
+        {
+            { "CategoryName", Model.CategoryName },
+            { "NewValue", Model.CategoryName }
+        }
+    } : null;
 }
 
 
 @section TopBarActions
 {
     <div class="flex justify-between">
-        @await Html.PartialAsync("Components/CategoryForm/_GoBack", Model)
+        @if (!string.IsNullOrEmpty(Model.CategoryName))
+        {
+            <a asp-controller="Category" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer">
+                <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                </span>
+                Go back
+            </a>
+        }
+        else
+        {
+            <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                </span>
+                Go back
+            </button>
+        }
+
+        @await Html.PartialAsync("~/Views/Shared/Components/CategoryForm/_GoBackModal.cshtml", leaveChangesModalModel)
 
         @if (Model.CategoryName != "" && Model.CategoryName is not null)
         {
-            @await Html.PartialAsync("Components/CategoryForm/_Delete", Model)
+            <div class="text-center">
+                <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                    Delete
+                </button>
+            </div>
+
+            
+            @await Html.PartialAsync("Components/CategoryForm/_DeleteModal", deleteModalModel)
         }
     </div>    
 }
@@ -47,7 +101,7 @@
                     }
                     else
                     {
-                        <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center" data-hs-overlay="#go-back-alert">
+                        <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center" data-hs-overlay="#@leaveChangesModalId">
                             Cancel
                         </div>
                     }
@@ -59,25 +113,4 @@
             </div>
         </form>
     </div>
-}
-
-@if(Model.CategoryName != "" && Model.CategoryName is not null)
-{
-    var deleteModalModel = new DeleteModalViewModel
-    {
-        ModalId = $"delete-category-{Model.CategoryName.Replace(' ', '-').ToLower()}",
-        ModalTitle = $"Delete Category: {Model.CategoryName}",
-        WarningMessage = "This action is not reversible, so please continue with caution.",
-        DangerMessage = Model.IsUsed == true
-            ? "This category is in use by other points of interest. Removing it will update related points of interest to have the default category of 'empty'."
-            : null,
-        FormController = "Category",
-        FormAction = "Delete",
-        HiddenInputs = new Dictionary<string, string>
-        {
-            { "CategoryName", Model.CategoryName },
-            { "NewValue", Model.CategoryName }
-        }
-    };  
-    @await Html.PartialAsync("Components/CategoryForm/_DeleteModal", deleteModalModel)
 }
