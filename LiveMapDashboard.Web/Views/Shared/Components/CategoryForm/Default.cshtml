@@ -1,4 +1,6 @@
-﻿@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
+﻿@using LiveMapDashboard.Web.Models.Modal
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
 
 <div class="max-w-10xl px-4 mx-auto">
     <div class="flex justify-between">
@@ -6,10 +8,15 @@
         
         @if (Model.CategoryName != "" && Model.CategoryName is not null)
         {
-            @await Html.PartialAsync("Components/CategoryForm/_Delete", Model)
+            <div class="text-center">
+                <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" data-hs-overlay="#delete-category-@Model.CategoryName.Replace(' ', '-').ToLower()">
+                    Delete
+                </button>
+            </div>
         }
     </div>
 </div>
+
 
 @if (ViewData["SuccessMessage"] != null || ViewData["ErrorMessage"] != null)
 {
@@ -29,6 +36,7 @@
         }
     </div>  
 }
+
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
     <form method="post" asp-controller="category" asp-action="submit">
@@ -83,3 +91,24 @@
         </div>
     </form>
 </div>
+
+@if(Model.CategoryName != "" && Model.CategoryName is not null)
+{
+    var deleteModalModel = new DeleteModalViewModel
+    {
+        ModalId = $"delete-category-{Model.CategoryName.Replace(' ', '-').ToLower()}",
+        ModalTitle = $"Delete Category: {Model.CategoryName}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        DangerMessage = Model.IsUsed == true
+            ? "This category is in use by other points of interest. Removing it will update related points of interest to have the default category of 'empty'."
+            : null,
+        FormController = "Category",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
+        {
+            { "CategoryName", Model.CategoryName },
+            { "NewValue", Model.CategoryName }
+        }
+    };  
+    @await Html.PartialAsync("Components/CategoryForm/_DeleteModal", deleteModalModel)
+}
