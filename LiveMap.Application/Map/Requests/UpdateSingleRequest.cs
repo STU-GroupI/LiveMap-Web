@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace LiveMap.Application.Map.Requests;
+using Domain.Models;
 
-namespace LiveMap.Application.Map.Requests
-{
-    class UpdateSingleRequest
-    {
-    }
-}
+public sealed record UpdateSingleRequest(Map Map);

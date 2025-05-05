@@ -55,6 +55,16 @@ public class MapRepository : IMapRepository
         return map.ToDomainMap();
     }
 
+    public async Task<Map> CreateAsync(Map map)
+    {
+        var newMap = map.ToSqlMap(null);
+
+        var result = await _context.Maps.AddAsync(newMap);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainMap();
+    }
+
     public async Task<bool> UpdateMapBorder(Guid id, Coordinate[] coords)
     {
         SqlMap? map = await _context.Maps.FindAsync(id);
@@ -88,6 +98,40 @@ public class MapRepository : IMapRepository
         {
             return false;
         }
+
+        return true;
+    }
+
+    public async Task<bool> Update(Map map)
+    {
+        var newMap = await _context.Maps
+            .Include(m => m.PointOfInterests)
+            .Where(m => m.Id == map.Id)
+            .FirstOrDefaultAsync();
+
+        if (newMap is null)
+        {
+            return false;
+        }
+        
+        newMap.Name = map.Name;
+        newMap.Position = map.Coordinate.ToSqlPoint();
+        newMap.Border = map.Area.ToPolygon();
+
+        if(map.PointOfInterests?.Count > 0)
+        {
+            foreach (var poi in map.PointOfInterests)
+            {
+                var existingPoi = newMap.PointOfInterests
+                    .FirstOrDefault(p => p.Id == poi.Id);
+                if (existingPoi is null)
+                {
+                    newMap.PointOfInterests.Add(poi.ToSqlPointOfInterest(newMap));
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync();
 
         return true;
     }
