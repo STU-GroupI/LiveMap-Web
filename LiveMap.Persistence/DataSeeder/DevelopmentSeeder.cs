@@ -94,6 +94,7 @@ public static class DevelopmentSeeder
         return new Faker<SqlPointOfInterest>()
             .RuleFor(p => p.Id, f => f.Random.Guid())
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(3))
+            .RuleFor(p => p.Image, f => f.PickRandom(new[] { "https://placehold.co/960x565/png", null }))
             .RuleFor(p => p.Description, f => f.Lorem.Paragraph())
             .RuleFor(p => p.Position, f => new(f.Address.Latitude(), f.Address.Longitude())
             {

@@ -1,0 +1,30 @@
+﻿@model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
+
+<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+    <div class="flex justify-between">
+        @await RenderSectionAsync("TopBarActions", required: false)
+    </div>
+</div>
+
+@if (ViewData["SuccessMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["SuccessMessage"]?.ToString() ?? "Your changes have been saved successfully!",
+        Type = ToastType.Success
+    })
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["ErrorMessage"]?.ToString() ?? "An error occurred while processing your request.",
+        Type = ToastType.Error
+    })
+}
+
+<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        @await RenderSectionAsync("GridLeftContent", required: false)
+        @await RenderSectionAsync("GridRightContent", required: false)
+    </div>
+</div>

@@ -13,6 +13,7 @@ public static class TestDataGenerator
             .RuleFor(p => p.Id, f => f.Random.Guid())
             .RuleFor(p => p.Title, f => f.Lorem.Sentence(3))
             .RuleFor(p => p.Description, f => f.Lorem.Paragraph())
+            .RuleFor(p => p.Image, f => f.PickRandom(new[] { "https://placehold.co/960x565", null }))
             .RuleFor(p => p.Coordinate, f => new Coordinate(
                 f.Address.Latitude(),
                 f.Address.Longitude()))
