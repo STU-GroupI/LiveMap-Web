@@ -66,6 +66,12 @@
                 </label>
 
                 @{
+                    string value = Model.IconName != "" && Model.IconName is not null
+                    ? Model.IconName
+                    : "";
+                }
+
+                @{
                     string placeholder = Model.IconName != "" && Model.IconName is not null
                     ? Model.IconName
                     : "Search a Material Icon...";
@@ -74,7 +80,8 @@
                 <input type="text"
                        id="iconSearchInput"
                        class="border px-2 py-2 rounded w-full text-sm"
-                       value="@placeholder"/>
+                       value="@value"
+                       placeholder="@placeholder"/>
 
                 <input type="hidden"
                        asp-for="IconName"
