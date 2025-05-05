@@ -60,3 +60,24 @@
         </form>
     </div>
 }
+
+@if(Model.CategoryName != "" && Model.CategoryName is not null)
+{
+    var deleteModalModel = new DeleteModalViewModel
+    {
+        ModalId = $"delete-category-{Model.CategoryName.Replace(' ', '-').ToLower()}",
+        ModalTitle = $"Delete Category: {Model.CategoryName}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        DangerMessage = Model.IsUsed == true
+            ? "This category is in use by other points of interest. Removing it will update related points of interest to have the default category of 'empty'."
+            : null,
+        FormController = "Category",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
+        {
+            { "CategoryName", Model.CategoryName },
+            { "NewValue", Model.CategoryName }
+        }
+    };  
+    @await Html.PartialAsync("Components/CategoryForm/_DeleteModal", deleteModalModel)
+}
