@@ -105,7 +105,6 @@ public class MapRepository : IMapRepository
     public async Task<Map?> Update(Map map)
     {
         var newMap = await _context.Maps
-            .Include(m => m.PointOfInterests)
             .Where(m => m.Id == map.Id)
             .FirstOrDefaultAsync();
 
@@ -117,19 +116,6 @@ public class MapRepository : IMapRepository
         newMap.Name = map.Name;
         newMap.Position = map.Coordinate.ToSqlPoint();
         newMap.Border = map.Area.ToPolygon();
-
-        if(map.PointOfInterests?.Count > 0)
-        {
-            foreach (var poi in map.PointOfInterests)
-            {
-                var existingPoi = newMap.PointOfInterests
-                    .FirstOrDefault(p => p.Id == poi.Id);
-                if (existingPoi is null)
-                {
-                    newMap.PointOfInterests.Add(poi.ToSqlPointOfInterest(newMap));
-                }
-            }
-        }
 
         await _context.SaveChangesAsync();
 
