@@ -21,36 +21,3 @@
         </button>
     </div>
 }
-
-@* @using LiveMapDashboard.Web.Models.Poi *@
-@* @model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel *@
-@* *@
-@* @if (!string.IsNullOrEmpty(Model.Id)) *@
-@* { *@
-@*     <a asp-controller="Poi" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert"> *@
-@*             <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500"> *@
-@*                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> *@
-@*             </span> *@
-@*         Go back *@
-@*     </a> *@
-@* } *@
-@* else *@
-@* { *@
-@*     <div class="text-center"> *@
-@*         <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert"> *@
-@*                 <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500"> *@
-@*                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> *@
-@*                 </span> *@
-@*             Go back *@
-@*         </button> *@
-@*     </div> *@
-@* *@
-@*     @await Html.PartialAsync("~/Views/Shared/Layouts/Modals/_LeaveChangesModalLayout.cshtml", new LiveMapDashboard.Web.Models.Modal.LeaveChangesModalViewModel *@
-@*     { *@
-@*         Id = "go-back-alert", *@
-@*         ConfirmActionUrl = Url.Action("Index", "Poi"), *@
-@*         CancelActionUrl = "#", *@
-@*         ModalTitle = "Leave changes", *@
-@*         ModalMessage = "Are you sure you would like to abandon your changes?" *@
-@*     }) *@
-@* } *@
