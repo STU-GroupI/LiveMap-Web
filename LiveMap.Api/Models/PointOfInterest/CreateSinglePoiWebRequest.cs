@@ -4,6 +4,7 @@ namespace LiveMap.Api.Models.PointOfInterest;
 public sealed record CreateSinglePoiWebRequest(
     string Title,
     string Description,
+    string? Image,
     string CategoryName,
     string MapId,
     Coordinate Coordinate,

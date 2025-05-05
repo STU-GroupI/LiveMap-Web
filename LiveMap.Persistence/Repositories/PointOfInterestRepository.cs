@@ -85,6 +85,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         poi.Title = pointOfInterest.Title;
         poi.Description = pointOfInterest.Description;
+        poi.Image = pointOfInterest.Image;
         poi.CategoryName = pointOfInterest.CategoryName;
         poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
         poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;

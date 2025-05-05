@@ -9,6 +9,7 @@ public class SqlPointOfInterest
 
     public required string Title { get; set; }
     public required string Description { get; set; }
+    public string? Image { get; set; }
     public required Point Position { get; set; }
 
     public required string CategoryName { get; set; }
