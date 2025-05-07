@@ -42,6 +42,11 @@ public sealed record PoiCrudformViewModel(
             results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(MapId) }));
         }
 
+        if (Coordinate.Latitude == 0 && Coordinate.Longitude == 0)
+        {
+            results.Add(new ValidationResult("A valid location must be added.", new[] { nameof(Coordinate) }));
+        }
+
         if (OpeningHours != null)
         {
             foreach (var openingHour in OpeningHours)
