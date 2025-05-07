@@ -1,85 +1,116 @@
-﻿@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
+﻿@using LiveMapDashboard.Web.Models.Modal
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LiveMapDashboard.Web.Models.Category.CategoryCrudFormViewModel
 
-<div class="max-w-10xl px-4 mx-auto">
-    <div class="flex justify-between">
-        @await Html.PartialAsync("Components/CategoryForm/_GoBack", Model)
-        
-        @if (Model.CategoryName != "" && Model.CategoryName is not null)
-        {
-            @await Html.PartialAsync("Components/CategoryForm/_Delete", Model)
-        }
-    </div>
-</div>
+@{
+    Layout = "~/Views/Shared/Layouts/_DefaultLayout.cshtml";
+    
+    const string leaveChangesModalId = "modal-leave-changes";
+    var leaveChangesModalModel = new LeaveChangesModalViewModel
+    {
+        ModalId = leaveChangesModalId,
+        ModalTitle = "Leave changes",
+        ModalMessage = "Are you sure you would like to abandon your changes?",
+    };
 
-@if (ViewData["SuccessMessage"] != null || ViewData["ErrorMessage"] != null)
-{
-    <div class="max-w-10xl px-4 mx-auto">
-        @if (ViewData["SuccessMessage"] != null)
+    var deleteModalId = $"delete-poi-{Model.CategoryName?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = !string.IsNullOrEmpty(Model.CategoryName) ? new DeleteModalViewModel
+    {
+        ModalId = deleteModalId,
+        ModalTitle = $"Delete Category: {Model.CategoryName}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        DangerMessage = Model.IsUsed == true
+            ? "This category is in use by other points of interest. Removing it will update related points of interest to have the default category of 'empty'."
+            : null,
+        FormController = "Category",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
         {
-            <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-                @ViewData["SuccessMessage"]
-            </div>
+            { "CategoryName", Model.CategoryName },
+            { "NewValue", Model.CategoryName }
         }
-
-        @if (ViewData["ErrorMessage"] != null)
-        {
-            <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-                @ViewData["ErrorMessage"]
-            </div>
-        }
-    </div>  
+    } : null;
 }
 
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    <form method="post" asp-controller="category" asp-action="submit">
-        @Html.AntiForgeryToken()
-        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
-        <input type="hidden" name="@nameof(Model.CategoryName)" asp-for="CategoryName" />
+@section TopBarActions
+{
+    <div class="flex justify-between">
+        @if (!string.IsNullOrEmpty(Model.CategoryName))
+        {
+            <a asp-controller="Category" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer">
+                <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                </span>
+                Go back
+            </a>
+        }
+        else
+        {
+            <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                </span>
+                Go back
+            </button>
+        }
 
-        <div class="flex flex-col gap-6">
-            <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
-                <div class="mb-2">
-                    <label for="newValue" class="block mb-2 text-sm font-medium">
-                        Category name
-                    </label>
-                    
-                    @{
-                        string placeHolder = Model.CategoryName != "" && Model.CategoryName is not null
-                            ? Model.CategoryName
-                            : "Some Name";
-                    }
-                    
-                    <input type="text" asp-for="NewValue" name="@nameof(Model.NewValue)"
-                           id="newValue"
-                           class="border py-2.5 sm:py-2 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                           placeholder="@placeHolder"
-                           value="@Model.CategoryName"/>
-                    <span asp-validation-for="NewValue" class="text-sm text-red-600 mt-2"></span>
-                </div>
-            </div>
-        </div>
+        @await Html.PartialAsync("~/Views/Shared/Components/CategoryForm/_GoBackModal.cshtml", leaveChangesModalModel)
 
-        <div class="mt-2 py-4 relative z-10">
-            <div class="flex justify-end gap-3 w-full">
-
-                @if (Model.CategoryName != "" && Model.CategoryName is not null)
-                {
-                    <a asp-controller="Category" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center">
-                        Cancel
-                    </a>
-                }
-                else
-                {
-                    <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center" data-hs-overlay="#go-back-alert">
-                        Cancel
-                    </div>
-                }
-
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-center">
-                    Save
+        @if (Model.CategoryName != "" && Model.CategoryName is not null)
+        {
+            <div class="text-center">
+                <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                    Delete
                 </button>
             </div>
-        </div>
-    </form>
-</div>
+
+            
+            @await Html.PartialAsync("Components/CategoryForm/_DeleteModal", deleteModalModel)
+        }
+    </div>    
+}
+
+@section Content
+{
+    <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+        <form method="post" asp-controller="category" asp-action="submit">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+            <input type="hidden" name="@nameof(Model.CategoryName)" asp-for="CategoryName" />
+
+            <div class="flex flex-col gap-6">
+                <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
+
+                    @Html.EditorFor(m => m.NewValue, new ViewDataDictionary(ViewData) {
+                        { "value", Model.CategoryName },
+                        { "Label", "Category name" }
+                    })
+                </div>
+            </div>
+
+            <div class="mt-2 py-4 relative z-10">
+                <div class="flex justify-end gap-3 w-full">
+
+                    @if (Model.CategoryName != "" && Model.CategoryName is not null)
+                    {
+                        <a asp-controller="Category" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center">
+                            Cancel
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-center" data-hs-overlay="#@leaveChangesModalId">
+                            Cancel
+                        </div>
+                    }
+
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-center">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+}

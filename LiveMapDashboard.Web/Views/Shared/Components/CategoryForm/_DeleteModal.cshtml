@@ -1,0 +1,41 @@
+﻿@model LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
+@{
+    Layout = "~/Views/Shared/Layouts/Modals/_DeleteModalLayout.cshtml";
+}
+
+@section ModalContent {
+    @if (!string.IsNullOrWhiteSpace(Model.WarningMessage))
+    {
+        <p class="text-gray-500 dark:text-neutral-500">
+            Permanently remove the category. This action is not reversible, so please continue with caution.
+        </p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.DangerMessage))
+    {
+        <div class="mt-3">
+            <p class="text-red-800 rounded-full dark:text-red-500">@Model.DangerMessage</p>
+        </div>
+    }
+}
+
+@section ModalSubmitForm 
+{
+    <form method="@Model.FormMethod" asp-controller="@Model.FormController" asp-action="@Model.FormAction">
+        @Html.AntiForgeryToken()
+
+        @foreach (var input in Model.HiddenInputs)
+        {
+            <input type="hidden" name="@input.Key" value="@input.Value" />
+        }
+
+        <div class="flex justify-end items-center gap-x-2 py-3 px-4 bg-gray-50 border-t border-gray-200 dark:bg-neutral-950 dark:border-neutral-800">
+            <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800" data-hs-overlay="#@Model.ModalId">
+                @(!string.IsNullOrWhiteSpace(Model.DangerMessage) ? "Keep category" : "Delete")
+            </button>
+            <button type="submit" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600">
+                @(!string.IsNullOrWhiteSpace(Model.DangerMessage) ? "Delete category and update related points of interest" : "Delete category")
+            </button>
+        </div>
+    </form>
+}

@@ -90,6 +90,7 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
         {
             Title = poi.Title,
             Category = poi.CategoryName,
+            Image = poi.Image,
             Coordinate = poi.Coordinate,
             Description = poi.Description,
             IsWheelchairAccessible = poi.IsWheelchairAccessible,

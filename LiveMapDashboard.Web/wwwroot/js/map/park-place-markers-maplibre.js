@@ -10,43 +10,19 @@ const map = MapFactory.createMap('map', [4.729, 52.045], 15);
 //Prevent the map from zooming in when double clicking
 map.doubleClickZoom.disable();
 
-const markers = []; // To keep track of added markers
-let clickedLngLat = null; // To store the clicked coordinates
-
-let clickTimeout = null; // Timer to differentiate between single and double clicks
+const markers = [];
+let clickedLngLat = null;
 
 // Event listener voor single click
 map.on('click', (e) => {
-    // Start a timer to delay the single click action
-    if (clickTimeout) clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => {
-        onMapClick(e);
-        clickTimeout = null;
-    }, 250); // 250 ms is a common threshold, we can change this if needed
-});
-
-// Event listener voor double click
-map.on('dblclick', (e) => {
-    // Cancel the single click action if it was triggered
-    if (clickTimeout) {
-        clearTimeout(clickTimeout);
-        clickTimeout = null;
-    }
-    onMapDoubleClick(e);
+    onMapClick(e);
 });
 
 function onMapClick(e) {
     const { lngLat } = e;
     clickedLngLat = lngLat; // Store the clicked coordinates
-    placeMarkerOnMap(); // Call the function to place the marker
-}
-
-function onMapDoubleClick(e) {
-    const { lngLat } = e;
-    clickedLngLat = lngLat; // Store the clicked coordinates
     document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
     document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
-    showAlert('success', 'Coördinaten zijn toegepast.');
     placeMarkerOnMap(); // Call the function to place the marker
 }
 
@@ -73,7 +49,7 @@ function showAlert(type, message) {
     alert(`${type.toUpperCase()}: ${message}`);
 }
 
-function placeMarkerOnMap(){
+function placeMarkerOnMap() {
 
     // If a marker already exists, remove it before adding a new one
     if (markers.length > 0) {
@@ -86,6 +62,8 @@ function placeMarkerOnMap(){
         .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
         .addTo(map);
 
+    window.mapCenter = marker;
+    
     // Store the marker in the markers array
     markers.push(marker);
     centerOnMap(); // Center the map on the new marker
@@ -99,7 +77,6 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
 
     document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
     document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
-    showAlert('success', 'Coördinaten zijn toegepast.');
 });
 
 map.on('load', () => {
@@ -110,7 +87,7 @@ map.on('load', () => {
         const clampedLong = Math.max(Math.min(long, 90), -90);
         const clampedLat = Math.max(Math.min(lat, 90), -90);
 
-        clickedLngLat = {lng: clampedLong, lat: clampedLat};
+        clickedLngLat = { lng: clampedLong, lat: clampedLat };
         placeMarkerOnMap();
     }
 });

@@ -9,26 +9,9 @@
             _ => null
         };
     };
-    string? successMessage = ParseValue("SuccessMessage");
-    string? errorMessage = ParseValue("ErrorMessage");
-}
-
-@if (successMessage is not null || errorMessage is not null)
-{
-    <div class="max-w-10xl mx-auto">
-        @if (successMessage is not null)
-        {
-            <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-                @successMessage
-            </div>
-        }
-        else if (errorMessage is not null)
-        {
-            <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-                @errorMessage
-            </div>
-        }
-    </div>
+    
+    ViewData["SuccessMessage"] = ParseValue("SuccessMessage");
+    ViewData["ErrorMessage"] = ParseValue("ErrorMessage");
 }
 
 <vc:category-list

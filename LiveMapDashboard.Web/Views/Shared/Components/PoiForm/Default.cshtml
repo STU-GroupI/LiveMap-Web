@@ -1,79 +1,193 @@
-﻿@using LiveMapDashboard.Web.Models.Poi
+﻿@using LiveMapDashboard.Web.Models.Modal
 @model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
 
-<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
-    <div class="flex justify-between">
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBack.cshtml")
+@{
+    Layout = "~/Views/Shared/Layouts/_GridDoubleLayout.cshtml";
 
-        @if (!string.IsNullOrEmpty(Model.Id))
+    const string leaveChangesModalId = "modal-leave-changes";
+    var leaveChangesModalModel = new LeaveChangesModalViewModel
+    {
+        ModalId = leaveChangesModalId,
+        ModalTitle = "Leave changes",
+        ModalMessage = "Are you sure you would like to abandon your changes?",
+    };
+
+    var deleteModalId = $"delete-poi-{Model.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = !string.IsNullOrEmpty(Model.Id) ? new DeleteModalViewModel
+    {
+        ModalId = deleteModalId,
+        ModalTitle = $"Delete Category: {Model.Title}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        FormController = "Poi",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
         {
-            @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Delete.cshtml", Model)
+            { "Id", Model.Id },
+            { "MapId", Model.MapId },
         }
-    </div>
-</div>
+    } : null;
+}
 
-@if (ViewData["SuccessMessage"] != null || ViewData["ErrorMessage"] != null)
+@section TopBarActions
 {
-    <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-        @if (ViewData["SuccessMessage"] != null)
-        {
-            <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-                @ViewData["SuccessMessage"]
-            </div>
-        }
+    @if (!string.IsNullOrEmpty(Model.Id))
+    {
+        <a asp-controller="Poi" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            </span>
+            Go back
+        </a>
+    }
+    else
+    {
+        <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            </span>
+            Go back
+        </button>
+    }
 
-        @if (ViewData["ErrorMessage"] != null)
-        {
-            <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-                @ViewData["ErrorMessage"]
+    @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBackModal.cshtml", leaveChangesModalModel)
+
+    @if (deleteModalModel != null)
+    {
+        <div class="text-center">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                Delete
+            </button>
+        </div>
+
+        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
+    }
+}
+
+@section GridLeftContent
+{
+    <div>
+        <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+            <div class="card-body w-full h-full">
+                <div id="map" class="h-[50vh] w-full rounded-lg"></div>
             </div>
-        }
+        </div>
     </div>
 }
 
-<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_Map.cshtml")
-        
-        <form method="post" asp-controller="poi" asp-action="submit">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+@section GridRightContent
+{
+    <form method="post" asp-controller="poi" asp-action="submit">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Coordinate.Latitude" />
-            <input type="hidden" asp-for="Coordinate.Longitude" />
-            <input type="hidden" asp-for="MapId" />
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="MapId" />
+        <input type="hidden" asp-for="Coordinate.Latitude" />
+        <input type="hidden" asp-for="Coordinate.Longitude" />
 
-       
-           
-            <div>
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_LocationButton.cshtml")
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_FormFields.cshtml")
-                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_OpeningHours.cshtml")
-            </div>
-       
-        
-            <div class="mt-2 py-4 relative z-10">
-                <div class="flex justify-end gap-3 w-full">
-                    @if (!string.IsNullOrEmpty(Model.Id))
-                    {
-                        <a asp-controller="Poi" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                            Cancel
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
-                            Cancel
-                        </a>   
-                    }
-                
-                    <button type="submit"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        @(!string.IsNullOrEmpty(Model.Id) ? "Update" : "Create")
+        <div>
+            <div class="mb-6 border border-blue-500 p-4 rounded-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p>
+                        <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
+                    </div>
+                    <button type="button"
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                            id="applyLocationButton">
+                        + Add location
                     </button>
                 </div>
             </div>
-        </form>
-    </div>
-</div>
+            
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                @Html.EditorFor(m => m.Title, new ViewDataDictionary(ViewData) {
+                    { "Placeholder", "Enter Title..." },
+                    { "Label", "Title" }
+                })
+
+                @Html.EditorFor(m => m.Category, "Dropdown", new ViewDataDictionary(ViewData) {
+                    { "Options", Model.Categories?.Select(c => c.CategoryName) },
+                    { "Label", "Category" }
+                })
+                
+                @Html.EditorFor(m => m.Description, new ViewDataDictionary(ViewData) {
+                    { "Placeholder", "Enter Description..." },
+                    { "Label", "Description" },
+                    { "IsMultiline", true }
+                })
+
+                @Html.EditorFor(m => m.IsWheelchairAccessible, new ViewDataDictionary(ViewData) {
+                    { "Label", "Wheelchair Accessible" }
+                })
+            </div>
+
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
+                { "Label", "Image (URL)" },
+                })
+
+                <div class="flex justify-center">
+                    <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+
+                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image"/>
+                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                </div>
+            </div>
+            
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                <div>
+                    <label class="block mb-2 text-sm font-medium dark:text-white">
+                        Opening Hours
+                    </label>
+
+                    <div class="space-y-3">
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            var dayName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetDayName((DayOfWeek)i);
+                   
+                            <div class="flex items-center gap-4">
+                                @Html.EditorFor(m => m.OpeningHours[i].IsActive, new ViewDataDictionary(ViewData) {
+                                { "Label", @dayName }
+                                })
+                                
+                                @Html.EditorFor(m => m.OpeningHours[i].Start, "Time", new ViewDataDictionary(ViewData) {
+                                { "Label", "" }
+                                })
+                                <span class="text-sm text-gray-500">to</span>
+                                @Html.EditorFor(m => m.OpeningHours[i].End, "Time", new ViewDataDictionary(ViewData) {
+                                { "Label", "" }
+                                })
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2 py-4 relative z-10">
+            <div class="flex justify-end gap-3 w-full">
+                @if (!string.IsNullOrEmpty(Model.Id))
+                {
+                    <a asp-controller="Poi" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Cancel
+                    </a>
+                }
+                else
+                {
+                    <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                        Cancel
+                    </a>
+                }
+
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    @(!string.IsNullOrEmpty(Model.Id) ? "Update" : "Create")
+                </button>
+            </div>
+        </div>
+    </form>
+    <script src="~/js/poi.js" asp-append-version="true" type="module"></script>
+}

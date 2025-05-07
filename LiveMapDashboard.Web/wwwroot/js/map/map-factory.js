@@ -40,6 +40,54 @@ const MapFactory = (() => {
     };
     
     function addBasicControls(map) {
+        class RecenterButton {
+            onAdd(map) {
+                this.map = map;
+                
+                const button = document.createElement('button');
+                button.className = 'maplibregl-ctrl-icon';
+                button.type = 'button';
+                button.title = 'Recenter map';
+
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        width="20" height="20" fill="none" stroke="#333333"
+                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                        style="display: block; margin: auto; vertical-align: middle;">
+                        <line x1="2" x2="5" y1="12" y2="12"/>
+                        <line x1="19" x2="22" y1="12" y2="12"/>
+                        <line x1="12" x2="12" y1="2" y2="5"/>
+                        <line x1="12" x2="12" y1="19" y2="22"/>
+                        <circle cx="12" cy="12" r="7"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                `;
+
+                button.addEventListener('click', () => {
+                    if (window.mapCenter) {
+                        const coordinates = window.mapCenter.getLngLat();
+                        map.flyTo({ center: [coordinates.lng, coordinates.lat], zoom: 15 });
+                    } else {
+                        button.classList.add('failShake');
+                        button.addEventListener('animationend', () => {
+                            button.classList.remove('failShake');
+                        }, { once: true });
+                    }
+                });
+
+                const container = document.createElement('div');
+                container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+                container.appendChild(button);
+
+                return container;
+            }
+
+            onRemove() {
+                this.map = undefined;
+            }
+        }
+        map.addControl(new RecenterButton(), 'top-right');
+
         map.addControl(new maplibregl.NavigationControl({
             visualizePitch: true,
             visualizeRoll: true,
@@ -47,6 +95,7 @@ const MapFactory = (() => {
             showCompass: true
         }));
         map.addControl(new maplibregl.FullscreenControl());
+
     }
 
     function addGeocoder(map) {
