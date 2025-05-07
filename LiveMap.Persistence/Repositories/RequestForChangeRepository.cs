@@ -86,7 +86,6 @@ public class RequestForChangeRepository : IRequestForChangeRepository
 
         int totalCount = await query.CountAsync();
 
-        //
         {
             if (ascending is bool fromValue)
             {
@@ -119,5 +118,23 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         }
 
         return new([.. result.Select(rfc => rfc.ToDomainRequestForChange())], take, skip, totalCount);
+    }
+
+    public async Task<RequestForChange?> UpdateWithoutCommitAsync(RequestForChange requestForChange)
+    {
+        var existingRfc = await _context.RequestsForChange.FirstOrDefaultAsync(r => r.Id == requestForChange.Id);
+
+        if (existingRfc == null)
+        {
+            return null;
+        }
+
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+
+        var result = _context.RequestsForChange.Update(existingRfc);
+
+        return result.Entity.ToDomainRequestForChange();   
     }
 }

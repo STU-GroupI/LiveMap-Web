@@ -14,9 +14,7 @@ namespace LiveMapDashboard.Web.Extensions.DI
                 .AddTransient<ICategoryService, CategoryHttpService>()
                 .AddTransient<IMapService, MapHttpService>()
                 .AddTransient<IRequestForChangeService, RequestForChangeHttpService>()
-                .AddTransient<
-                    ISuggestedPointOfInterestService, 
-                    SuggestedPointOfInterestHttpService>();
+                .AddTransient<ISuggestedPointOfInterestService, SuggestedPointOfInterestHttpService>();
         }
     }
 }

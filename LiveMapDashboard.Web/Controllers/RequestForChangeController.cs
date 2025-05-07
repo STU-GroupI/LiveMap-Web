@@ -1,6 +1,7 @@
-﻿using LiveMap.Domain.Models;
+﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using LiveMapDashboard.Web.Extensions.Controllers;
+using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
@@ -17,20 +18,32 @@ namespace LiveMapDashboard.Web.Controllers
             [FromServices] IViewModelProvider<RequestForChangeFormViewModel> provider)
         {
             var viewModel = new RequestForChangeFormViewModel(
-                Rfc: new() { Id = Guid.Parse(id), SubmittedOn = default, ApprovalStatus = string.Empty }, 
+                Rfc: new() { 
+                    Id = Guid.Parse(id), 
+                    SubmittedOn = default, 
+                    ApprovalStatus = string.Empty 
+                }, 
                 CrudformViewModel: PoiCrudformViewModel.Empty);
 
             return View("form", await provider.Hydrate(viewModel));
         }
 
-        [HttpPost("approvalFormSubmit")]
-        public IActionResult ApprovalFormSubmit(RequestForChangeFormViewModel viewModel)
+        [HttpPost("approvalSubmit")]
+        public async Task<IActionResult> ApprovalFormSubmit(
+            RequestForChangeFormViewModel viewModel,
+            [FromServices] IViewModelProvider<RequestForChangeFormViewModel> formProvider,
+            [FromServices] IViewModelProvider<RequestForChangeListViewModel> indexProvider,
+            [FromServices] IRequestForChangeService requestForChangeService)
         {
             if (!ModelState.IsValid) 
             {
-                return View("form", viewModel);
+                return View("form", await formProvider.Hydrate(viewModel));
             }
-            return Ok(viewModel);
+            var result = await requestForChangeService.ApproveRequestForChange(
+                viewModel.Rfc, 
+                viewModel.CrudformViewModel.ToDomainPointOfInterest());
+
+            return View("index", await indexProvider.Provide());
         }
 
         [HttpGet("")]

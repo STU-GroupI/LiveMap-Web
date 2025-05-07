@@ -29,6 +29,11 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
         return Task.FromResult(pointOfInterest);
     }
 
+    public Task<PointOfInterest> CreateWithoutCommitAsync(PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task DeleteSingle(Guid id)
     {
         PointOfInterest? poi = pois.FirstOrDefault(p => p.Id == id);
@@ -67,6 +72,11 @@ public class StubPointOfInterestRepository : IPointOfInterestRepository
     }
 
     public Task<PointOfInterest?> Update(PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<PointOfInterest?> UpdateWithoutCommitAsync(PointOfInterest pointOfInterest)
     {
         throw new NotImplementedException();
     }

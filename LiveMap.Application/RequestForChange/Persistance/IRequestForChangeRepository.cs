@@ -10,4 +10,6 @@ public interface IRequestForChangeRepository
     public Task<RequestForChange?> UpdateAsync(RequestForChange requestForChange);
     public Task<Models.RequestForChange?> GetSingle(Guid id);
     public Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending);
+
+    public Task<RequestForChange?> UpdateWithoutCommitAsync(RequestForChange requestForChange);
 }

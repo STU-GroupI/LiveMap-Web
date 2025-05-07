@@ -55,4 +55,9 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<RequestForChange?> UpdateWithoutCommitAsync(RequestForChange requestForChange)
+    {
+        throw new NotImplementedException();
+    }
 }

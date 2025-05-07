@@ -8,4 +8,6 @@ public interface IRequestForChangeService
 {
     Task<BackendApiHttpResponse<DomainModels.RequestForChange>> Get(Guid id);
     Task<BackendApiHttpResponse<PaginatedResult<DomainModels.RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending);
+
+    Task<BackendApiHttpResponse> ApproveRequestForChange(DomainModels.RequestForChange rfc, DomainModels.PointOfInterest poi);
 }

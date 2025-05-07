@@ -1,5 +1,5 @@
 ﻿@using LiveMapDashboard.Web.Models.Modal
-@model LiveMapDashboard.Web.Models.Poi.PoiCrudformViewModel
+@model LiveMapDashboard.Web.Models.Rfc.RequestForChangeFormViewModel
 
 @{
     Layout = "~/Views/Shared/Layouts/_GridDoubleLayout.cshtml";
@@ -12,27 +12,27 @@
         ModalMessage = "Are you sure you would like to abandon your changes?",
     };
 
-    var deleteModalId = $"delete-poi-{Model.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
-    var deleteModalModel = !string.IsNullOrEmpty(Model.Id) ? new DeleteModalViewModel
+    var deleteModalId = $"delete-poi-{Model.CrudformViewModel.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = !string.IsNullOrEmpty(Model.CrudformViewModel.Id) ? new DeleteModalViewModel
     {
         ModalId = deleteModalId,
-        ModalTitle = $"Delete Category: {Model.Title}",
+        ModalTitle = $"Delete Category: {Model.CrudformViewModel.Title}",
         WarningMessage = "This action is not reversible, so please continue with caution.",
         FormController = "Poi",
         FormAction = "Delete",
         HiddenInputs = new Dictionary<string, string>
         {
-            { "Id", Model.Id },
-            { "MapId", Model.MapId },
+            { "Id", Model.CrudformViewModel.Id },
+            { "MapId", Model.CrudformViewModel.MapId },
         }
     } : null;
 }
 
 @section TopBarActions
 {
-    @if (!string.IsNullOrEmpty(Model.Id))
+    @if (!string.IsNullOrEmpty(Model.Rfc.Id.ToString()))
     {
-        <a asp-controller="Poi" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+        <a asp-controller="Rfc" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
             <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             </span>
@@ -53,37 +53,54 @@
 
     @if (deleteModalModel != null)
     {
-        <div class="text-center">
-            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
-                Delete
-            </button>
-        </div>
+         <div class="text-center">
+             <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                 Delete
+             </button>
+         </div>
 
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
+         @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
     }
 }
 
 @section GridLeftContent
 {
     <div>
+        <div class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+            <div class="p-4 md:p-5">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+                    Card title
+                </h3>
+                <p class="mt-1 text-gray-500 dark:text-neutral-400">
+                    @Model.Rfc.Message
+                </p>
+                @* <a class="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" href="#">
+                    Go somewhere
+                </a> *@
+            </div>
+        </div>
         <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
             <div class="card-body w-full h-full">
                 <div id="map" class="h-[50vh] w-full rounded-lg"></div>
             </div>
         </div>
     </div>
+
 }
 
 @section GridRightContent
 {
-    <form method="post" asp-controller="Rfc" asp-action="submit">
+    <form method="post" asp-controller="rfc" asp-action="approvalSubmit">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="MapId" />
-        <input type="hidden" asp-for="Coordinate.Latitude" />
-        <input type="hidden" asp-for="Coordinate.Longitude" />
+        <input type="hidden" asp-for="Rfc.Id" />
+        <input type="hidden" asp-for="Rfc.SuggestedPoiId" />
+
+        <input type="hidden" asp-for="CrudformViewModel.Id" />
+        <input type="hidden" asp-for="CrudformViewModel.MapId" />
+        <input type="hidden" id="Coordinate_Latitude" asp-for="CrudformViewModel.Coordinate.Latitude" />
+        <input type="hidden" id="Coordinate_Longitude" asp-for="CrudformViewModel.Coordinate.Longitude" />
 
         <div>
             <div class="mb-6 border border-blue-500 p-4 rounded-lg">
@@ -91,7 +108,7 @@
                     <div>
                         <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label>
                         <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p>
-                        <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
+                        <span asp-validation-for="CrudformViewModel.Coordinate" class="text-red-500 mb-4"></span>
                     </div>
                     <button type="button"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
@@ -102,30 +119,30 @@
             </div>
             
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.Title, new ViewDataDictionary(ViewData) {
+                @Html.EditorFor(m => m.CrudformViewModel.Title, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Title..." },
                     { "Label", "Title" }
                 })
 
-                @Html.EditorFor(m => m.Category, "Dropdown", new ViewDataDictionary(ViewData) {
-                    { "Options", Model.Categories?.Select(c => c.CategoryName) },
+                @Html.EditorFor(m => m.CrudformViewModel.Category, "Dropdown", new ViewDataDictionary(ViewData) {
+                    { "Options", Model.CrudformViewModel.Categories?.Select(c => c.CategoryName) },
                     { "Label", "Category" }
                 })
-                
-                @Html.EditorFor(m => m.Description, new ViewDataDictionary(ViewData) {
+
+                @Html.EditorFor(m => m.CrudformViewModel.Description, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Description..." },
                     { "Label", "Description" },
                     { "IsMultiline", true }
                 })
 
-                @Html.EditorFor(m => m.IsWheelchairAccessible, new ViewDataDictionary(ViewData) {
+                @Html.EditorFor(m => m.CrudformViewModel.IsWheelchairAccessible, new ViewDataDictionary(ViewData) {
                     { "Label", "Wheelchair Accessible" }
                 })
             </div>
 
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
-                { "Label", "Image (URL)" },
+                @Html.EditorFor(m => m.CrudformViewModel.Image, new ViewDataDictionary(ViewData) {
+                    { "Label", "Image (URL)" },
                 })
 
                 <div class="flex justify-center">
@@ -150,16 +167,16 @@
                             var dayName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetDayName((DayOfWeek)i);
                    
                             <div class="flex items-center gap-4">
-                                @Html.EditorFor(m => m.OpeningHours[i].IsActive, new ViewDataDictionary(ViewData) {
-                                { "Label", @dayName }
+                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].IsActive, new ViewDataDictionary(ViewData) {
+                                    { "Label", @dayName }
                                 })
-                                
-                                @Html.EditorFor(m => m.OpeningHours[i].Start, "Time", new ViewDataDictionary(ViewData) {
-                                { "Label", "" }
+
+                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].Start, "Time", new ViewDataDictionary(ViewData) {
+                                    { "Label", "" }
                                 })
                                 <span class="text-sm text-gray-500">to</span>
-                                @Html.EditorFor(m => m.OpeningHours[i].End, "Time", new ViewDataDictionary(ViewData) {
-                                { "Label", "" }
+                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].End, "Time", new ViewDataDictionary(ViewData) {
+                                    { "Label", "" }
                                 })
                             </div>
                         }
@@ -170,21 +187,21 @@
 
         <div class="mt-2 py-4 relative z-10">
             <div class="flex justify-end gap-3 w-full">
-                @if (!string.IsNullOrEmpty(Model.Id))
+                @if (!string.IsNullOrEmpty(Model.CrudformViewModel.Id))
                 {
-                    <a asp-controller="Poi" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                        Cancel
+                    <a asp-controller="Rfc" asp-action="Index" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                        Deny request and discard
                     </a>
                 }
                 else
                 {
-                    <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
-                        Cancel
+                    <a class="bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                        Deny request and discard
                     </a>
                 }
 
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    @(!string.IsNullOrEmpty(Model.Id) ? "Update" : "Create")
+                    Approve request and save
                 </button>
             </div>
         </div>

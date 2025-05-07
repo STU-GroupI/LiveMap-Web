@@ -6,6 +6,7 @@ using LiveMap.Application.RequestForChange.Responses;
 using LiveMap.Api.Models;
 using LiveMap.Application;
 using LiveMap.Domain.Pagination;
+using LiveMap.Api.Models.RequestForChange;
 
 namespace LiveMap.Api.Controllers;
 
@@ -130,4 +131,30 @@ public class RequestForChangeController : ControllerBase
         return Ok(response.Rfc);
     }
 
+    [HttpPost("approve")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Approve (
+        [FromBody] ApproveRfcWebRequest webRequest,
+        [FromServices] IRequestHandler<ApprovalRequest, ApprovalResponse> handler)
+    {
+        var request = new ApprovalRequest(webRequest.Rfc, webRequest.Poi);
+
+        try
+        {
+            ApprovalResponse response = await handler.Handle(request);
+            if(!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
 }

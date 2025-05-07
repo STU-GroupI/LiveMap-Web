@@ -2,11 +2,8 @@
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMap.Infrastructure.Services;
@@ -43,6 +40,17 @@ public class RequestForChangeHttpService : IRequestForChangeService
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri
+            });
+    }
+
+    public async Task<BackendApiHttpResponse> ApproveRequestForChange(RequestForChange rfc, PointOfInterest poi)
+    {
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{_ENDPOINT}/{rfc.Id}/Approve", UriKind.Relative),
+                Content = new StringContent(JsonSerializer.Serialize(new { Rfc = rfc, Poi = poi }), Encoding.UTF8, "application/json")
             });
     }
 }
