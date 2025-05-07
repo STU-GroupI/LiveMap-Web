@@ -96,7 +96,6 @@ function placeMarkerOnMap(shouldCenter) {
     markerElement.className = 'custom-marker';
 
     if (iconName) {
-        console.log("IconName found :)");
         // Use the Material Design Icons (mdi) library to get the SVG path
         const iconPath = mdi[iconName];
         if (iconPath) {
@@ -119,11 +118,14 @@ function placeMarkerOnMap(shouldCenter) {
             if (shouldCenter) {
                 centerOnMap();
             }
+            return;
         } else {
             PlaceDefaultMarker(shouldCenter)
+            return;
         }
     } else {
         PlaceDefaultMarker(shouldCenter)
+        return;
     }
 }
 
