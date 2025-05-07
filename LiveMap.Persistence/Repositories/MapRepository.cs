@@ -1,5 +1,6 @@
 ﻿using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,15 @@ public class MapRepository : IMapRepository
         _context = context;
     }
 
-    public async Task<ICollection<Map>> GetMultiple(int? skip, int? take)
+    public async Task<PaginatedResult<Map>> GetMultiple(int? skip, int? take)
     {
+        if (take != null && take == 0)
+        {
+            take = 1;
+        }
+
         var query = _context.Maps.AsQueryable();
+        int totalCount = await query.CountAsync();
 
         if (skip is int fromValue)
         {
@@ -30,14 +37,12 @@ public class MapRepository : IMapRepository
         }
 
         var result = await query.ToListAsync();
-
         if (result is not { Count: > 0 })
         {
-            return [];
+            return new();
         }
 
-        return result.Select(map => map.ToDomainMap())
-            .ToList();
+        return new([.. result.Select(map => map.ToDomainMap())], take, skip, totalCount);
     }
 
     public async Task<Map?> GetSingle(Guid id)
