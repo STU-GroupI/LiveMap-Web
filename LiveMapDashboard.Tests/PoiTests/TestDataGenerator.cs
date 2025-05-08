@@ -27,8 +27,9 @@ public static class TestDataGenerator
                 Id = p.MapId,
                 Name = f.Address.City(),
                 PointOfInterests = new List<PointOfInterest>(),
-                Area = new Coordinate[] {},
-                Coordinate = p.Coordinate
+                Area = Array.Empty<Coordinate>(),
+                Bounds = Array.Empty<Coordinate>(),
+                ImageUrl = f.Image.PicsumUrl()
             });
     
         #pragma warning restore CS8601
@@ -50,11 +51,20 @@ public static class TestDataGenerator
         return new Faker<Map>()
             .RuleFor(m => m.Id, f => f.Random.Guid())
             .RuleFor(m => m.Name, f => f.Lorem.Word())
-            .RuleFor(m => m.Coordinate, f => new(
-                f.Address.Latitude(),
-                f.Address.Longitude()))
             .RuleFor(m => m.PointOfInterests, () => new List<PointOfInterest>())
             .RuleFor(m => m.Area, (f, m) => [
+                new(f.Address.Latitude(),
+                    f.Address.Longitude()),
+                new(f.Address.Latitude(),
+                    f.Address.Longitude()),
+                new(f.Address.Latitude(),
+                    f.Address.Longitude()),
+                new(f.Address.Latitude(),
+                    f.Address.Longitude()),
+                new(f.Address.Latitude(),
+                    f.Address.Longitude()),
+                ])
+            .RuleFor(m => m.Bounds, (f, m) => [
                 new(f.Address.Latitude(),
                     f.Address.Longitude()),
                 new(f.Address.Latitude(),

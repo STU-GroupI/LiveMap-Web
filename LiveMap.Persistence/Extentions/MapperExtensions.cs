@@ -10,9 +10,10 @@ public static class MapperExtensions
         {
             Id = map.Id,
             Name = map.Name,
-            Coordinate = map.Position.ToDomainCoordinate(),
+            Bounds = map.Bounds.ToDomainCoordinates(),
             PointOfInterests = new List<PointOfInterest>(),
             Area = map.Border.ToDomainCoordinates(),
+            ImageUrl = map.ImageUrl ?? null,
         };
     }
 
@@ -133,14 +134,15 @@ public static class MapperExtensions
         return sqlPoi;
     }
 
-    public static SqlMap ToSqlMap(this Map map, SqlPointOfInterest? poi)
+    public static SqlMap ToSqlMap(this Map map, SqlPointOfInterest? poi = null)
     {
         var sqlMap = new SqlMap
         {
             Id = map.Id,
             Name = map.Name,
             Border = map.Area.ToPolygon(),
-            Position = map.Coordinate.ToSqlPoint(),
+            Bounds = map.Bounds.ToPolygon(),
+            ImageUrl = map.ImageUrl ?? null,
             PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? []
         };
 
