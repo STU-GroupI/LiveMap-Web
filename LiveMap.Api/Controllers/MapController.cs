@@ -60,7 +60,7 @@ public class MapController : ControllerBase
         var request = new GetMultipleRequest(skip, take);
         var response = await handler.Handle(request);
 
-        return Ok(response.Maps);
+        return Ok(response.Result);
     }
 
     /// <summary>

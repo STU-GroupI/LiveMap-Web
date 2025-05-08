@@ -1,4 +1,5 @@
-﻿using Models = LiveMap.Domain.Models;
+﻿using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 
 namespace LiveMap.Application.Map.Persistance;
 public interface IMapRepository
@@ -9,7 +10,7 @@ public interface IMapRepository
 
     public Task<Models.Map> CreateAsync(Models.Map map);
 
-    public Task<bool> UpdateMapBorder(Guid id, Models.Coordinate[] coords);
+    public Task<PaginatedResult<Domain.Models.Map>> GetMultiple(int? skip, int? take);
 
     public Task<Models.Map?> Update(Models.Map map);
 }
