@@ -60,6 +60,16 @@ public class MapRepository : IMapRepository
         return map.ToDomainMap();
     }
 
+    public async Task<Map> CreateAsync(Map map)
+    {
+        var newMap = map.ToSqlMap();
+
+        var result = await _context.Maps.AddAsync(newMap);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainMap();
+    }
+
     public async Task<bool> UpdateMapBorder(Guid id, Coordinate[] coords)
     {
         SqlMap? map = await _context.Maps.FindAsync(id);
@@ -95,5 +105,30 @@ public class MapRepository : IMapRepository
         }
 
         return true;
+    }
+
+    public async Task<Map?> Update(Map map)
+    {
+        var newMap = await _context.Maps
+            .Where(m => m.Id == map.Id)
+            .FirstOrDefaultAsync();
+
+        if (newMap is null)
+        {
+            return null;
+        }
+        
+        newMap.Name = map.Name;
+        newMap.Bounds = map.Bounds.ToPolygon();
+        newMap.Border = map.Area.ToPolygon();
+
+        if(map.ImageUrl is not null)
+        {
+            newMap.ImageUrl = map.ImageUrl;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return newMap.ToDomainMap();
     }
 }

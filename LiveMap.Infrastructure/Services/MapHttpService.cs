@@ -14,12 +14,22 @@ public class MapHttpService : IMapService
         _backendApiService = backendApiHttpService;
     }
 
-    public Task<BackendApiHttpResponse<Map>> CreateSingle(Map poi)
+    public async Task<BackendApiHttpResponse<Map>> CreateSingle(Map map)
     {
+        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
         throw new NotImplementedException();
+        
+        // Setup for Backend communication
+        /*return await _backendApiService
+            .SendRequest<Map>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = new StringContent(JsonSerializer.Serialize(map), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri(_ENDPOINT, UriKind.Relative)
+            });*/
     }
 
-    public Task<BackendApiHttpResponse> Delete(Map poi)
+    public Task<BackendApiHttpResponse> Delete(Map map)
     {
         throw new NotImplementedException();
     }
@@ -48,8 +58,18 @@ public class MapHttpService : IMapService
     }
 
 
-    public Task<BackendApiHttpResponse<Map>> UpdateSingle(Map poi)
+    public async Task<BackendApiHttpResponse<Map>> UpdateSingle(Map map)
     {
+        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
         throw new NotImplementedException();
+
+        // Setup for Backend communication
+        /*return await _backendApiService
+            .SendRequest<Map>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Patch,
+                Content = new StringContent(JsonSerializer.Serialize(poi), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri($"{_ENDPOINT}/{map.Id.ToString()}", UriKind.Relative)
+            });*/
     }
 }
