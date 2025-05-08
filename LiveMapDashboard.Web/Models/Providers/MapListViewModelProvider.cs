@@ -1,7 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using LiveMapDashboard.Web.Models.Park;
+using LiveMapDashboard.Web.Models.Map;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {

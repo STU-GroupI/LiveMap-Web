@@ -1,0 +1,9 @@
+﻿@using LiveMapDashboard.Web.Models.Map
+@model MapCrudformViewModel
+
+@await Component.InvokeAsync("MapForm", Model)
+
+@section Scripts {
+    <script src="~/js/map/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

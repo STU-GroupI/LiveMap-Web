@@ -1,0 +1,33 @@
+﻿@using LiveMapDashboard.Web.Models.Modal
+@model LiveMapDashboard.Web.Models.Map.MapCrudformViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_GridDoubleLayout.cshtml";
+
+    const string leaveChangesModalId = "modal-leave-changes";
+    var leaveChangesModalModel = new LeaveChangesModalViewModel
+    {
+        ModalId = leaveChangesModalId,
+        ModalTitle = "Leave changes",
+        ModalMessage = "Are you sure you would like to abandon your changes?",
+    };
+
+    var deleteModalId = $"delete-map-{Model.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = !string.IsNullOrEmpty(Model.Id) ? new DeleteModalViewModel
+    {
+        ModalId = deleteModalId,
+        ModalTitle = $"Delete Map: {Model.Name}",
+        WarningMessage = "This action is not reversible, so please continue with caution.",
+        FormController = "Map",
+        FormAction = "Delete",
+        HiddenInputs = new Dictionary<string, string>
+        {
+            { "Id", Model.Id }
+        }
+    } : null;
+}
+
+@section TopBarActions
+{
+
+}

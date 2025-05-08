@@ -1,5 +1,5 @@
 ﻿using LiveMapDashboard.Web.Models.Category;
-using LiveMapDashboard.Web.Models.Park;
+using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
