@@ -29,7 +29,7 @@
 
             @foreach (var category in Model.Categories!)
             {
-                <option value="@category.CategoryName" selected="@(Model.Category is not null ? Model.Category == category.CategoryName : Model.Categories![0] == category)">
+                <option value="@category.CategoryName" data-iconname="@category.IconName" selected="@(Model.Category is not null ? Model.Category == category.CategoryName : Model.Categories![0] == category)">
                     @category.CategoryName
                 </option>
             }

@@ -21,7 +21,7 @@ public class CategoryController : Controller
     public async Task<IActionResult> CreateForm(
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        return View("CategoryForm", await provider.Hydrate(new(string.Empty, string.Empty)));
+        return View("CategoryForm", await provider.Hydrate(new(string.Empty, string.Empty, string.Empty)));
     }
 
     [Route("form/{name}")]
@@ -29,7 +29,9 @@ public class CategoryController : Controller
         [FromRoute] string? name,
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty)));
+        var categoryService = HttpContext.RequestServices.GetService<ICategoryService>();
+        var category = await categoryService?.Get(name);
+        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, category.Value.IconName)));
     }
 
 
@@ -48,10 +50,10 @@ public class CategoryController : Controller
         {
             var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
                 => await categoryService.UpdateSingle(
-                    new() { CategoryName = vm.CategoryName! },
-                    new() { CategoryName = vm.NewValue }),
+                    new() { CategoryName = vm.CategoryName!, IconName = viewModel.IconName },
+                    new() { CategoryName = vm.NewValue, IconName = viewModel.IconName }),
             _ => await categoryService.CreateSingle(
-                    new() { CategoryName = viewModel.NewValue })
+                    new() { CategoryName = viewModel.NewValue, IconName = viewModel.IconName })
         };
 
         this.BuildResponseMessageForRedirect(result);
@@ -68,7 +70,7 @@ public class CategoryController : Controller
         if (!ModelState.IsValid)
         {
             return View("CategoryForm", await provider.Hydrate(
-                new(CategoryName: categoryName, NewValue: string.Empty)));
+                new(CategoryName: categoryName, NewValue: string.Empty, IconName: string.Empty)));
         }
 
         var result = await categoryService.Delete(new() { CategoryName = categoryName });

@@ -219,13 +219,13 @@ public static class DevelopmentSeeder
 
         var defaultIcons = new Dictionary<string, string>
         {
-            { Category.STORE, "store-outline" },
-            { Category.INFORMATION, "information-outline" },
-            { Category.FIRSTAID_AND_MEDICAL, "medical-bag" },
-            { Category.TRASH_BIN, "trash-can-outline" },
-            { Category.PARKING, "parking" },
-            { Category.ENTERTAINMENT, "movie-open-outline" },
-            { Category.EMPTY, "help-box-outline" },
+            { Category.STORE, "mdiStoreOutline" },
+            { Category.INFORMATION, "mdiInformationOutline" },
+            { Category.FIRSTAID_AND_MEDICAL, "mdiMedicalBag" },
+            { Category.TRASH_BIN, "mdiTrashCanOutline" },
+            { Category.PARKING, "mdiParking" },
+            { Category.ENTERTAINMENT, "mdiMovieOpenOutline" },
+            { Category.EMPTY, "mdiHelpBoxOutline" },
         };
         
         foreach (var category in categories)
