@@ -131,7 +131,7 @@ public class RequestForChangeController : ControllerBase
         return Ok(response.Rfc);
     }
 
-    [HttpPost("approve")]
+    [HttpPost("{id}/approve")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

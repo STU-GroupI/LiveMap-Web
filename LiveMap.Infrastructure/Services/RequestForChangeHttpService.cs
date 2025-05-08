@@ -49,7 +49,7 @@ public class RequestForChangeHttpService : IRequestForChangeService
             .SendRequest(new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{_ENDPOINT}/{rfc.Id}/Approve", UriKind.Relative),
+                RequestUri = new Uri($"{_ENDPOINT}/{rfc.Id}/approve", UriKind.Relative),
                 Content = new StringContent(JsonSerializer.Serialize(new { Rfc = rfc, Poi = poi }), Encoding.UTF8, "application/json")
             });
     }
