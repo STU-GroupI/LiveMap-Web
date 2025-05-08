@@ -1,10 +1,12 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
-using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Map;
 
+
 namespace LiveMapDashboard.Web.Models.Providers
 {
+    using Models = LiveMap.Domain.Models;
+
     public class MapListViewModelProvider : IViewModelProvider<MapListViewModel>
     {
         private readonly IMapService _mapService;
@@ -16,7 +18,7 @@ namespace LiveMapDashboard.Web.Models.Providers
 
         public async Task<MapListViewModel> Hydrate(MapListViewModel viewModel)
         {
-            PaginatedResult<Map> result = (await _mapService.Get(viewModel.Skip, viewModel.Take)).Value ?? PaginatedResult<Map>.Default;
+            PaginatedResult<Models.Map> result = (await _mapService.Get(viewModel.Skip, viewModel.Take)).Value ?? PaginatedResult<Models.Map>.Default;
 
             return viewModel with
             {

@@ -29,5 +29,80 @@
 
 @section TopBarActions
 {
+    @if (!string.IsNullOrEmpty(Model.Id))
+    {
+        <a asp-controller="Map" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+            </span>
+            Go back
+        </a>
+    }
+    else
+    {
+        <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+            </span>
+            Go back
+        </button>
+    }
 
+    @await Html.PartialAsync("~/Views/Shared/Components/MapForm/_GoBackModal.cshtml", leaveChangesModalModel)
+
+    @if (deleteModalModel != null)
+    {
+        <div class="text-center">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                Delete
+            </button>
+        </div>
+
+        @await Html.PartialAsync("~/Views/Shared/Components/MapForm/_DeleteModal.cshtml", deleteModalModel)
+    }
+}
+
+@section GridLeftContent
+{
+    <div>
+        <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+            <div class="card-body w-full h-full">
+                <div id="map" class="h-[50vh] w-full rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@section GridRightContent
+{
+    <form method="post" asp-controller="map" asp-action="submit">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+        <input type="hidden" asp-for="Id" />
+
+        <div>
+            <div class="mb-6 border border-blue-500 p-4 rounded-lg">
+                @Html.EditorFor(m => m.Name, new ViewDataDictionary(ViewData) {
+                    { "Placeholder", "Enter Name..." },
+                    { "Label", "Name" }
+                })
+
+                <div class="flex justify-between items-center">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p>
+                        <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
+                    </div>
+                    <button type="button"
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                            id="applyLocationButton">
+                        + Add location
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
 }

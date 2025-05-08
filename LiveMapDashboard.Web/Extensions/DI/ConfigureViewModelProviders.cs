@@ -26,6 +26,9 @@ public static class ConfigureViewModelProviders
                 IViewModelProvider<MapListViewModel>,
                 MapListViewModelProvider>()
             .AddTransient<
+                IViewModelProvider<MapCrudformViewModel>,
+                MapCrudformViewModelProvider>()
+            .AddTransient<
                 IViewModelProvider<CategoryCrudFormViewModel>,
                 CategoryCrudFormViewModelProvider>();
     }

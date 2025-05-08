@@ -2,7 +2,6 @@
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Map;
-using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,7 +52,7 @@ namespace LiveMapDashboard.Web.Controllers
             {
                 Id = null
             });
-            return View("PoiForm", viewModel);
+            return View("MapForm", viewModel);
         }
 
         [HttpPost]

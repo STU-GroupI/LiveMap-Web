@@ -95,12 +95,6 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
-                Map.Requests.UpdateBorderRequest,
-                Map.Responses.UpdateBorderResponse>,
-            Map.Handlers.UpdateBorderHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
                 Rfc.Requests.CreateSingleRequest,
                 Rfc.Responses.CreateSingleResponse>,
             Rfc.Handlers.CreateSingleHandler>();
