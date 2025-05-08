@@ -123,9 +123,10 @@ public class RequestForChangeController : ControllerBase
         [FromQuery] int? skip,
         [FromQuery] int? take,
         [FromQuery] bool? ascending,
+        [FromQuery] bool? isPending,
         [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
     {
-        var request = new GetMultipleRequest(Guid.Parse(mapId), skip, take, ascending);
+        var request = new GetMultipleRequest(Guid.Parse(mapId), skip, take, ascending, isPending);
         var response = await handler.Handle(request);
 
         return Ok(response.Rfc);
@@ -146,6 +147,33 @@ public class RequestForChangeController : ControllerBase
         {
             ApprovalResponse response = await handler.Handle(request);
             if(!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+        }
+    }
+
+    [HttpPost("{id}/reject")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Reject(
+        string id,
+        [FromServices] IRequestHandler<RejectRfcRequest, RejectRfcResponse> handler)
+    {
+        var request = new RejectRfcRequest(Guid.Parse(id));
+
+        try
+        {
+            RejectRfcResponse response = await handler.Handle(request);
+            if (!response.Success)
             {
                 return BadRequest(response);
             }

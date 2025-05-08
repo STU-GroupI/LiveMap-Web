@@ -90,121 +90,120 @@
 
 @section GridRightContent
 {
-    <form method="post" asp-controller="rfc" asp-action="approvalSubmit">
-        @Html.AntiForgeryToken()
-        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+    <div>
+        <form method="post" asp-controller="rfc" asp-action="rejectSubmit" id="reject_form">
+            <input type="hidden" asp-for="Rfc.Id" />
+        </form>
 
-        <input type="hidden" asp-for="Rfc.Id" />
-        <input type="hidden" asp-for="Rfc.SuggestedPoiId" />
+        <form method="post" asp-controller="rfc" asp-action="approvalSubmit">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
-        <input type="hidden" asp-for="CrudformViewModel.Id" />
-        <input type="hidden" asp-for="CrudformViewModel.MapId" />
-        <input type="hidden" id="Coordinate_Latitude" asp-for="CrudformViewModel.Coordinate.Latitude" />
-        <input type="hidden" id="Coordinate_Longitude" asp-for="CrudformViewModel.Coordinate.Longitude" />
+            <input type="hidden" asp-for="Rfc.Id" />
+            <input type="hidden" asp-for="Rfc.SuggestedPoiId" />
+            <input type="hidden" asp-for="Rfc.PoiId" />
 
-        <div>
-            <div class="mb-6 border border-blue-500 p-4 rounded-lg">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p>
-                        <span asp-validation-for="CrudformViewModel.Coordinate" class="text-red-500 mb-4"></span>
+            <input type="hidden" asp-for="CrudformViewModel.Id" />
+            <input type="hidden" asp-for="CrudformViewModel.MapId" />
+            <input type="hidden" id="Coordinate_Latitude" asp-for="CrudformViewModel.Coordinate.Latitude" />
+            <input type="hidden" id="Coordinate_Longitude" asp-for="CrudformViewModel.Coordinate.Longitude" />
+
+            <div>
+                <div class="mb-6 border border-blue-500 p-4 rounded-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p>
+                            <span asp-validation-for="CrudformViewModel.Coordinate" class="text-red-500 mb-4"></span>
+                        </div>
+                        <button type="button"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                                id="applyLocationButton">
+                            + Add location
+                        </button>
                     </div>
-                    <button type="button"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-                            id="applyLocationButton">
-                        + Add location
+                </div>
+            
+                <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    @Html.EditorFor(m => m.CrudformViewModel.Title, new ViewDataDictionary(ViewData) {
+                        { "Placeholder", "Enter Title..." },
+                        { "Label", "Title" }
+                    })
+
+                    @Html.EditorFor(m => m.CrudformViewModel.Category, "Dropdown", new ViewDataDictionary(ViewData) {
+                        { "Options", Model.CrudformViewModel.Categories?.Select(c => c.CategoryName) },
+                        { "Label", "Category" }
+                    })
+
+                    @Html.EditorFor(m => m.CrudformViewModel.Description, new ViewDataDictionary(ViewData) {
+                        { "Placeholder", "Enter Description..." },
+                        { "Label", "Description" },
+                        { "IsMultiline", true }
+                    })
+
+                    @Html.EditorFor(m => m.CrudformViewModel.IsWheelchairAccessible, new ViewDataDictionary(ViewData) {
+                        { "Label", "Wheelchair Accessible" }
+                    })
+                </div>
+
+                <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    @Html.EditorFor(m => m.CrudformViewModel.Image, new ViewDataDictionary(ViewData) {
+                        { "Label", "Image (URL)" },
+                    })
+
+                    <div class="flex justify-center">
+                        <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+
+                        <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image"/>
+                        <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                    </div>
+                </div>
+            
+                <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium dark:text-white">
+                            Opening Hours
+                        </label>
+
+                        <div class="space-y-3">
+                            @for (int i = 0; i < 7; i++)
+                            {
+                                var dayName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetDayName((DayOfWeek)i);
+                   
+                                <div class="flex items-center gap-4">
+                                    @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].IsActive, new ViewDataDictionary(ViewData) {
+                                        { "Label", @dayName }
+                                    })
+
+                                    @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].Start, "Time", new ViewDataDictionary(ViewData) {
+                                        { "Label", "" }
+                                    })
+                                    <span class="text-sm text-gray-500">to</span>
+                                    @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].End, "Time", new ViewDataDictionary(ViewData) {
+                                        { "Label", "" }
+                                    })
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 py-4 relative z-10">
+                <div class="flex justify-end gap-3 w-full">
+                    <button type="button" id="btn_reject_rfc" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                        Reject request
+                    </button>
+
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Approve request and save
                     </button>
                 </div>
             </div>
-            
-            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.CrudformViewModel.Title, new ViewDataDictionary(ViewData) {
-                    { "Placeholder", "Enter Title..." },
-                    { "Label", "Title" }
-                })
-
-                @Html.EditorFor(m => m.CrudformViewModel.Category, "Dropdown", new ViewDataDictionary(ViewData) {
-                    { "Options", Model.CrudformViewModel.Categories?.Select(c => c.CategoryName) },
-                    { "Label", "Category" }
-                })
-
-                @Html.EditorFor(m => m.CrudformViewModel.Description, new ViewDataDictionary(ViewData) {
-                    { "Placeholder", "Enter Description..." },
-                    { "Label", "Description" },
-                    { "IsMultiline", true }
-                })
-
-                @Html.EditorFor(m => m.CrudformViewModel.IsWheelchairAccessible, new ViewDataDictionary(ViewData) {
-                    { "Label", "Wheelchair Accessible" }
-                })
-            </div>
-
-            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.CrudformViewModel.Image, new ViewDataDictionary(ViewData) {
-                    { "Label", "Image (URL)" },
-                })
-
-                <div class="flex justify-center">
-                    <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-
-                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image"/>
-                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
-                </div>
-            </div>
-            
-            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                <div>
-                    <label class="block mb-2 text-sm font-medium dark:text-white">
-                        Opening Hours
-                    </label>
-
-                    <div class="space-y-3">
-                        @for (int i = 0; i < 7; i++)
-                        {
-                            var dayName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetDayName((DayOfWeek)i);
-                   
-                            <div class="flex items-center gap-4">
-                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].IsActive, new ViewDataDictionary(ViewData) {
-                                    { "Label", @dayName }
-                                })
-
-                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].Start, "Time", new ViewDataDictionary(ViewData) {
-                                    { "Label", "" }
-                                })
-                                <span class="text-sm text-gray-500">to</span>
-                                @Html.EditorFor(m => m.CrudformViewModel.OpeningHours[i].End, "Time", new ViewDataDictionary(ViewData) {
-                                    { "Label", "" }
-                                })
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-2 py-4 relative z-10">
-            <div class="flex justify-end gap-3 w-full">
-                @if (!string.IsNullOrEmpty(Model.CrudformViewModel.Id))
-                {
-                    <a asp-controller="Rfc" asp-action="Index" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-                        Deny request and discard
-                    </a>
-                }
-                else
-                {
-                    <a class="bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
-                        Deny request and discard
-                    </a>
-                }
-
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Approve request and save
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
     <script src="~/js/poi.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/rfc.js" asp-append-version="true" type="module"></script>
 }

@@ -46,6 +46,23 @@ namespace LiveMapDashboard.Web.Controllers
             return View("index", await indexProvider.Provide());
         }
 
+        [HttpPost("rejectSubmit")]
+        public async Task<IActionResult> RejectFormSubmit(
+            RequestForChangeFormViewModel viewModel,
+            [FromServices] IViewModelProvider<RequestForChangeFormViewModel> formProvider,
+            [FromServices] IViewModelProvider<RequestForChangeListViewModel> indexProvider,
+            [FromServices] IRequestForChangeService requestForChangeService)
+        {
+            if (viewModel.Rfc.Id == Guid.Empty)
+            {
+                return View("form", await formProvider.Hydrate(viewModel));
+            }
+
+            var result = await requestForChangeService.RejectRequestForChange(viewModel.Rfc.Id);
+
+            return View("index", await indexProvider.Provide());
+        }
+
         [HttpGet("")]
         public async Task<IActionResult> Index(
             [FromQuery] string mapId,

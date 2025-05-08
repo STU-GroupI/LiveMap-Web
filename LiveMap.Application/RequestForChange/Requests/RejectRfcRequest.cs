@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.RequestForChange.Requests;
 
-public sealed record GetMultipleRequest(Guid MapId, int? Skip, int? Take, bool? Ascending, bool? IsPending);
+public sealed record RejectRfcRequest(Guid RfcId);

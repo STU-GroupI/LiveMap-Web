@@ -63,7 +63,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return requestForChange?.ToDomainRequestForChange() ?? null;
     }
 
-    public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending, bool? IsPending)
     {
         if (take != null && take == 0)
         {
@@ -86,6 +86,15 @@ public class RequestForChangeRepository : IRequestForChangeRepository
 
         int totalCount = await query.CountAsync();
 
+        if(IsPending is bool isPendingValue)
+        {
+            query = isPendingValue switch
+            {
+                true => query.Where(rfc => rfc.ApprovalStatus == ApprovalStatus.PENDING),
+                false => query.Where(rfc => rfc.ApprovalStatus != ApprovalStatus.PENDING)
+            };
+        }
+
         {
             if (ascending is bool fromValue)
             {
@@ -99,6 +108,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             }
         }
 
+
         {
             if (skip is int fromValue)
             {
@@ -110,6 +120,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         {
             query = query.Take(amountValue);
         }
+
 
         var result = await query.ToListAsync();
         if (result is not { Count: > 0 })
@@ -135,6 +146,6 @@ public class RequestForChangeRepository : IRequestForChangeRepository
 
         var result = _context.RequestsForChange.Update(existingRfc);
 
-        return result.Entity.ToDomainRequestForChange();   
+        return result.Entity.ToDomainRequestForChange();
     }
 }

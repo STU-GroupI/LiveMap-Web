@@ -51,7 +51,7 @@ public class StubRequestForChangeRepository : IRequestForChangeRepository
         return Task.FromResult(rfc);
     }
 
-    public Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    public Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending, bool? isPending)
     {
         throw new NotImplementedException();
     }

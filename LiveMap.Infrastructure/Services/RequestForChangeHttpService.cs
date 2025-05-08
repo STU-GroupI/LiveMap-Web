@@ -30,9 +30,9 @@ public class RequestForChangeHttpService : IRequestForChangeService
             });
     }
 
-    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending)
+    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending, bool? isPending)
     {
-        var query = $"{nameof(mapId)}={mapId.ToString()}&{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}";
+        var query = $"{nameof(mapId)}={mapId.ToString()}&{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}&{nameof(isPending)}={isPending}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
 
         return await _backendApiService
@@ -51,6 +51,16 @@ public class RequestForChangeHttpService : IRequestForChangeService
                 Method = HttpMethod.Post,
                 RequestUri = new Uri($"{_ENDPOINT}/{rfc.Id}/approve", UriKind.Relative),
                 Content = new StringContent(JsonSerializer.Serialize(new { Rfc = rfc, Poi = poi }), Encoding.UTF8, "application/json")
+            });
+    }
+
+    public async Task<BackendApiHttpResponse> RejectRequestForChange(Guid rfcId)
+    {
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{_ENDPOINT}/{rfcId.ToString()}/reject", UriKind.Relative)
             });
     }
 }
