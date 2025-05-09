@@ -6,14 +6,24 @@ using Models = LiveMap.Domain.Models;
 public sealed record MapCrudformViewModel(
     string? Id,
     string Name,
-    Models.Coordinate[] Area,
+    string? Image,
+    Models.Coordinate TopLeft,
+    Models.Coordinate TopRight,
+    Models.Coordinate BottomLeft,
+    Models.Coordinate BottomRight,
     Models.Coordinate Coordinate
     )
 {
     public static MapCrudformViewModel Empty => new(
         Id: string.Empty,
         Name: string.Empty,
-        Area: [],
+        Image: string.Empty,
+
+        TopLeft: new(0.0, 0.0),
+        TopRight: new(0.0, 0.0),
+        BottomLeft: new(0.0, 0.0),
+        BottomRight: new(0.0, 0.0),
+
         Coordinate: new(0.0, 0.0)
         );
 

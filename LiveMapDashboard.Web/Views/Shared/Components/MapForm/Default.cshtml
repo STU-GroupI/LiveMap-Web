@@ -64,13 +64,13 @@
 
 @section GridLeftContent
 {
-    <div>
-        <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
-            <div class="card-body w-full h-full">
-                <div id="map" class="h-[50vh] w-full rounded-lg"></div>
-            </div>
+<div>
+    <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+        <div class="card-body w-full h-full">
+            <div id="map" class="h-[50vh] w-full rounded-lg"></div>
         </div>
     </div>
+</div>
 }
 
 @section GridRightContent
@@ -95,14 +95,84 @@
                         <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
                     </div>
                     <button type="button"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-                            id="applyLocationButton">
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                    id="applyLocationButton">
                         + Add location
                     </button>
                 </div>
             </div>
 
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
+                    { "Label", "Image (URL)" },
+                })
+                <div class="flex justify-center">
+                    <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
+                        <span class="sr-only">Loading...</span>
+                    </div>
 
+                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image" />
+                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                </div>
+            </div>
+
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Map geo coordinates</label>
+                <p class="text-xs text-gray-500 dark:text-gray-400">In order to set the location of the given map image, the exact bottom and top coordinates are needed. With this the map can be and accurat representation  </p>
+            
+                <div class="flex pt-4">
+                    @Html.EditorFor(m => m.TopLeft, new ViewDataDictionary(ViewData) {
+                        { "12", "34" }
+                    })
+                    @Html.EditorFor(m => m.TopRight, new ViewDataDictionary(ViewData) {
+                        { "12", "34" }
+                    })
+                </div>
+                <div class="flex pt-2">
+                    @Html.EditorFor(m => m.BottomLeft, new ViewDataDictionary(ViewData) {
+                        { "12", "34" }
+                    })
+                    @Html.EditorFor(m => m.BottomRight, new ViewDataDictionary(ViewData) {
+                        { "12", "34" }
+                    })
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Boundaries</label>
+                        <button type="button"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                                id="applyLocationButton">
+                            + Set Boundaries
+                        </button>
+                    </div>
+                </div>
+            }
+
+            <div class="mt-2 py-4 relative z-10">
+                <div class="flex justify-end gap-3 w-full">
+                    @if (!string.IsNullOrEmpty(Model.Id))
+                    {
+                        <a asp-controller="Map" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            Cancel
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                            Cancel
+                        </a>
+                    }
+
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        @(!string.IsNullOrEmpty(Model.Id) ? "Update" : "Create")
+                    </button>
+                </div>
+            </div>
         </div>
     </form>
+    <script src="~/js/preview-image.js" asp-append-version="true" type="module"></script>
 }

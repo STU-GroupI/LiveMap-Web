@@ -7,8 +7,6 @@ using Models = LiveMap.Domain.Models;
 
 public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewModel>
 {
-    
-
     private readonly IMapService _mapService;
 
     public MapCrudformViewModelProvider(IMapService mapService)
@@ -48,7 +46,7 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
         return viewModel with
         {
             Name = map.Name,
-            Area = map.Area,
+            //Area = map.Area,
             //Coordinate = map.,
             Id = mapId.ToString()
         };

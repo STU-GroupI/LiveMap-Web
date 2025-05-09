@@ -1,0 +1,37 @@
+﻿@model LiveMap.Domain.Models.Coordinate
+
+@{
+    var fieldName = ViewData.ModelMetadata.PropertyName;
+    var labelText = ViewData["Label"] as string ?? fieldName;
+
+    var fullFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
+    // var minValue = ViewData["MinValue"] as double?;
+    // var maxValue = ViewData["MaxValue"] as double?;
+}
+
+<div class="mb-2">
+    <div class="flex">
+    @if (!string.IsNullOrEmpty(labelText))
+    {
+        <label class="block mb-2 text-sm font-medium dark:text-white">
+            @labelText
+        </label>
+    }
+        <input id="@fullFieldName-longitude" name="@fullFieldName-longitude"
+               type="number"
+               value="@(Model.Longitude.ToString())"
+               class="border py-2.5 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+               placeholder="Longitude" />
+
+        <input id="@fullFieldName-latitude" name="@fullFieldName-latitude"
+               type="number"
+               value="@(Model.Latitude.ToString())"
+               class="border py-2.5 px-2 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+               placeholder="Latitude" />
+    </div>
+
+    @if (ViewData.ModelState.TryGetValue(fieldName ?? "", out var entry) && entry.Errors.Count > 0)
+    {
+        <span class="text-sm text-red-600 mt-2">@entry.Errors[0].ErrorMessage</span>
+    }
+</div>
