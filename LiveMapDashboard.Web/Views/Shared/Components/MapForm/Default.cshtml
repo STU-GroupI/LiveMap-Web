@@ -103,7 +103,7 @@
             </div>
 
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
+                @Html.EditorFor(m => m.ImageUrl, new ViewDataDictionary(ViewData) {
                     { "Label", "Image (URL)" },
                 })
                 <div class="flex justify-center">

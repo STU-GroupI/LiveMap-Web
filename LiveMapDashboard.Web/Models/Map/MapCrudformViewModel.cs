@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace LiveMapDashboard.Web.Models.Map;
 using Models = LiveMap.Domain.Models;
@@ -6,7 +7,7 @@ using Models = LiveMap.Domain.Models;
 public sealed record MapCrudformViewModel(
     string? Id,
     string Name,
-    string? Image,
+    string? ImageUrl,
     Models.Coordinate TopLeft,
     Models.Coordinate TopRight,
     Models.Coordinate BottomLeft,
@@ -17,7 +18,7 @@ public sealed record MapCrudformViewModel(
     public static MapCrudformViewModel Empty => new(
         Id: string.Empty,
         Name: string.Empty,
-        Image: string.Empty,
+        ImageUrl: string.Empty,
 
         TopLeft: new(0.0, 0.0),
         TopRight: new(0.0, 0.0),
@@ -31,7 +32,20 @@ public sealed record MapCrudformViewModel(
     {
         var results = new List<ValidationResult>();
 
-        // TODO: write validation
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            results.Add(new ValidationResult("The Name field is required", new[] { nameof(Name) }));
+        }
+
+        if (!string.IsNullOrWhiteSpace(Name) && !Regex.IsMatch(Name, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
+        {
+            results.Add(new ValidationResult("Name can only contain alphanumeric characters and basic symbols.", new[] { nameof(Name) }));
+        }
+
+        if (Coordinate.Latitude == 0 && Coordinate.Longitude == 0)
+        {
+            results.Add(new ValidationResult("A valid location must be added.", new[] { nameof(Coordinate) }));
+        }
 
         return results;
     }
