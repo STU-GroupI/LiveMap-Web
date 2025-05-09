@@ -18,8 +18,9 @@ function renderResults(results) {
     <span>${icon.name}</span>
     `;
         wrapper.addEventListener('click', () => {
+            console.log(icon)
             document.getElementById('iconSearchInput').value = icon.name;
-            document.getElementById('iconNameField').value = icon.name;
+            document.getElementById('IconName').value = icon.name;
             // clear out the results
             container.innerHTML = '';
 
