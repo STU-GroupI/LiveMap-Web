@@ -133,7 +133,7 @@ public class MapRepository : IMapRepository
         return newMap.ToDomainMap();
     }
 
-    public async Task<bool> DeleteSingle(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
         SqlMap? map = await _context.Maps
             .Where(map => map.Id == id)
@@ -148,20 +148,41 @@ public class MapRepository : IMapRepository
 
         try
         {
+            List<SqlSuggestedPointOfInterest> suggestedPois = await _context.SuggestedPointsOfInterest
+                .Where(sugPoi => sugPoi.MapId == id)
+                .ToListAsync();
 
-
-            List<SqlPointOfInterest> deletedPointsOfInterest = await _context.PointsOfInterest.Where(poi => poi.MapId == id).ToListAsync();
-
-            foreach(var poi in deletedPointsOfInterest)
+            foreach (var suggestedPoi in suggestedPois)
             {
-                await _context.RequestsForChange
-                    .Where(rfc => rfc.Poi != null && rfc.Poi.MapId == id)
-                    .ExecuteDeleteAsync();
+                SqlRequestForChange requestForChangeToDelete = await _context.RequestsForChange
+                    .Where(rfc => rfc.SuggestedPoi == suggestedPoi)
+                    .FirstAsync();
+
+                requestForChangeToDelete.SuggestedPoi = null;
+
+                _context.RequestsForChange.Remove(requestForChangeToDelete);
             }
 
-            await _context.SuggestedPointsOfInterest
-                .Where(sugPoi => sugPoi.MapId == id)
-                .ExecuteDeleteAsync();
+            _context.SuggestedPointsOfInterest.RemoveRange(suggestedPois);
+
+            await _context.SaveChangesAsync();
+
+            List<SqlRequestForChange> requestsForChange = await _context.RequestsForChange
+                .Where(rfc => rfc.Poi != null && rfc.Poi.MapId == id)
+                .ToListAsync();
+
+            foreach (var requestForChange in requestsForChange)
+            {
+                requestForChange.Poi = null;
+            }
+
+            _context.RequestsForChange.RemoveRange(requestsForChange);
+
+            await _context.SaveChangesAsync();
+
+            await _context.PointsOfInterest.Where(poi => poi.MapId == id).ExecuteDeleteAsync();
+
+
 
             /*_context.RequestsForChange
             .Where(rfc => rfc.Poi != null && rfc.Poi.MapId == id)

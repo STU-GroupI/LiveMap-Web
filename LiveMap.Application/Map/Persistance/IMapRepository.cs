@@ -14,5 +14,5 @@ public interface IMapRepository
 
     public Task<Models.Map?> Update(Models.Map map);
 
-    public Task<bool> DeleteSingle(Guid id);
+    public Task<bool> Delete(Guid id);
 }
