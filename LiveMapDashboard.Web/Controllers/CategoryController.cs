@@ -4,6 +4,7 @@ using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Models.Category;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LiveMapDashboard.Web.Controllers;
 using Models = LiveMap.Domain.Models;
@@ -30,8 +31,14 @@ public class CategoryController : Controller
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
         var categoryService = HttpContext.RequestServices.GetService<ICategoryService>();
-        var category = await categoryService?.Get(name);
-        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, category.Value.IconName, false)));
+        if (categoryService is null || name is null)
+        {
+            return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, string.Empty, false)));
+        }
+        
+        var category = await categoryService.Get(name);
+        return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, category.Value?.IconName ?? string.Empty, false)));
+
     }
 
 

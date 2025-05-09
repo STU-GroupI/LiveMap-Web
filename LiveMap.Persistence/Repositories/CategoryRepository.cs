@@ -46,6 +46,13 @@ public class CategoryRepository : ICategoryRepository
             var category = await _context.Categories
                 .FirstOrDefaultAsync(c => c.CategoryName == oldName);
 
+            if (category is null)
+            {
+                // Rollback if the category doesn't exist
+                await transaction.RollbackAsync();
+                return false;
+            }
+            
             if (oldName == newName)
             {
                 // Just update icon name
@@ -55,14 +62,7 @@ public class CategoryRepository : ICategoryRepository
 
                 return true;
             }
-
-            if (category is null)
-            {
-                // Rollback if the category doesn't exist
-                await transaction.RollbackAsync();
-                return false;
-            }
-
+            
             //Create a new category entity with the new name
             Category newCategory = new Category
             {
