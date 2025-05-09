@@ -99,22 +99,6 @@ public class MapController : ControllerBase
         }
     }
 
-    /*[HttpPatch("{id}")]
-    public async Task<IActionResult> Patch(
-        [FromRoute] string id,
-        [FromBody] Coordinate[] coordinates,
-        [FromServices] IRequestHandler<UpdateBorderRequest, UpdateBorderResponse> handler)
-    {
-        var response = await handler.Handle(new(Guid.Parse(id), coordinates));
-
-        if (!response.Succeeded)
-        {
-            return NotFound(id);
-        }
-
-        return NoContent();
-    }*/
-
     /// <summary>
     /// Updates a map for the given request data
     /// </summary>
@@ -150,5 +134,29 @@ public class MapController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
+    }
+
+    /// <summary>
+    /// Deletes a map with the given id
+    /// </summary>
+    /// <param name="id">The id of the specified map.</param>
+    /// <returns>Returns nothing. </returns>
+    /// <response code="204">No Content. </response>
+    /// <response code="404">Map not found.</response>
+    [HttpDelete("{id}")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromRoute] string id,
+        [FromServices] IRequestHandler<DeleteSingleRequest> handler)
+    {
+        var request = new DeleteSingleRequest(Guid.Parse(id));
+        var result = await handler.Handle(request);
+        if (!result)
+        {
+            return NotFound();
+        }
+        return NoContent();
     }
 }

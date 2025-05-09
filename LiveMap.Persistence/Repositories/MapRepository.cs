@@ -1,4 +1,5 @@
-﻿using LiveMap.Application.Map.Persistance;
+﻿using Bogus.DataSets;
+using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
@@ -130,5 +131,52 @@ public class MapRepository : IMapRepository
         await _context.SaveChangesAsync();
 
         return newMap.ToDomainMap();
+    }
+
+    public async Task<bool> DeleteSingle(Guid id)
+    {
+        SqlMap? map = await _context.Maps
+            .Where(map => map.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (map is null)
+        {
+            return false;
+        }
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+
+
+            List<SqlPointOfInterest> deletedPointsOfInterest = await _context.PointsOfInterest.Where(poi => poi.MapId == id).ToListAsync();
+
+            foreach(var poi in deletedPointsOfInterest)
+            {
+                await _context.RequestsForChange
+                    .Where(rfc => rfc.Poi != null && rfc.Poi.MapId == id)
+                    .ExecuteDeleteAsync();
+            }
+
+            await _context.SuggestedPointsOfInterest
+                .Where(sugPoi => sugPoi.MapId == id)
+                .ExecuteDeleteAsync();
+
+            /*_context.RequestsForChange
+            .Where(rfc => rfc.Poi != null && rfc.Poi.MapId == id)
+            .ExecuteDelete();*/
+
+            _context.Maps.Remove(map);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

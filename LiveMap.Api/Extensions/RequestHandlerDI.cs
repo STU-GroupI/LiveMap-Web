@@ -95,9 +95,8 @@ public static class RequestHandlerDI
 
         services.AddTransient<
             IRequestHandler<
-                Map.Requests.UpdateBorderRequest,
-                Map.Responses.UpdateBorderResponse>,
-            Map.Handlers.UpdateBorderHandler>();
+                Map.Requests.DeleteSingleRequest>,
+            Map.Handlers.DeleteSingleHandler>();
 
         services.AddTransient<
             IRequestHandler<
