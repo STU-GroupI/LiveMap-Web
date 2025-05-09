@@ -72,4 +72,18 @@ public class MapHttpService : IMapService
                 RequestUri = new Uri($"{_ENDPOINT}/{map.Id.ToString()}", UriKind.Relative)
             });*/
     }
+
+    public async Task<BackendApiHttpResponse> DeleteSingle(Guid id)
+    {
+        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
+        throw new NotImplementedException();
+
+        // Setup for Backend communication
+        /*return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            });;*/
+    }
 }
