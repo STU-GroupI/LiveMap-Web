@@ -46,10 +46,17 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
         return viewModel with
         {
             Name = map.Name,
-            //Area = map.Area,
-            //Coordinate = map.,
+            TopLeft = GetBound(map, 0),
+            TopRight = GetBound(map, 1),
+            BottomLeft = GetBound(map, 2),
+            BottomRight = GetBound(map, 3),
             Id = mapId.ToString()
         };
+    }
+
+    public Coordinate GetBound(Models.Map map, int index)
+    {
+        return map.Bounds[index] ?? new Coordinate(0.0, 0.0);
     }
 
     public async Task<MapCrudformViewModel> Provide()
