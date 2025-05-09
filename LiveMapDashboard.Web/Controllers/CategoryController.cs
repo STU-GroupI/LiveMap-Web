@@ -21,7 +21,7 @@ public class CategoryController : Controller
     public async Task<IActionResult> CreateForm(
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        return View("CategoryForm", await provider.Hydrate(new(string.Empty, string.Empty, string.Empty)));
+        return View("CategoryForm", await provider.Hydrate(new(string.Empty, string.Empty, string.Empty, false)));
     }
 
     [Route("form/{name}")]
@@ -31,7 +31,7 @@ public class CategoryController : Controller
     {
         var categoryService = HttpContext.RequestServices.GetService<ICategoryService>();
         var category = await categoryService?.Get(name);
-        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, category.Value.IconName)));
+        return View("CategoryForm", await provider.Hydrate(new(name, string.Empty, category.Value.IconName, false)));
     }
 
 
@@ -64,17 +64,16 @@ public class CategoryController : Controller
     [Route("delete")]
     public async Task<IActionResult> SubmitDelete(
         string categoryName,
+        [FromForm] CategoryCrudFormViewModel viewModel,
         [FromServices] ICategoryService categoryService,
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
         if (!ModelState.IsValid)
         {
-            return View("CategoryForm", await provider.Hydrate(
-                new(CategoryName: categoryName, NewValue: string.Empty, IconName: string.Empty)));
+            return View("CategoryForm", viewModel);
         }
 
         var result = await categoryService.Delete(new() { CategoryName = categoryName });
-
         this.BuildResponseMessageForRedirect(result, this.CreateMessageDictionary());
 
         return RedirectToAction("index");

@@ -5,6 +5,7 @@ public sealed record UpdateSinglePoiWebRequest(
     string Id,
     string Title,
     string Description,
+    string? Image,
     string CategoryName,
     string MapId,
     Coordinate Coordinate,

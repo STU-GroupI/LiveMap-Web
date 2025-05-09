@@ -11,29 +11,12 @@ const map = MapFactory.createMap('map', [4.729, 52.045], 15);
 //Prevent the map from zooming in when double clicking
 map.doubleClickZoom.disable();
 
-const markers = []; // To keep track of added markers
-let clickedLngLat = null; // To store the clicked coordinates
-
-let clickTimeout = null; // Timer to differentiate between single and double clicks
+const markers = [];
+let clickedLngLat = null;
 
 // Event listener voor single click
 map.on('click', (e) => {
-    // Start a timer to delay the single click action
-    if (clickTimeout) clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => {
-        onMapClick(e);
-        clickTimeout = null;
-    }, 250); // 250 ms is a common threshold, we can change this if needed
-});
-
-// Event listener voor double click
-map.on('dblclick', (e) => {
-    // Cancel the single click action if it was triggered
-    if (clickTimeout) {
-        clearTimeout(clickTimeout);
-        clickTimeout = null;
-    }
-    onMapDoubleClick(e);
+    onMapClick(e);
 });
 
 function onMapClick(e) {
@@ -135,6 +118,8 @@ function PlaceDefaultMarker(shouldCenter) {
         .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
         .addTo(map);
 
+    window.mapCenter = marker;
+    
     // Store the marker in the markers array
     markers.push(marker);
     if (shouldCenter) {
@@ -155,7 +140,6 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
 
     document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
     document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
-    showAlert('success', 'Coördinaten zijn toegepast.');
 });
 
 map.on('load', () => {

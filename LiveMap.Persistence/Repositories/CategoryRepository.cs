@@ -157,7 +157,13 @@ public class CategoryRepository : ICategoryRepository
         }
         query = query.Where(value => value.CategoryName != Category.EMPTY);
 
-        return await query.ToArrayAsync();
+        var categories = await query.ToArrayAsync();
+        foreach (var category in categories)
+        {
+            ComputeCategoryInUse(category);
+        }
+        
+        return categories;
     }
 
     public async Task<Category?> GetSingle(string name)
@@ -167,7 +173,18 @@ public class CategoryRepository : ICategoryRepository
             return null;
         }
 
+        var category = await _context.Categories.FindAsync(name);
+        if (category is not null)
+        {
+            ComputeCategoryInUse(category);
+        }
+        
         return await _context.Categories.FindAsync(name);
+    }
+    
+    private void ComputeCategoryInUse(Category category)
+    {
+        category.InUse = _context.PointsOfInterest.Any(poi => poi.CategoryName == category.CategoryName);
     }
 }
 

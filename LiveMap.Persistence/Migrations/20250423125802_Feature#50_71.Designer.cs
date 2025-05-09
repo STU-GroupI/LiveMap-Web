@@ -4,6 +4,7 @@ using LiveMap.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace LiveMap.Persistence.Migrations
 {
     [DbContext(typeof(LiveMapContext))]
-    partial class LiveMapContextModelSnapshot : ModelSnapshot
+    [Migration("20250423125802_Feature#50_71")]
+    partial class Feature50_71
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,10 +41,6 @@ namespace LiveMap.Persistence.Migrations
                     b.Property<string>("CategoryName")
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Category");
-
-                    b.Property<string>("IconName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CategoryName");
 

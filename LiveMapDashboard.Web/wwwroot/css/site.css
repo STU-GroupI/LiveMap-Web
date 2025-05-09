@@ -1,5 +1,5 @@
 /**
- * Custom code and changes
+ * Global styles
  */
 html {
   font-size: 14px;
@@ -50,6 +50,20 @@ body {
 
 .fade-out {
     opacity: 0;
+}
+
+/**
+ * Map styles
+ */
+@keyframes FailShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+}
+
+.failShake {
+    animation: FailShake 0.3s ease-in-out;
 }
 
 .custom-marker {

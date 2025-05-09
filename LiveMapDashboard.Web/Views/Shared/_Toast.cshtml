@@ -1,0 +1,46 @@
+﻿@model LiveMapDashboard.Web.Models.ToastViewModel
+
+@{
+    var id = $"{Model.Id}-toast-{Model.Type.ToString().ToLower()}";
+
+    var colorSettings = Model.Type switch
+    {
+        ToastType.Success => new { Text = "text-green-800", Bg = "bg-green-50", Border = "border-green-200", IconBg = "bg-green-100", IconText = "text-green-500", DarkText = "dark:text-green-400", DarkBg = "dark:bg-green-900", DarkBorder = "dark:border-green-800", DarkIconBg = "dark:bg-green-800", DarkIconText = "dark:text-green-200" },
+        ToastType.Error => new { Text = "text-red-800", Bg = "bg-red-50", Border = "border-red-200", IconBg = "bg-red-100", IconText = "text-red-500", DarkText = "dark:text-red-400", DarkBg = "dark:bg-red-900", DarkBorder = "dark:border-red-800", DarkIconBg = "dark:bg-red-800", DarkIconText = "dark:text-red-200" },
+        ToastType.Warning => new { Text = "text-yellow-800", Bg = "bg-yellow-50", Border = "border-yellow-200", IconBg = "bg-yellow-100", IconText = "text-yellow-500", DarkText = "dark:text-yellow-400", DarkBg = "dark:bg-yellow-900", DarkBorder = "dark:border-yellow-800", DarkIconBg = "dark:bg-yellow-800", DarkIconText = "dark:text-yellow-200" },
+        ToastType.Info => new { Text = "text-blue-800", Bg = "bg-blue-50", Border = "border-blue-200", IconBg = "bg-blue-100", IconText = "text-blue-500", DarkText = "dark:text-blue-400", DarkBg = "dark:bg-blue-900", DarkBorder = "dark:border-blue-800", DarkIconBg = "dark:bg-blue-800", DarkIconText = "dark:text-blue-200" },
+        _ => new { Text = "text-gray-800", Bg = "bg-gray-50", Border = "border-gray-200", IconBg = "bg-gray-100", IconText = "text-gray-500", DarkText = "dark:text-gray-400", DarkBg = "dark:bg-gray-900", DarkBorder = "dark:border-gray-800", DarkIconBg = "dark:bg-gray-800", DarkIconText = "dark:text-gray-200" }
+    };
+}
+
+<div id="@id" class="fixed top-5 right-5 flex items-center w-full max-w-md p-3 mb-4 transition-all transform duration-300 ease-in-out @colorSettings.Text @colorSettings.Bg @colorSettings.Border border rounded-lg shadow @colorSettings.DarkText @colorSettings.DarkBg @colorSettings.DarkBorder z-50" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 @colorSettings.IconText @colorSettings.IconBg rounded-lg @colorSettings.DarkIconBg @colorSettings.DarkIconText">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15H5v-3.414l8.293-8.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+    </div>
+    <div class="ml-4 text-sm font-medium">@Model.Message</div>
+    <button type="button" class="ml-auto -mx-1.5 -my-1.5 @colorSettings.IconText rounded-lg p-1.5 hover:@colorSettings.IconBg @colorSettings.DarkIconBg inline-flex h-8 w-8" aria-label="Close" onclick="closeToast('@id')">
+        <span class="sr-only">Close</span>
+        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
+    </button>
+</div>
+
+<script>
+    function closeToast(id) {
+        const toast = document.getElementById(id);
+        if (toast) {
+            toast.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+    }
+    
+    setTimeout(() => {
+        closeToast("@id");
+    }, 5000);
+</script>
