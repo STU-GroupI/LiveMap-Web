@@ -109,6 +109,7 @@
 
                 @Html.EditorFor(m => m.Category, "Dropdown", new ViewDataDictionary(ViewData) {
                     { "Options", Model.Categories?.Select(c => c.CategoryName) },
+                    { "IconNames", Model.Categories?.Select(c => c.IconName) },
                     { "Label", "Category" }
                 })
                 

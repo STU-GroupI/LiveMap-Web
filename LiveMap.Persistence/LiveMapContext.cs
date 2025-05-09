@@ -72,6 +72,8 @@ public class LiveMapContext : DbContext
                 .HasKey(cat => cat.CategoryName);
             entityBuilder.Property(cat => cat.CategoryName)
                 .HasColumnName("Category");
+            entityBuilder.Property(cat => cat.IconName)
+                .HasColumnName("IconName");
         });
 
         modelBuilder.Entity<PointOfInterestStatus>(entityBuilder =>

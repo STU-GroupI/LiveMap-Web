@@ -64,6 +64,7 @@ public class CategoryController : ControllerBase
         var category = new Category()
         {
             CategoryName = webRequest.CategoryName,
+            IconName = webRequest.IconName
         };
 
         var request = new CreateSingleRequest(category);
@@ -107,10 +108,14 @@ public class CategoryController : ControllerBase
         [FromBody] UpdateSingleCategoryWebRequest webRequest,
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
-        var request = new UpdateSingleRequest(oldName, webRequest.CategoryName);
+        var request = new UpdateSingleRequest(oldName, webRequest.CategoryName, webRequest.IconName);
         var response = await handler.Handle(request);
 
-        return Ok(new Category { CategoryName = response.NewName});
+        return Ok(new Category
+        {
+            CategoryName = response.NewName,
+            IconName = response.iconName
+        });
     }
 
     /// <summary>

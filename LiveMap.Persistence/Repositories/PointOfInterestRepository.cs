@@ -19,6 +19,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
     {
         var query = _context.PointsOfInterest
             .Include(poi => poi.OpeningHours)
+            .Include(poi => poi.Category)
             .Where(poi => poi.MapId == mapId);
 
         if (skip is int fromValue)

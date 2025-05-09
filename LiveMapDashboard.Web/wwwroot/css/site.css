@@ -65,3 +65,10 @@ body {
 .failShake {
     animation: FailShake 0.3s ease-in-out;
 }
+
+.custom-marker {
+    border-radius: 50%;
+    padding: 1px;
+    background-color: white;
+    border: 2px solid black;
+}

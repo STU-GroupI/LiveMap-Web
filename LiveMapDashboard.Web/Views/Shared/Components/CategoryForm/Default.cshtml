@@ -27,7 +27,8 @@
         HiddenInputs = new Dictionary<string, string>
         {
             { "CategoryName", Model.CategoryName },
-            { "NewValue", Model.CategoryName }
+            { "NewValue", Model.CategoryName },
+            { "IconName", Model.IconName }
         }
     } : null;
 }
@@ -87,6 +88,41 @@
                         { "value", Model.CategoryName },
                         { "Label", "Category name" }
                     })
+                </div>
+            </div>
+
+            <div class="mt-2 p-4 relative z-10 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
+                <label asp-for="IconName" class="block mb-2 text-sm font-medium">
+                    Select icon
+                </label>
+
+                @{
+                    string value = Model.IconName != "" && Model.IconName is not null
+                    ? Model.IconName
+                    : "";
+                }
+
+                @{
+                    string placeholder = Model.IconName != "" && Model.IconName is not null
+                    ? Model.IconName
+                    : "Search a Material Icon...";
+                }
+
+                <input type="text"
+                       id="iconSearchInput"
+                       class="border px-2 py-2 rounded w-full text-sm"
+                       value="@value"
+                       placeholder="@placeholder"/>
+
+                @Html.EditorFor(m => m.IconName, new ViewDataDictionary(ViewData)
+                {
+                    { "value", Model.IconName },
+                    { "Label", "Icon name" },
+                    { "Hidden", true }
+                })
+
+                <div id="iconSearchResults"
+                     class="mt-2 max-h-60 overflow-y-auto border border-gray-200 rounded p-2 bg-white dark:bg-neutral-900 shadow-inner text-sm">
                 </div>
             </div>
 
