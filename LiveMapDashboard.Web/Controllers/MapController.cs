@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
@@ -70,8 +71,34 @@ namespace LiveMapDashboard.Web.Controllers
             }
 
             // TODO
+            var map = new Map()
+            {
+                Id = Guid.TryParse(viewModel.Id, out Guid mapId) ? mapId : Guid.Empty,
+                Name = viewModel.Name,
+                ImageUrl = viewModel.ImageUrl,
+                Bounds =
+                [
+                    viewModel.TopLeft,
+                    viewModel.TopRight,
+                    viewModel.BottomLeft,
+                    viewModel.BottomRight
+                ],
+                Area = []
+            };
+
+            var isNewMap = string.IsNullOrEmpty(viewModel.Id);
+
+            var result = isNewMap
+                ? await service.CreateSingle(map)
+                : await service.UpdateSingle(map);
+
+            if (isNewMap && result.IsSuccess)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View("MapForm", await provider.Hydrate(viewModel));
+
         }
     }
 }
