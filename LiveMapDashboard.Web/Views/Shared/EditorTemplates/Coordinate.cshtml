@@ -19,26 +19,26 @@
     
     <div class="grid grid-cols-2 gap-4">
         <div>
-            <label for="@fullFieldName-longitude" class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
+            <label for="@(fullFieldName)-longitude" class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
                 Longitude
             </label>
-            <input id="@fullFieldName-longitude" name="@(fullFieldName).Longitude" 
+            <input id="@(fullFieldName)-longitude" name="@(fullFieldName).Longitude" 
                    type="number" 
                    step="any"
-                   value="@Model.Longitude" 
+                   value="@(Model.Longitude)" 
                    class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-                   placeholder="Longitude" />
+                   placeholder="@(Model.Longitude)" />
         </div>
         <div>
-            <label for="@fullFieldName-latitude" class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
+            <label for="@(fullFieldName)-latitude" class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
                 Latitude
             </label>
-            <input id="@fullFieldName-latitude" name="@(fullFieldName).Latitude" 
+            <input id="@(fullFieldName)-latitude" name="@(fullFieldName).Latitude" 
                    type="number" 
                    step="any"
-                   value="@Model.Latitude" 
+                   value="@(Model.Latitude)" 
                    class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-                   placeholder="Latitude" />
+                   placeholder="@(Model.Latitude)" />
         </div>
     </div>
     

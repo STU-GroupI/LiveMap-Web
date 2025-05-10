@@ -75,7 +75,7 @@
 
 @section GridRightContent
 {
-    <form method="post" asp-controller="map" asp-action="submit">
+    <form method="post" asp-controller="map" asp-action="submit" id="map_form">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
@@ -87,19 +87,6 @@
                     { "Placeholder", "Enter Name..." },
                     { "Label", "Name" }
                 })
-
-                @* <div class="flex justify-between items-center"> *@
-                @*     <div> *@
-                @*         <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Locatie</label> *@
-                @*         <p class="text-xs text-gray-500 dark:text-gray-400">*Click on the map to add a location</p> *@
-                @*         <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span> *@
-                @*     </div> *@
-                @*     <button type="button" *@
-                @*     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200" *@
-                @*     id="applyLocationButton"> *@
-                @*         + Add location *@
-                @*     </button> *@
-                @* </div> *@
             </div>
 
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
@@ -137,20 +124,6 @@
                     })
                 </div>
             </div>
-
-            @* @if (!string.IsNullOrEmpty(Model.Id)) *@
-            @* { *@
-            @*     <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700"> *@
-            @*         <div class="flex justify-between items-center"> *@
-            @*             <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Boundaries</label> *@
-            @*             <button type="button" *@
-            @*                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200" *@
-            @*                     id="applyLocationButton"> *@
-            @*                 + Set Boundaries *@
-            @*             </button> *@
-            @*         </div> *@
-            @*     </div> *@
-            @* } *@
 
             <div class="mt-2 py-4 relative z-10">
                 <div class="flex justify-end gap-3 w-full">
