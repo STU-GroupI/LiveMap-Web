@@ -1,5 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
-    const imageInput = document.querySelector('#Image');
+    const imageInput = document.querySelector('[id$="Image"]');
     const previewImage = document.querySelector('#previewImage');
     const previewImageError = document.querySelector('#imagePreviewError');
     const previewImageLoader = document.querySelector('#previewImageLoader');

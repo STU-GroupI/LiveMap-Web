@@ -9,6 +9,7 @@ builder.Services.RegisterLiveMapContext(
 
 builder.Services.RegisterRepositories();
 builder.Services.RegisterRequestHandlers();
+builder.Services.RegisterUnitsOfWork();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
