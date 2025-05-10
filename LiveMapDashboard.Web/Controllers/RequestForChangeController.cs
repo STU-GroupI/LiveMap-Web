@@ -17,15 +17,20 @@ namespace LiveMapDashboard.Web.Controllers
             string id,
             [FromServices] IViewModelProvider<RequestForChangeFormViewModel> provider)
         {
-            var viewModel = new RequestForChangeFormViewModel(
+            var viewModel = await provider.Hydrate(new RequestForChangeFormViewModel(
                 Rfc: new() { 
                     Id = Guid.Parse(id), 
                     SubmittedOn = default, 
                     ApprovalStatus = string.Empty 
                 }, 
-                CrudformViewModel: PoiCrudformViewModel.Empty);
+                CrudformViewModel: PoiCrudformViewModel.Empty));
+            
+            if(viewModel.Rfc.ApprovalStatus != ApprovalStatus.PENDING)
+            {
+                return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });
+            }
 
-            return View("form", await provider.Hydrate(viewModel));
+            return View("form", viewModel);
         }
 
         [HttpPost("approvalSubmit")]
@@ -43,7 +48,7 @@ namespace LiveMapDashboard.Web.Controllers
                 viewModel.Rfc, 
                 viewModel.CrudformViewModel.ToDomainPointOfInterest());
 
-            return View("index", await indexProvider.Provide());
+            return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });
         }
 
         [HttpPost("rejectSubmit")]
@@ -60,7 +65,7 @@ namespace LiveMapDashboard.Web.Controllers
 
             var result = await requestForChangeService.RejectRequestForChange(viewModel.Rfc.Id);
 
-            return View("index", await indexProvider.Provide());
+            return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });
         }
 
         [HttpGet("")]

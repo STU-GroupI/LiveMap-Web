@@ -16,9 +16,9 @@
     var deleteModalModel = !string.IsNullOrEmpty(Model.CrudformViewModel.Id) ? new DeleteModalViewModel
     {
         ModalId = deleteModalId,
-        ModalTitle = $"Delete Category: {Model.CrudformViewModel.Title}",
+        ModalTitle = $"Delete Request for change: {Model.CrudformViewModel.Title}",
         WarningMessage = "This action is not reversible, so please continue with caution.",
-        FormController = "Poi",
+        FormController = "Rfc",
         FormAction = "Delete",
         HiddenInputs = new Dictionary<string, string>
         {
@@ -53,13 +53,13 @@
 
     @if (deleteModalModel != null)
     {
-         <div class="text-center">
-             <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
-                 Delete
-             </button>
-         </div>
+         @* <div class="text-center"> *@
+         @*     <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId"> *@
+         @*         Delete *@
+         @*     </button> *@
+         @* </div> *@
 
-         @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
+         @* @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel) *@
     }
 }
 
@@ -93,6 +93,7 @@
     <div>
         <form method="post" asp-controller="rfc" asp-action="rejectSubmit" id="reject_form">
             <input type="hidden" asp-for="Rfc.Id" />
+            <input type="hidden" asp-for="CrudformViewModel.MapId" />
         </form>
 
         <form method="post" asp-controller="rfc" asp-action="approvalSubmit">
