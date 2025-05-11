@@ -59,6 +59,7 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
                     Category = poi.CategoryName,
                     Coordinate = poi.Coordinate,
                     IsWheelchairAccessible = poi.IsWheelchairAccessible,
+                    Image = poi.Image,
                     OpeningHours = poi.OpeningHours.Select(oh => oh.ToViewModelOpeningHours()).ToArray(),
                 },
 
@@ -71,6 +72,7 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
                     Description = poi.Description,
                     Category = poi.CategoryName,
                     Coordinate = poi.Coordinate,
+                    Image = poi.Image,
                     IsWheelchairAccessible = poi.IsWheelchairAccessible,
                     // OpeningHours is omitted here
                 },

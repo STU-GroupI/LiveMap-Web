@@ -84,7 +84,6 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             throw new Exception($"If you ever see this being called, some of your RFC data is corrupt");
         }
 
-        int totalCount = await query.CountAsync();
 
         if(IsPending is bool isPendingValue)
         {
@@ -128,6 +127,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             return new();
         }
 
+        int totalCount = await query.CountAsync();
         return new([.. result.Select(rfc => rfc.ToDomainRequestForChange())], take, skip, totalCount);
     }
 
