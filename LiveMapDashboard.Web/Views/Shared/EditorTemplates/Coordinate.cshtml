@@ -5,6 +5,9 @@
     var labelText = ViewData["Label"] as string ?? fieldName;
 
     var fullFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName("");
+
+    var longitude = Model.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    var latitude = Model.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
     // var minValue = ViewData["MinValue"] as double?;
     // var maxValue = ViewData["MaxValue"] as double?;
 }
@@ -25,9 +28,8 @@
             <input id="@(fullFieldName)-longitude" name="@(fullFieldName).Longitude" 
                    type="number" 
                    step="any"
-                   value="@(Model.Longitude)" 
-                   class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-                   placeholder="@(Model.Longitude)" />
+                   value="@(longitude)"
+                   class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"  />
         </div>
         <div>
             <label for="@(fullFieldName)-latitude" class="block text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">
@@ -36,9 +38,8 @@
             <input id="@(fullFieldName)-latitude" name="@(fullFieldName).Latitude" 
                    type="number" 
                    step="any"
-                   value="@(Model.Latitude)" 
-                   class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
-                   placeholder="@(Model.Latitude)" />
+                   value="@(latitude)"
+                   class="border py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"  />
         </div>
     </div>
     
