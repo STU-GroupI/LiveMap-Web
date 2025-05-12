@@ -147,8 +147,7 @@ public static class MapperExtensions
             PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? []
         };
 
-        throw new Exception();
-        //return sqlMap;
+        return sqlMap;
     }
 
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)
