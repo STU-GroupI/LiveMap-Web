@@ -1,8 +1,5 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
-using Model = LiveMap.Domain.Models;
-using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Map;
-using LiveMapDashboard.Web.Models.Poi;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {

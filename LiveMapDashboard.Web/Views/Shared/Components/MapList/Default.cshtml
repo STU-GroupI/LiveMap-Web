@@ -59,7 +59,7 @@
                 FormMethod = "post",
                 FormController = "Map",
                 FormAction = "Delete",
-                DangerMessage = "WARNING: Permanently remove the map and all of its contents. Including: Points of interest and requests for change. This action is irreversible. Continue?",
+                DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
                 HiddenInputs = new Dictionary<string, string>
                 {
                     { "Id", map.Id }
@@ -68,6 +68,6 @@
         )
     )
     {
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModal)
+        @await Html.PartialAsync("~/Views/Shared/Components/MapList/_DeleteModal.cshtml", deleteModal)
     }
 }

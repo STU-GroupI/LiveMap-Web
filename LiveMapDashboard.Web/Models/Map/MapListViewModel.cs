@@ -1,9 +1,4 @@
-﻿using Model = LiveMap.Domain.Models;
-using LiveMap.Domain.Pagination;
-using System.ComponentModel.DataAnnotations;
-using LiveMapDashboard.Web.Models.Poi;
-
-namespace LiveMapDashboard.Web.Models.Map;
+﻿namespace LiveMapDashboard.Web.Models.Map;
 
 public sealed record MapListViewModel()
 {
