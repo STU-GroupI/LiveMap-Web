@@ -29,11 +29,6 @@ public class MapHttpService : IMapService
             });*/
     }
 
-    public Task<BackendApiHttpResponse> Delete(Map map)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<BackendApiHttpResponse<Map>> Get(Guid id)
     {
         return await _backendApiService
@@ -71,5 +66,15 @@ public class MapHttpService : IMapService
                 Content = new StringContent(JsonSerializer.Serialize(poi), Encoding.UTF8, "application/json"),
                 RequestUri = new Uri($"{_ENDPOINT}/{map.Id.ToString()}", UriKind.Relative)
             });*/
+    }
+
+    public async Task<BackendApiHttpResponse> Delete(Guid id)
+    {
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            }); ;
     }
 }
