@@ -21,7 +21,7 @@ namespace LiveMapDashboard.Web.Controllers
                 Rfc: new() { 
                     Id = Guid.Parse(id), 
                     SubmittedOn = default, 
-                    ApprovalStatus = string.Empty 
+                    ApprovalStatus = ApprovalStatus.PENDING,
                 }, 
                 CrudformViewModel: PoiCrudformViewModel.Empty));
             

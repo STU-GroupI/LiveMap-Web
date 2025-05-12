@@ -60,7 +60,7 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
                     Coordinate = poi.Coordinate,
                     IsWheelchairAccessible = poi.IsWheelchairAccessible,
                     Image = poi.Image,
-                    OpeningHours = poi.OpeningHours.Select(oh => oh.ToViewModelOpeningHours()).ToArray(),
+                    OpeningHours = this.NormalizeOpeningHours(poi.OpeningHours.ToList() ?? []),
                 },
 
             { IsSuccess: true, Value: PointOfInterest poi } =>
@@ -98,5 +98,32 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
     public Task<RequestForChangeFormViewModel> Provide()
     {
         throw new NotImplementedException();
+    }
+    
+    private OpeningHoursViewModel[] NormalizeOpeningHours(List<OpeningHours> existingHours)
+    {
+        var allDays = Enum.GetValues<DayOfWeek>();
+        var existingDict = existingHours.ToDictionary(oh => oh.DayOfWeek, oh => oh);
+
+        var result = new List<OpeningHoursViewModel>();
+
+        foreach (var day in allDays)
+        {
+            if (existingDict.TryGetValue(day, out var existing))
+            {
+                result.Add(existing.ToViewModelOpeningHours());
+            }
+            else
+            {
+                result.Add(new OpeningHoursViewModel
+                (
+                    Start: new TimeOnly(9, 0).ToString(),
+                    End: new TimeOnly(17, 0).ToString(),
+                    IsActive: false
+                ));
+            }
+        }
+
+        return result.ToArray();
     }
 }
