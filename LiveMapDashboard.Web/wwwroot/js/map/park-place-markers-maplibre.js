@@ -58,7 +58,7 @@ function showAlert(type, message) {
 }
 
 function getSelectedCategoryIconName() {
-    const categoryDropdown = document.getElementById('Category');
+    const categoryDropdown = document.querySelector('[id$="Category"]');
     const selectedOption = categoryDropdown.options[categoryDropdown.selectedIndex];
     const iconName = selectedOption.getAttribute('data-iconname');
     return iconName;
@@ -128,7 +128,7 @@ function PlaceDefaultMarker(shouldCenter) {
 }
 
 
-document.getElementById('Category').addEventListener('change', () => {
+document.querySelector('[id$="Category"]').addEventListener('change', () => {
         placeMarkerOnMap(false); // Update the marker's appearance
 });
 
