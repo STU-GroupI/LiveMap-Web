@@ -1,5 +1,6 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
+using NetTopologySuite.Geometries;
 
 namespace LiveMap.Persistence.Extensions;
 public static class MapperExtensions
@@ -146,7 +147,8 @@ public static class MapperExtensions
             PointOfInterests = map.PointOfInterests?.Select(x => x.ToSqlPointOfInterest()).ToList() ?? []
         };
 
-        return sqlMap;
+        throw new Exception();
+        //return sqlMap;
     }
 
     public static SqlRequestForChange ToSqlRequestForChange(this RequestForChange requestForChange)

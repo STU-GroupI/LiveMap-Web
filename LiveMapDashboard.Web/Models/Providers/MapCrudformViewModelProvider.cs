@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMap.Domain.Models;
+using LiveMap.Persistence.Extensions;
 
 namespace LiveMapDashboard.Web.Models.Providers;
 using Models = LiveMap.Domain.Models;
@@ -50,7 +51,8 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
             TopRight = GetBound(map, 1),
             BottomLeft = GetBound(map, 2),
             BottomRight = GetBound(map, 3),
-            Id = mapId.ToString()
+            Id = mapId.ToString(),
+            Area = map.Area.ToJsonCoordinates()
         };
     }
 

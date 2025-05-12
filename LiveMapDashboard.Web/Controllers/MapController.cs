@@ -5,6 +5,7 @@ using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace LiveMapDashboard.Web.Controllers
 {
@@ -65,15 +66,16 @@ namespace LiveMapDashboard.Web.Controllers
             MapCrudformViewModel viewModel,
             string action)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("MapForm", await provider.Hydrate(viewModel));
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View("MapForm", await provider.Hydrate(viewModel));
+            //}
 
-            // TODO
+            Guid mapId = Guid.TryParse(viewModel.Id, out Guid outMapId) ? outMapId : Guid.Empty;
+            bool isNewMap = mapId == Guid.Empty;
             var map = new Map()
             {
-                Id = Guid.TryParse(viewModel.Id, out Guid mapId) ? mapId : Guid.Empty,
+                Id = mapId,
                 Name = viewModel.Name,
                 ImageUrl = viewModel.ImageUrl,
                 Bounds =
@@ -83,10 +85,8 @@ namespace LiveMapDashboard.Web.Controllers
                     viewModel.BottomLeft,
                     viewModel.BottomRight
                 ],
-                Area = []
+                Area = ToCoordinates(viewModel.Area)
             };
-
-            var isNewMap = string.IsNullOrEmpty(viewModel.Id);
 
             var result = isNewMap
                 ? await service.CreateSingle(map)
@@ -99,6 +99,23 @@ namespace LiveMapDashboard.Web.Controllers
 
             return View("MapForm", await provider.Hydrate(viewModel));
 
+        }
+
+        private static Coordinate[] ToCoordinates(string areaJson)
+        {
+            if (string.IsNullOrEmpty(areaJson))
+            {
+                return [];
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<Coordinate[]>(areaJson) ?? [];
+            }
+            catch (Exception)
+            {
+                return [];
+            }
         }
     }
 }

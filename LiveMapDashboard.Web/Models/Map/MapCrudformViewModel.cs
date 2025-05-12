@@ -12,7 +12,8 @@ public sealed record MapCrudformViewModel(
     Models.Coordinate TopRight,
     Models.Coordinate BottomLeft,
     Models.Coordinate BottomRight,
-    Models.Coordinate Coordinate
+    Models.Coordinate Coordinate,
+    string Area
     )
 {
     public static MapCrudformViewModel Empty => new(
@@ -25,7 +26,9 @@ public sealed record MapCrudformViewModel(
         BottomLeft: new(0.0, 0.0),
         BottomRight: new(0.0, 0.0),
 
-        Coordinate: new(0.0, 0.0)
+        Coordinate: new(0.0, 0.0),
+
+        Area: string.Empty
         );
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

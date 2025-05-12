@@ -2,6 +2,8 @@
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using System.Text;
+using System.Text.Json;
 
 namespace LiveMap.Infrastructure.Services;
 public class MapHttpService : IMapService
@@ -16,17 +18,17 @@ public class MapHttpService : IMapService
 
     public async Task<BackendApiHttpResponse<Map>> CreateSingle(Map map)
     {
-        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
-        throw new NotImplementedException();
-        
+        //await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
+        //throw new NotImplementedException();
+
         // Setup for Backend communication
-        /*return await _backendApiService
+        return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 Content = new StringContent(JsonSerializer.Serialize(map), Encoding.UTF8, "application/json"),
                 RequestUri = new Uri(_ENDPOINT, UriKind.Relative)
-            });*/
+            });
     }
 
     public Task<BackendApiHttpResponse> Delete(Map map)
