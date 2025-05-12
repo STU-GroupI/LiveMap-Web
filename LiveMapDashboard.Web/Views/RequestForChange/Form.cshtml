@@ -1,0 +1,9 @@
+﻿@using LiveMapDashboard.Web.Models.Rfc
+@model RequestForChangeFormViewModel
+
+@await Component.InvokeAsync("RfcForm", Model)
+
+@section Scripts {
+    <script src="~/js/map/park-place-markers-maplibre.js" asp-append-version="true" type="module"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

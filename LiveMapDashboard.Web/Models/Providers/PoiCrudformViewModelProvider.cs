@@ -27,16 +27,16 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
         var map = (await _mapService.Get(null, null)).Value;
         var mapId = map is { Length: > 1 } ? map[0].Id : Guid.Empty;
 
-        if (Guid.TryParse(viewModel.Id, out var poiId))
+        if (!Guid.TryParse(viewModel.Id, out var poiId))
         {
-            return await HydrateWithPoi(viewModel, poiId, categories, mapId);
+            return viewModel with
+            {
+                Categories = categories,
+                MapId = mapId.ToString(),
+            };
         }
 
-        return viewModel with
-        {
-            Categories = categories,
-            MapId = mapId.ToString(),
-        };
+        return await HydrateWithPoi(viewModel, poiId, categories);
     }
 
     private OpeningHoursViewModel[] NormalizeOpeningHours(List<OpeningHours> existingHours)
@@ -71,19 +71,15 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
     private async Task<PoiCrudformViewModel> HydrateWithPoi(
         PoiCrudformViewModel viewModel,
         Guid poiId,
-        Models.Category[] categories,
-        Guid mapId)
+        Models.Category[] categories)
     {
         var poiResult = await _pointOfInterestService.Get(poiId);
-
-        if (!poiResult.IsSuccess || poiResult.Value is null)
+        
+        if (poiResult is not { IsSuccess: true, Value: not null } )
         {
-            return viewModel with
-            {
-                Categories = categories,
-                MapId = mapId.ToString(),
-            };
+            throw new Exception($"The poi for the given ID was not found while hydrating from {this.GetType().FullName}");
         }
+
         PointOfInterest poi = poiResult.Value;
 
         var openingHours = poi.OpeningHours?
@@ -100,7 +96,7 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
             IsWheelchairAccessible = poi.IsWheelchairAccessible,
             OpeningHours = this.NormalizeOpeningHours(poi.OpeningHours?.ToList() ?? []),
             Categories = categories,
-            MapId = mapId.ToString(),
+            MapId = poi.MapId.ToString(),
         };
     }
 

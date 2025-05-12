@@ -4,7 +4,6 @@ using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -29,7 +28,42 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return result.Entity.ToDomainRequestForChange();
     }
 
-    public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending)
+    public async Task<RequestForChange?> UpdateAsync(RequestForChange requestForChange)
+    {
+        var existingRfc = await _context.RequestsForChange.FirstOrDefaultAsync(r => r.Id == requestForChange.Id);
+        
+        if (existingRfc == null)
+        {
+            return null;
+        }
+        
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+
+        try
+        {
+            _context.RequestsForChange.Update(existingRfc);
+            await _context.SaveChangesAsync();
+
+            return existingRfc.ToDomainRequestForChange();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public async Task<RequestForChange?> GetSingle(Guid id)
+    {
+        SqlRequestForChange? requestForChange = await _context.RequestsForChange
+            .Where(r => r.Id == id)
+            .FirstOrDefaultAsync();
+
+        return requestForChange?.ToDomainRequestForChange() ?? null;
+    }
+
+    public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending, bool? IsPending)
     {
         if (take != null && take == 0)
         {
@@ -50,9 +84,16 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             throw new Exception($"If you ever see this being called, some of your RFC data is corrupt");
         }
 
-        int totalCount = await query.CountAsync();
 
-        //
+        if(IsPending is bool isPendingValue)
+        {
+            query = isPendingValue switch
+            {
+                true => query.Where(rfc => rfc.ApprovalStatus == ApprovalStatus.PENDING),
+                false => query.Where(rfc => rfc.ApprovalStatus != ApprovalStatus.PENDING)
+            };
+        }
+
         {
             if (ascending is bool fromValue)
             {
@@ -66,6 +107,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             }
         }
 
+
         {
             if (skip is int fromValue)
             {
@@ -78,12 +120,32 @@ public class RequestForChangeRepository : IRequestForChangeRepository
             query = query.Take(amountValue);
         }
 
+
         var result = await query.ToListAsync();
         if (result is not { Count: > 0 })
         {
             return new();
         }
 
+        int totalCount = await query.CountAsync();
         return new([.. result.Select(rfc => rfc.ToDomainRequestForChange())], take, skip, totalCount);
+    }
+
+    public async Task<RequestForChange?> UpdateWithoutCommitAsync(RequestForChange requestForChange)
+    {
+        var existingRfc = await _context.RequestsForChange.FirstOrDefaultAsync(r => r.Id == requestForChange.Id);
+
+        if (existingRfc == null)
+        {
+            return null;
+        }
+
+        existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
+        existingRfc.ApprovedOn = requestForChange.ApprovedOn;
+        existingRfc.Message = requestForChange.Message;
+
+        var result = _context.RequestsForChange.Update(existingRfc);
+
+        return result.Entity.ToDomainRequestForChange();
     }
 }
