@@ -29,11 +29,6 @@ public class MapHttpService : IMapService
             });*/
     }
 
-    public Task<BackendApiHttpResponse> Delete(Map map)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<BackendApiHttpResponse<Map>> Get(Guid id)
     {
         return await _backendApiService
@@ -73,17 +68,13 @@ public class MapHttpService : IMapService
             });*/
     }
 
-    public async Task<BackendApiHttpResponse> DeleteSingle(Guid id)
+    public async Task<BackendApiHttpResponse> Delete(Guid id)
     {
-        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
-        throw new NotImplementedException();
-
-        // Setup for Backend communication
-        /*return await _backendApiService
+        return await _backendApiService
             .SendRequest(new HttpRequestMessage
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
-            });;*/
+            }); ;
     }
 }
