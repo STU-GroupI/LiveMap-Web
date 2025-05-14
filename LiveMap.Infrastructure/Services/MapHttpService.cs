@@ -62,16 +62,16 @@ public class MapHttpService : IMapService
 
     public async Task<BackendApiHttpResponse<Map>> UpdateSingle(Map map)
     {
-        await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
-        throw new NotImplementedException();
+        //await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
+        //throw new NotImplementedException();
 
         // Setup for Backend communication
-        /*return await _backendApiService
+        return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                Content = new StringContent(JsonSerializer.Serialize(poi), Encoding.UTF8, "application/json"),
+                Content = new StringContent(JsonSerializer.Serialize(map), Encoding.UTF8, "application/json"),
                 RequestUri = new Uri($"{_ENDPOINT}/{map.Id.ToString()}", UriKind.Relative)
-            });*/
+            });
     }
 }
