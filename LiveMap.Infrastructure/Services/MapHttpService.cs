@@ -18,9 +18,6 @@ public class MapHttpService : IMapService
 
     public async Task<BackendApiHttpResponse<Map>> CreateSingle(Map map)
     {
-        //await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
-        //throw new NotImplementedException();
-
         // Setup for Backend communication
         return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage
@@ -62,9 +59,6 @@ public class MapHttpService : IMapService
 
     public async Task<BackendApiHttpResponse<Map>> UpdateSingle(Map map)
     {
-        //await Task.Yield(); // Simulate async, remove when method is implemented and add async to method
-        //throw new NotImplementedException();
-
         // Setup for Backend communication
         return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage

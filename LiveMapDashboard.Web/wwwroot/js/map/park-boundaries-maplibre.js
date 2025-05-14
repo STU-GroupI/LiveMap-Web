@@ -1,7 +1,5 @@
 import * as turf from 'https://esm.sh/@turf/turf@7.1.0';
 
-const API_PATH = "/api/map"
-
 MapboxDraw.constants.classes.CANVAS  = 'maplibregl-canvas';
 MapboxDraw.constants.classes.CONTROL_BASE  = 'maplibregl-ctrl';
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
@@ -149,8 +147,6 @@ function translateCoordinates(coordinates) {
     return coordinates.map(p => new Object({ "Longitude": p[1], "Latitude": p[0] }));
 }
 
-let mapId = '';
-
 document.addEventListener('DOMContentLoaded', () => {
     {
         try {
@@ -169,11 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showAlert('error', 'Could not load map boundaries');
         }
     }
-
-    //
-    //
-    //
-    //
 
     document.querySelector('#map_form').addEventListener('submit', (e) => {
         try {

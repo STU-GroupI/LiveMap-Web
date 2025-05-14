@@ -66,10 +66,10 @@ namespace LiveMapDashboard.Web.Controllers
             MapCrudformViewModel viewModel,
             string action)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View("MapForm", await provider.Hydrate(viewModel));
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View("MapForm", await provider.Hydrate(viewModel));
+            }
 
             Guid mapId = Guid.TryParse(viewModel.Id, out Guid outMapId) ? outMapId : Guid.Empty;
             bool isNewMap = mapId == Guid.Empty;
