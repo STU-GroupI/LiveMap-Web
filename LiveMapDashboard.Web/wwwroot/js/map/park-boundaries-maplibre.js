@@ -150,17 +150,19 @@ function translateCoordinates(coordinates) {
 document.addEventListener('DOMContentLoaded', () => {
     {
         try {
-            const area = JSON.parse(document.querySelector('#Area').value);
-            draw.add({
-                type: 'Feature',
-                properties: [],
-                geometry: {
-                    type: 'Polygon',
-                    coordinates: [translateArea(area),],
-                }
-            });
-            centerOnMap();
-            onAreaChanged();
+            const area = document.querySelector('#Area').value; 
+            if (area !== '') {
+                draw.add({
+                    type: 'Feature',
+                    properties: [],
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [translateArea(JSON.parse(area)),],
+                    }
+                });
+                centerOnMap();
+                onAreaChanged();
+            }
         } catch (error) {
             showAlert('error', 'Could not load map boundaries');
         }

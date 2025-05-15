@@ -13,7 +13,7 @@
     };
 
     var deleteModalId = $"delete-map-{Model.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
-    var deleteModalModel = !string.IsNullOrEmpty(Model.Id) ? new DeleteModalViewModel
+    var deleteModalModel = (!string.IsNullOrEmpty(Model.Id) && Model.Id != Guid.Empty.ToString() && Model.Id != "00000000-0000-0000-0000-000000000000") ? new DeleteModalViewModel
     {
         ModalId = deleteModalId,
         ModalTitle = $"Delete Map: {Model.Name}",
@@ -79,6 +79,9 @@
                     Remove boundaries from map
                 </button>
             </div>
+            <p class="text-sm text-red-600 mt-2">
+                @Html.ValidationMessageFor(model => model.Area)
+            </p>
         </div>
     </div>
 }
@@ -93,7 +96,7 @@
         <input type="hidden" asp-for="Area" />
 
         <div>
-            <div class="mb-6 border border-blue-500 p-4 rounded-lg">
+            <div class="mb-6 border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-lg">
                 @Html.EditorFor(m => m.Name, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Name..." },
                     { "Label", "Name" }

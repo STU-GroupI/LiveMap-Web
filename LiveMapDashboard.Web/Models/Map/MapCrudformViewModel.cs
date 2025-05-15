@@ -12,6 +12,7 @@ public sealed record MapCrudformViewModel(
     Models.Coordinate TopRight,
     Models.Coordinate BottomLeft,
     Models.Coordinate BottomRight,
+    [Required(ErrorMessage = "No park boundaries are set.")]
     string Area
     )
 {
