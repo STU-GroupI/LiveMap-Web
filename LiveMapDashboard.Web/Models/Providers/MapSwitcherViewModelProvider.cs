@@ -3,16 +3,16 @@ using LiveMapDashboard.Web.Models.Dashboard;
 
 namespace LiveMapDashboard.Web.Models.Providers;
 
-public class DashboardViewModelProvider : IViewModelProvider<DashboardViewModel>
+public class MapSwitcherViewModelProvider : IViewModelProvider<MapSwitcherViewModel>
 {
     private readonly IMapService _mapService;
 
-    public DashboardViewModelProvider(IMapService mapService)
+    public MapSwitcherViewModelProvider(IMapService mapService)
     {
         _mapService = mapService;
     }
 
-    public async Task<DashboardViewModel> Hydrate(DashboardViewModel viewModel)
+    public async Task<MapSwitcherViewModel> Hydrate(MapSwitcherViewModel viewModel)
     {
         // The reason this is a valuetask is because we want to limit the amount of allocations
         // we are doing here. ValueTasks are like tasks. They allocate less heap memory, but you HAVE
@@ -55,8 +55,8 @@ public class DashboardViewModelProvider : IViewModelProvider<DashboardViewModel>
         };
     }
 
-    public async Task<DashboardViewModel> Provide()
+    public async Task<MapSwitcherViewModel> Provide()
     {
-        return await Hydrate(DashboardViewModel.Empty);
+        return await Hydrate(MapSwitcherViewModel.Empty);
     }
 }

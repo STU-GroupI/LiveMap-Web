@@ -28,7 +28,7 @@ public static class ConfigureViewModelProviders
                 IViewModelProvider<RequestForChangeFormViewModel>,
                 RequestForChangeFormViewModelProvider>()
             .AddTransient<
-                IViewModelProvider<DashboardViewModel>,
-                DashboardViewModelProvider>();
+                IViewModelProvider<MapSwitcherViewModel>,
+                MapSwitcherViewModelProvider>();
     }
 }

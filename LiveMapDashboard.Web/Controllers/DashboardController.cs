@@ -20,7 +20,7 @@ public class DashboardController : Controller
     [HttpGet("/{mapId}")]
     public async Task<IActionResult> Index(
         string? mapId,
-        [FromServices] IViewModelProvider<DashboardViewModel> provider)
+        [FromServices] IViewModelProvider<MapSwitcherViewModel> provider)
     {
         if (mapId is not null && Guid.TryParse(mapId, out var id))
         {
@@ -38,11 +38,12 @@ public class DashboardController : Controller
                 RedirectToAction("Index", "Dashboard", new { mapId = current }),
 
             (_, _) => 
-                View(await provider.Hydrate(DashboardViewModel.Empty with { MapId = currentMapId}))
+                View(await provider.Hydrate(MapSwitcherViewModel.Empty with { MapId = currentMapId}))
         };
     }
 
-    public IActionResult Park()
+    [HttpGet("park/{mapId}")]
+    public IActionResult Park([FromRoute] string mapId)
     {
         return View();
     }

@@ -1,5 +1,5 @@
 ﻿@using LiveMapDashboard.Web.Models.Dashboard;
-@model DashboardViewModel
+@model MapSwitcherViewModel
 
 @{
     ViewData["Title"] = $"Dashboard: {Model.MapName ?? string.Empty}";
@@ -14,33 +14,4 @@
     </p>
 }
 
-<div>
-    <select asp-for="MapId" id="mapSelector">
-    @foreach ((string id, string name) in Model.Maps)
-    {
-        if (Model.MapId.Equals(id))
-        {
-            <option selected value="@id">
-                @name
-            </option>
-        }
-        else
-        {
-            <option value="@id">
-                @name
-            </option>
-        }
-    }
-    </select>
-
-    <button onclick="navigateToSelectedMap()">Switch</button>
-</div>
-
-@section Scripts {
-    <script>
-        function navigateToSelectedMap() {
-            const mapId = document.getElementById("mapSelector").value;
-            window.location.href = `/${mapId}`;
-        }
-    </script>
-}
+@await Html.PartialAsync("Components/Dashboard/MapSwitcher", Model)
