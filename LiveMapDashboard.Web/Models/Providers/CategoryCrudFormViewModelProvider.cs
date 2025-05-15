@@ -28,6 +28,6 @@ public class CategoryCrudFormViewModelProvider : IViewModelProvider<CategoryCrud
 
     public async Task<CategoryCrudFormViewModel> Provide()
     {
-        return await Hydrate(new(string.Empty, string.Empty, false));
+        return await Hydrate(new(string.Empty, string.Empty, string.Empty, false));
     }
 }
