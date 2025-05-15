@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace LiveMapDashboard.Web.Models.Map;
@@ -44,5 +45,22 @@ public sealed record MapCrudformViewModel(
         }
 
         return results;
+    }
+
+    public static Models.Coordinate[] ToCoordinates(string areaJson)
+    {
+        if (string.IsNullOrEmpty(areaJson))
+        {
+            return [];
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<Models.Coordinate[]>(areaJson) ?? [];
+        }
+        catch (Exception)
+        {
+            return [];
+        }
     }
 }

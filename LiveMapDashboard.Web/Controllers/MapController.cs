@@ -85,7 +85,7 @@ namespace LiveMapDashboard.Web.Controllers
                     viewModel.BottomLeft,
                     viewModel.BottomRight
                 ],
-                Area = ToCoordinates(viewModel.Area)
+                Area = MapCrudformViewModel.ToCoordinates(viewModel.Area)
             };
 
             var result = isNewMap
@@ -99,23 +99,6 @@ namespace LiveMapDashboard.Web.Controllers
 
             return View("MapForm", await provider.Hydrate(viewModel));
 
-        }
-
-        private static Coordinate[] ToCoordinates(string areaJson)
-        {
-            if (string.IsNullOrEmpty(areaJson))
-            {
-                return [];
-            }
-
-            try
-            {
-                return JsonSerializer.Deserialize<Coordinate[]>(areaJson) ?? [];
-            }
-            catch (Exception)
-            {
-                return [];
-            }
         }
     }
 }

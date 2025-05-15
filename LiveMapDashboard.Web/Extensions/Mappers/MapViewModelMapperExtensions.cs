@@ -14,20 +14,14 @@ public static class MapViewModelMapperExtensions
                 : Guid.Empty,
             Name = viewModel.Name,
             ImageUrl = viewModel.ImageUrl,
-            Bounds = new[]
-            {
+            Bounds = [
+            
                 viewModel.TopLeft,
                 viewModel.TopRight,
                 viewModel.BottomLeft,
                 viewModel.BottomRight
-            }, 
-            Area = new[]
-            {
-                viewModel.TopLeft,
-                viewModel.TopRight,
-                viewModel.BottomLeft,
-                viewModel.BottomRight
-            }
+            ], 
+            Area = MapCrudformViewModel.ToCoordinates(viewModel.Area)
         };
     }
 }
