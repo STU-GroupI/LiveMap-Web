@@ -226,6 +226,26 @@ public static class DevelopmentSeeder
             new() { CategoryName = Category.EMPTY },
         ];
 
+        var defaultIcons = new Dictionary<string, string>
+        {
+            { Category.STORE, "mdiStoreOutline" },
+            { Category.INFORMATION, "mdiInformationOutline" },
+            { Category.FIRSTAID_AND_MEDICAL, "mdiMedicalBag" },
+            { Category.TRASH_BIN, "mdiTrashCanOutline" },
+            { Category.PARKING, "mdiParking" },
+            { Category.ENTERTAINMENT, "mdiMovieOpenOutline" },
+            { Category.EMPTY, "mdiHelpBoxOutline" },
+        };
+        
+        foreach (var category in categories)
+        {
+            if (string.IsNullOrEmpty(category.IconName) 
+                && defaultIcons.TryGetValue(category.CategoryName, out var iconName))
+            {
+                category.IconName = iconName;
+            }
+        }
+
         List<PointOfInterestStatus> poiStatuses = [
             new() { Status = "Active" },
             new() { Status = "Inactive" },

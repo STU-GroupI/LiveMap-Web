@@ -39,6 +39,10 @@ namespace LiveMap.Persistence.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Category");
 
+                    b.Property<string>("IconName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CategoryName");
 
                     b.ToTable("Category", (string)null);

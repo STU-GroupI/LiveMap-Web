@@ -10,106 +10,12 @@ public static class RequestHandlerDI
 {
     public static IServiceCollection RegisterRequestHandlers(this IServiceCollection services)
     {
-        services.AddTransient<
-            IRequestHandler<
-                PointOfInterest.Requests.GetSingleRequest,
-                PointOfInterest.Responses.GetSingleResponse>,
-            PointOfInterest.Handlers.GetSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                PointOfInterest.Requests.GetMultipleRequest,
-                PointOfInterest.Responses.GetMultipleResponse>,
-            PointOfInterest.Handlers.GetMultipleHandler>();
-        
-        services.AddTransient<
-            IRequestHandler<
-                PointOfInterest.Requests.CreateSingleRequest,
-                PointOfInterest.Responses.CreateSingleResponse>,
-            PointOfInterest.Handlers.CreateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                PointOfInterest.Requests.UpdateSingleRequest,
-                PointOfInterest.Responses.UpdateSingleResponse>,
-            PointOfInterest.Handlers.UpdateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                PointOfInterest.Requests.DeleteSingleRequest>,
-            PointOfInterest.Handlers.DeleteSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetSingleRequest,
-                Category.Responses.GetSingleResponse>,
-            Category.Handlers.GetSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.GetMultipleRequest,
-                Category.Responses.GetMultipleResponse>,
-            Category.Handlers.GetMultipleHandler>();
-        
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.CreateSingleRequest,
-                Category.Responses.CreateSingleResponse>,
-            Category.Handlers.CreateSingleHandler>();
-        
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.UpdateSingleRequest,
-                Category.Responses.UpdateSingleResponse>,
-            Category.Handlers.UpdateSingleHandler>();
-        
-        services.AddTransient<
-            IRequestHandler<
-                Category.Requests.DeleteSingleRequest,
-                Category.Responses.DeleteSingleResponse>,
-            Category.Handlers.DeleteSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Map.Requests.GetSingleRequest,
-                Map.Responses.GetSingleResponse>,
-            Map.Handlers.GetSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Map.Requests.GetMultipleRequest,
-                Map.Responses.GetMultipleResponse>,
-            Map.Handlers.GetMultipleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Map.Requests.CreateSingleRequest,
-                Map.Responses.CreateSingleResponse>,
-            Map.Handlers.CreateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Map.Requests.UpdateSingleRequest,
-                Map.Responses.UpdateSingleResponse>,
-            Map.Handlers.UpdateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Rfc.Requests.CreateSingleRequest,
-                Rfc.Responses.CreateSingleResponse>,
-            Rfc.Handlers.CreateSingleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                Rfc.Requests.GetMultipleRequest,
-                Rfc.Responses.GetMultipleResponse>,
-            Rfc.Handlers.GetMultipleHandler>();
-
-        services.AddTransient<
-            IRequestHandler<
-                SuggestedPoi.Requests.CreateSingleRequest,
-                SuggestedPoi.Responses.CreateSingleResponse>,
-            SuggestedPoi.Handlers.CreateSingleHandler>();
+        foreach (var handlerTypeInformation in Helpers.ScanHandlersFromAssembly())
+        {
+            services.AddTransient(
+                handlerTypeInformation.Interface, 
+                handlerTypeInformation.Implementation);
+        }
 
         return services;
     }
