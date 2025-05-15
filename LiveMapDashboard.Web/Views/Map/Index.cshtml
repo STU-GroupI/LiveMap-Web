@@ -1,0 +1,8 @@
+﻿@using LiveMapDashboard.Web.Models.Map
+@model MapListViewModel
+
+@await Component.InvokeAsync("MapList", Model)
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

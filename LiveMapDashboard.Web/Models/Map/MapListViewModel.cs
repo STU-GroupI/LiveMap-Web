@@ -2,15 +2,16 @@
 using LiveMap.Domain.Pagination;
 using System.ComponentModel.DataAnnotations;
 
-namespace LiveMapDashboard.Web.Models.Park;
+namespace LiveMapDashboard.Web.Models.Map;
+using Models = LiveMap.Domain.Models;
 
 public sealed record MapListViewModel(
     int? Skip,
     int? Take,
-    PaginatedResult<Map> Result
+    PaginatedResult<Models.Map> Result
     ) : IValidatableObject
 {
-    public static MapListViewModel Empty => new(null, null, PaginatedResult<Map>.Default);
+    public static MapListViewModel Empty => new(null, null, PaginatedResult<Models.Map>.Default);
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
