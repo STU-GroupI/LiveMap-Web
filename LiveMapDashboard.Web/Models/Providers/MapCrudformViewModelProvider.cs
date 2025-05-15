@@ -52,6 +52,7 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
             BottomLeft = GetBound(map, 2),
             BottomRight = GetBound(map, 3),
             Id = mapId.ToString(),
+            ImageUrl = map.ImageUrl,
             Area = map.Area.ToJsonCoordinates()
         };
     }
