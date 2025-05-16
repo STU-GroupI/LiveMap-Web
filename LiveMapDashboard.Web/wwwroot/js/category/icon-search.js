@@ -18,7 +18,6 @@ function renderResults(results) {
     <span>${icon.name}</span>
     `;
         wrapper.addEventListener('click', () => {
-            console.log(icon)
             document.getElementById('iconSearchInput').value = icon.name;
             document.getElementById('IconName').value = icon.name;
             // clear out the results
@@ -49,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('iconSearchInput');
     if (input && input.value.trim()) {
         const value = input.value.trim();
-        const results = searchIcons(value);
-        renderResults(results.slice(0, 50), value);
+        const result = searchIcons(value).find(i => i.name === value);
+        renderResults([result]);
     }
 });
 
