@@ -3,6 +3,7 @@
 @{
     string? mapId = Context.GetCurrentMapId()?.ToString();
     string? currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string? currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 
 <!DOCTYPE html>
@@ -41,7 +42,7 @@
             <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
                 <a class="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80 dark:text-white" asp-area="" asp-controller="Home" asp-action="Index" aria-label="LiveMapDashboard.Web">LiveMapDashboard.Web</a>
                 <div class="flex flex-row items-center gap-5 mt-5 sm:justify-end sm:mt-0 sm:ps-5">
-                    <a class="font-medium @(currentController == "Dashboard" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
+                    <a class="font-medium @(currentController == "Dashboard" && currentAction == "Index" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
                        asp-controller="Dashboard"
                        asp-action="Index"
@@ -53,6 +54,13 @@
                        asp-controller="Category"
                        asp-action="Index">
                         Categories
+                    </a>
+                    <a class="font-medium @(currentController == "Dashboard" && currentAction == "Park" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
+                       asp-area=""
+                       asp-controller="Dashboard"
+                       asp-action="Park"
+                       asp-route-mapId="@mapId">
+                        Park Management
                     </a>
                     <a class="font-medium @(currentController == "Poi" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
