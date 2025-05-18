@@ -1,10 +1,19 @@
 ﻿import * as mdi from 'https://cdn.jsdelivr.net/npm/@mdi/js/+esm';
 
 function searchIcons(query) {
-    const lower = query.toLowerCase();
+    const raw = query.toLowerCase().replace(/\s+/g, '');
     return Object.entries(mdi)
-        .filter(([name]) => name.toLowerCase().includes(lower))
-        .map(([name, path]) => ({ name, path }));
+        .map(([name, path]) => {
+            // build a human-friendly display name
+            const displayName = name
+                .replace(/^mdi/, '')
+                .replace(/([A-Z])/g, ' $1')
+                .trim();
+            const normalized = displayName.toLowerCase().replace(/\s+/g, '');
+            return { name, path, displayName, normalized };
+        })
+        // match ignoring case and spaces
+        .filter(icon => icon.normalized.includes(raw));
 }
 
 function renderResults(results) {
@@ -15,11 +24,11 @@ function renderResults(results) {
         wrapper.className = 'flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 rounded';
         wrapper.innerHTML = `
     <svg viewBox="0 0 24 24" width="20" height="20"><path d="${icon.path}" /></svg>
-    <span>${icon.name}</span>
+    <span>${icon.displayName}</span>
     `;
         wrapper.addEventListener('click', () => {
-            document.getElementById('iconSearchInput').value = icon.name;
-            document.getElementById('IconName').value = icon.name;
+            document.getElementById('iconSearchInput').value = icon.displayName;
+            document.getElementById('IconName').value = icon.displayName;
             // clear out the results
             container.innerHTML = '';
 
@@ -30,7 +39,7 @@ function renderResults(results) {
     <svg viewBox="0 0 24 24" width="20" height="20">
       <path d="${icon.path}" />
     </svg>
-    <span>${icon.name} has been chosen</span>
+    <span>${icon.displayName} has been chosen</span>
   `;
 
             container.appendChild(chosen);
