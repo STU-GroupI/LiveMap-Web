@@ -73,10 +73,16 @@
         <div class="mt-4 p-4 card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
             <div>
                 <button type="button" id="drawMap" class="py-2.5 sm:py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    Toggle draw border on Map
+                    <div class="flex flex-col text-start">
+                        <p>Click to start drawing on the map</p>
+                        <p><small>Click on the map to set the boundaries.</small></p>
+                    </div>
                 </button>
                 <button type="button" id="deleteBoundaries" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-hidden focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
-                    Remove boundaries from map
+                    <div class="flex flex-col text-start">
+                        <p>Remove boundaries from map</p>
+                        <p><small>Removes existing boundaries on the map.</small></p>
+                    </div>
                 </button>
             </div>
             <p class="text-sm text-red-600 mt-2">

@@ -68,7 +68,7 @@
             @RenderBody()
         </main>
 
-        <div id="alertContainer"></div>
+        <div id="alertContainer" class="flex flex-col gap-2"></div>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -82,8 +82,33 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/alert.js" asp-append-version="true"></script>
     
     @await RenderSectionAsync("Scripts", required: false)
 </div>
+    <template id="danger-alert">
+        <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
+            <span id="hs-soft-color-danger-label" class="font-bold">Danger</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="warning-alert">
+        <div class="mt-2 bg-yellow-100 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-warning-label">
+            <span id="hs-soft-color-warning-label" class="font-bold">Warning</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="success-alert">
+        <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
+            <span id="hs-soft-color-success-label" class="font-bold">Success</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="info-alert">
+        <div class="mt-2 bg-blue-100 border border-blue-200 text-sm text-blue-800 rounded-lg p-4 dark:bg-blue-800/10 dark:border-blue-900 dark:text-blue-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-info-label">
+            <span id="hs-soft-color-info-label" class="font-bold">Info</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
 </body>
 </html>
