@@ -26,12 +26,12 @@ public static class DevelopmentSeeder
                 randomPoint.X,
                 randomPoint.Y,
                 radius: f.Random.Double(0.01d, 0.05d),  // Random radius between 0.01 and 0.05 degrees
-                numberOfPoints: f.Random.Int(25, 70)))  // Random points between 25 and 70 for irregularity
+                numberOfPoints: 4))  // Random points between 25 and 70 for irregularity
             .RuleFor(m => m.Bounds, (f, m) => CreateIrregularPolygon(
                 randomPoint.X,
                 randomPoint.Y,
                 radius: f.Random.Double(0.05d, 0.055d),  // Random radius between 0.01 and 0.05 degrees
-                numberOfPoints: f.Random.Int(25, 70)));  // Random points between 25 and 70 for irregularity
+                numberOfPoints: 4));  // Random points between 25 and 70 for irregularity
     }
 
     private static Polygon CreateIrregularPolygon(double centerX, double centerY, double radius, int numberOfPoints = 40)

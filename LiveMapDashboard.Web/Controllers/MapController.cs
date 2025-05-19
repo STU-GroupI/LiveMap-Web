@@ -5,6 +5,7 @@ using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Text.Json;
 
 namespace LiveMapDashboard.Web.Controllers
@@ -92,13 +93,27 @@ namespace LiveMapDashboard.Web.Controllers
                 ? await service.CreateSingle(map)
                 : await service.UpdateSingle(map);
 
-            if (isNewMap && result.IsSuccess)
+            if (isNewMap)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            return View("MapForm", await provider.Hydrate(viewModel));
+            if (result.IsSuccess)
+            {
+                ViewData["SuccessMessage"] = "Your request was successfully processed!";
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = result.StatusCode switch
+                {
+                    HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
+                    HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
+                    HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
+                    _ => "Something went wrong while trying to contact the application. Please try again later"
+                };
+            }
 
+            return View("MapForm", await provider.Hydrate(viewModel));
         }
     }
 }
