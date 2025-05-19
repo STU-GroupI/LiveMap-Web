@@ -56,8 +56,10 @@ document.getElementById('iconSearchInput')?.addEventListener('input', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('iconSearchInput');
     if (input && input.value.trim()) {
-        const value = input.value.trim();
-        const result = searchIcons(value).find(i => i.name === value);
+        const value = input.value.replace(/^mdi/, '')
+            .replace(/([A-Z])/g, ' $1').trim();
+        input.value = value;
+        const result = searchIcons(value).find(i => i.displayName === value);
         renderResults([result]);
     }
 });
