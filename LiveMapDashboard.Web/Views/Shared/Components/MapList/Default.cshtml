@@ -1,72 +1,89 @@
 ﻿@model LiveMapDashboard.Web.Models.Map.MapListViewModel
+@using LiveMap.Domain.Models
+@using LiveMapDashboard.Web.Models.Map
 
 @{
     Layout = "~/Views/Shared/Layouts/_DefaultLayout.cshtml";
 }
 
+@section TopBarActions
+{
+    <div class="py-4 flex justify-end">
+        <a asp-controller="Map" asp-action="MapCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            New Map
+        </a>
+    </div>
+}
+
 @section Content
 {
-    <div class="flex flex-col">
-        <div class="-m-1.5 overflow-x-auto">
-            <div class="p-1.5 min-w-full inline-block align-middle">
-                <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-                        <thead>
-                        <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Id
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Name
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Action
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                        @foreach (var map in Model.Maps)
-                        {
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
-                                    @map.Id
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                    @map.Name
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                    <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@map.Id" data-hs-overlay="#delete-alert-@map.Id">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+    <div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+        <h1 class="text-4xl dark:text-white">Maps</h1>
+        <br />
+
+        <div class="flex flex-col">
+            <div class="-m-1.5 overflow-x-auto">
+                <div class="p-1.5 min-w-full inline-block align-middle">
+                    @if (Model.Result.TotalCount > 0)
+                    {
+                        <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
+
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Map Name</th>
+                                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+                                    @foreach (Map map in Model.Result.Items)
+                                    {
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">
+                                                @map.Name
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                                <a asp-action="form" asp-controller="Map" asp-route-id="@map.Id"
+                                                   class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
+                                                    Edit
+                                                </a>
+                                                <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@map.Id" data-hs-overlay="#delete-alert-@map.Id">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @await Html.PartialAsync("Table/_TablePagination")
+                    }
+                    else
+                    {
+                        <p class="dark:text-white">Er zijn geen mappen</p>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
     @foreach (
-        var deleteModal in Model.Maps.Select(map => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
-            {
-                ModalId = $"delete-alert-{map.Id}",
-                ModalTitle = $"Delete Map: {map.Name}",
-                FormMethod = "post",
-                FormController = "Map",
-                FormAction = "Delete",
-                DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
-                HiddenInputs = new Dictionary<string, string>
+       var deleteModal in Model.Result.Items.Select(map => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
+        {
+            ModalId = $"delete-alert-{map.Id}",
+            ModalTitle = $"Delete Map: {map.Name}",
+            FormMethod = "post",
+            FormController = "Map",
+            FormAction = "Delete",
+            DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
+            HiddenInputs = new Dictionary<string, string>
                 {
-                    { "Id", map.Id }
+                    { "Id", map.Id.ToString() }
                 }
-            }
-        )
-    )
+        }
+       )
+   )
     {
         @await Html.PartialAsync("~/Views/Shared/Components/MapList/_DeleteModal.cshtml", deleteModal)
     }

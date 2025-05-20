@@ -1,8 +1,11 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Map;
 
 namespace LiveMapDashboard.Web.Models.Providers
 {
+    using Models = LiveMap.Domain.Models;
+
     public class MapListViewModelProvider : IViewModelProvider<MapListViewModel>
     {
         private readonly IMapService _mapService;
@@ -14,24 +17,17 @@ namespace LiveMapDashboard.Web.Models.Providers
 
         public async Task<MapListViewModel> Hydrate(MapListViewModel viewModel)
         {
-            var mapsResult = await _mapService.Get(null, null);
-            var maps = mapsResult.Value?.Items ?? [];
+            PaginatedResult<Models.Map> result = (await _mapService.Get(viewModel.Skip, viewModel.Take)).Value ?? PaginatedResult<Models.Map>.Default;
 
             return viewModel with
             {
-                Maps = maps.Select(map => new MapListEntryViewModel()
-                {
-                    Id = map.Id.ToString(),
-                    Name = map.Name
-                }).ToList()
+                Result = result
             };
         }
 
         public async Task<MapListViewModel> Provide()
         {
-            var viewModel = new MapListViewModel();
-
-            return await Hydrate(viewModel);
+            return await Hydrate(MapListViewModel.Empty);
         }
     }
 }

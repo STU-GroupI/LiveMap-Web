@@ -4,6 +4,7 @@ using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Models.Category;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LiveMapDashboard.Web.Controllers;
 using Models = LiveMap.Domain.Models;
@@ -21,11 +22,7 @@ public class CategoryController : Controller
     public async Task<IActionResult> CreateForm(
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        var viewModel = await provider.Hydrate(
-            new(string.Empty, string.Empty, false)
-        );
-        
-        return View("CategoryForm", viewModel);
+        return View("CategoryForm", await provider.Hydrate(new(string.Empty, string.Empty, string.Empty, false)));
     }
 
     [Route("form/{name}")]
@@ -33,11 +30,15 @@ public class CategoryController : Controller
         [FromRoute] string? name,
         [FromServices] IViewModelProvider<CategoryCrudFormViewModel> provider)
     {
-        var viewModel = await provider.Hydrate(
-            new(name, string.Empty, false)
-        );
+        var categoryService = HttpContext.RequestServices.GetService<ICategoryService>();
+        if (categoryService is null || name is null)
+        {
+            return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, string.Empty, false)));
+        }
         
-        return View("CategoryForm", viewModel);
+        var category = await categoryService.Get(name);
+        return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, category.Value?.IconName ?? string.Empty, false)));
+
     }
 
 
@@ -56,10 +57,10 @@ public class CategoryController : Controller
         {
             var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
                 => await categoryService.UpdateSingle(
-                    new() { CategoryName = vm.CategoryName! },
-                    new() { CategoryName = vm.NewValue }),
+                    new() { CategoryName = vm.CategoryName!, IconName = viewModel.IconName },
+                    new() { CategoryName = vm.NewValue, IconName = viewModel.IconName }),
             _ => await categoryService.CreateSingle(
-                    new() { CategoryName = viewModel.NewValue })
+                    new() { CategoryName = viewModel.NewValue, IconName = viewModel.IconName })
         };
 
         this.BuildResponseMessageForRedirect(result);

@@ -5,5 +5,6 @@
         public required string ModalId { get; set; }
         public string ModalTitle { get; set; } = "Leave changes";
         public string ModalMessage { get; set; } = "Are you sure you would like to abandon your changes?";
+        public Dictionary<string, string> QueryParameters { get; set; } = new();
     }
 }

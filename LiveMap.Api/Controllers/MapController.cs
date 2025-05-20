@@ -84,7 +84,7 @@ public class MapController : ControllerBase
             Name = webRequest.Name,
             Bounds = webRequest.Bounds,
             Area = webRequest.Area,
-            ImageUrl = webRequest.ImageUrl
+            ImageUrl = webRequest.ImageUrl,
         };
         var request = new CreateSingleRequest(map);
 

@@ -19,13 +19,19 @@ public static class ConfigureViewModelProviders
             .AddTransient<IViewModelProvider<CategoryListViewModel>,
                 CategoryListViewModelProvider>()
             .AddTransient<
-                IViewModelProvider<RequestForChangeViewModel>,
-                RequestForChangeViewModelProvider>()
+                IViewModelProvider<RequestForChangeListViewModel>,
+                RequestForChangeListViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<MapListViewModel>,
                 MapListViewModelProvider>()
             .AddTransient<
+                IViewModelProvider<MapCrudformViewModel>,
+                MapCrudformViewModelProvider>()
+            .AddTransient<
                 IViewModelProvider<CategoryCrudFormViewModel>,
-                CategoryCrudFormViewModelProvider>();
+                CategoryCrudFormViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<RequestForChangeFormViewModel>,
+                RequestForChangeFormViewModelProvider>();
     }
 }

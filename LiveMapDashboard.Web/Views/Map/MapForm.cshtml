@@ -1,0 +1,8 @@
+﻿@using LiveMapDashboard.Web.Models.Map
+@model MapCrudformViewModel
+
+@await Component.InvokeAsync("MapForm", Model)
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -26,12 +26,12 @@ public static class DevelopmentSeeder
                 randomPoint.X,
                 randomPoint.Y,
                 radius: f.Random.Double(0.01d, 0.05d),  // Random radius between 0.01 and 0.05 degrees
-                numberOfPoints: f.Random.Int(25, 70)))  // Random points between 25 and 70 for irregularity
+                numberOfPoints: 4))  // Random points between 25 and 70 for irregularity
             .RuleFor(m => m.Bounds, (f, m) => CreateIrregularPolygon(
                 randomPoint.X,
                 randomPoint.Y,
                 radius: f.Random.Double(0.05d, 0.055d),  // Random radius between 0.01 and 0.05 degrees
-                numberOfPoints: f.Random.Int(25, 70)));  // Random points between 25 and 70 for irregularity
+                numberOfPoints: 4));  // Random points between 25 and 70 for irregularity
     }
 
     private static Polygon CreateIrregularPolygon(double centerX, double centerY, double radius, int numberOfPoints = 40)
@@ -225,6 +225,26 @@ public static class DevelopmentSeeder
             new() { CategoryName = "Entertainment" },
             new() { CategoryName = Category.EMPTY },
         ];
+
+        var defaultIcons = new Dictionary<string, string>
+        {
+            { Category.STORE, "mdiStoreOutline" },
+            { Category.INFORMATION, "mdiInformationOutline" },
+            { Category.FIRSTAID_AND_MEDICAL, "mdiMedicalBag" },
+            { Category.TRASH_BIN, "mdiTrashCanOutline" },
+            { Category.PARKING, "mdiParking" },
+            { Category.ENTERTAINMENT, "mdiMovieOpenOutline" },
+            { Category.EMPTY, "mdiHelpBoxOutline" },
+        };
+        
+        foreach (var category in categories)
+        {
+            if (string.IsNullOrEmpty(category.IconName) 
+                && defaultIcons.TryGetValue(category.CategoryName, out var iconName))
+            {
+                category.IconName = iconName;
+            }
+        }
 
         List<PointOfInterestStatus> poiStatuses = [
             new() { Status = "Active" },

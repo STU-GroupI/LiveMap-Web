@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LiveMapDashboard.Web.Models.Rfc;
 
-public sealed record RequestForChangeViewModel(
+public sealed record RequestForChangeListViewModel(
     Guid MapId,
     int? Skip,
     int? Take,
@@ -13,7 +13,7 @@ public sealed record RequestForChangeViewModel(
     PaginatedResult<RequestForChange> Result
     ) : IValidatableObject
 {
-    public static RequestForChangeViewModel Empty =>
+    public static RequestForChangeListViewModel Empty =>
         new(
             MapId: Guid.Empty,
             Skip: null,
