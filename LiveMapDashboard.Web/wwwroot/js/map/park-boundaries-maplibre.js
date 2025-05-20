@@ -94,7 +94,7 @@ function centerOnMap() {
     map.setZoom(15);
     const features = draw.getAll().features;
     if (features.length === 0) {
-        showAlert('error', 'There are no park boundaries yet.');
+        showAlert('error', 'There are no map boundaries yet.');
         return;
     }
 
@@ -130,7 +130,7 @@ function deleteBoundaries() {
         document.activeElement.blur();
         onAreaChanged();
     } else {
-        showAlert('error', 'There are no park boundaries to delete.');
+        showAlert('error', 'There are no map boundaries to delete.');
     }
 }
 
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasDrawing() === false) {
             draw.changeMode('draw_polygon');  // Enable drawing polygon mode
         } else {
-            showAlert('info', 'There is a park boundary already present.');
+            showAlert('info', 'There is a map boundary already present.');
         }
     });
 

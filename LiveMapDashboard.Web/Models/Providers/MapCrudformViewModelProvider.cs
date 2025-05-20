@@ -19,7 +19,7 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
     {
         if (Guid.TryParse(viewModel.Id, out Guid poiId))
         {
-            return await HydratreWithMap(viewModel, poiId);
+            return await HydrateWithMap(viewModel, poiId);
         }
 
         return viewModel with
@@ -28,7 +28,7 @@ public class MapCrudformViewModelProvider : IViewModelProvider<MapCrudformViewMo
         };
     }
 
-    private async Task<MapCrudformViewModel> HydratreWithMap(
+    private async Task<MapCrudformViewModel> HydrateWithMap(
         MapCrudformViewModel viewModel,
         Guid mapId
         )
