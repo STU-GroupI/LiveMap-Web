@@ -138,17 +138,15 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
         return;
     }
 
-    document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString().replace('.', ',');
-    document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString().replace('.', ',');
+    updateCoordinateFields(clickedLngLat.lat, clickedLngLat.lng);
 });
 
 map.on('load', () => {
-    const long = parseFloat(document.getElementById('Coordinate_Longitude').value.replace(',', '.'))
-    const lat = parseFloat(document.getElementById('Coordinate_Latitude').value.replace(',', '.'))
+    const coords = getCoordinateFromFields();
 
-    if ((long && lat) && (long !== 0 && lat !== 0)) {
-        const clampedLong = Math.max(Math.min(long, 90), -90);
-        const clampedLat = Math.max(Math.min(lat, 90), -90);
+    if (coords && (coords.lng !== 0 || coords.lat !== 0)) {
+        const clampedLong = Math.max(Math.min(coords.lng, 90), -90);
+        const clampedLat = Math.max(Math.min(coords.lat, 90), -90);
 
         clickedLngLat = {lng: clampedLong, lat: clampedLat};
         placeMarkerOnMap(true);

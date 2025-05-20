@@ -36,8 +36,7 @@ body {
 #alertContainer {
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 20px;
     z-index: 1050; /* Make sure the alert is above other content */
 }
 

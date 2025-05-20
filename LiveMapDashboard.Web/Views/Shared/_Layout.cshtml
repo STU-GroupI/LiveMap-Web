@@ -38,7 +38,6 @@
             <div class="flex flex-row items-center gap-5 mt-5 sm:justify-end sm:mt-0 sm:ps-5">
                 <a class="font-medium text-blue-500 focus:outline-hidden" aria-current="page" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" asp-area="" asp-controller="Home" asp-action="Park">Parkbeheer</a>
                 <div>
                     <button type="button" class="hs-dark-mode hs-dark-mode-active:hidden flex items-center gap-x-2 py-2 px-3 bg-white/10 rounded-full text-sm dark:text-white text-dark hover:bg-white/20 focus:outline-hidden focus:bg-white/20" data-hs-theme-click-value="dark">
                         <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -69,7 +68,7 @@
             @RenderBody()
         </main>
 
-        <div id="alertContainer"></div>
+        <div id="alertContainer" class="flex flex-col gap-2"></div>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -83,8 +82,33 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/alert.js" asp-append-version="true"></script>
     
     @await RenderSectionAsync("Scripts", required: false)
 </div>
+    <template id="danger-alert">
+        <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
+            <span id="hs-soft-color-danger-label" class="font-bold">Danger</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="warning-alert">
+        <div class="mt-2 bg-yellow-100 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-warning-label">
+            <span id="hs-soft-color-warning-label" class="font-bold">Warning</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="success-alert">
+        <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
+            <span id="hs-soft-color-success-label" class="font-bold">Success</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
+    <template id="info-alert">
+        <div class="mt-2 bg-blue-100 border border-blue-200 text-sm text-blue-800 rounded-lg p-4 dark:bg-blue-800/10 dark:border-blue-900 dark:text-blue-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-info-label">
+            <span id="hs-soft-color-info-label" class="font-bold">Info</span> 
+            <span id="alert-text"></span>
+        </div>
+    </template>
 </body>
 </html>
