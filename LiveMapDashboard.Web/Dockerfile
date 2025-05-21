@@ -17,6 +17,7 @@ COPY ["LiveMapDashboard.Web/LiveMapDashboard.Web.csproj", "LiveMapDashboard.Web/
 COPY ["LiveMap.Application/LiveMap.Application.csproj", "LiveMap.Application/"]
 COPY ["LiveMap.Domain/LiveMap.Domain.csproj", "LiveMap.Domain/"]
 COPY ["LiveMap.Persistence/LiveMap.Persistence.csproj", "LiveMap.Persistence/"]
+COPY ["LiveMap.Persistence/LiveMap.Infrastructure.csproj", "LiveMap.Infrastructure/"]
 
 RUN dotnet restore "./LiveMapDashboard.Web/LiveMapDashboard.Web.csproj"
 COPY . .
@@ -32,4 +33,7 @@ RUN dotnet publish "./LiveMapDashboard.Web.csproj" -c $BUILD_CONFIGURATION -o /a
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+ENV BACKEND_URL=http://localhost:5006
+
 ENTRYPOINT ["dotnet", "LiveMapDashboard.Web.dll"]
