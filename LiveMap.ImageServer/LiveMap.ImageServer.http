@@ -1,0 +1,6 @@
+@LiveMap.ImageServer_HostAddress = http://localhost:5150
+
+GET {{LiveMap.ImageServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

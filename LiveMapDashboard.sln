@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.Api", "LiveMap.Api\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.Infrastructure", "LiveMap.Infrastructure\LiveMap.Infrastructure.csproj", "{CEC05EB2-3A89-4701-A3CC-92B6B90F34FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveMap.ImageServer", "LiveMap.ImageServer\LiveMap.ImageServer.csproj", "{7E586C7B-A39C-4F50-98D3-AADD14338C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{CEC05EB2-3A89-4701-A3CC-92B6B90F34FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEC05EB2-3A89-4701-A3CC-92B6B90F34FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEC05EB2-3A89-4701-A3CC-92B6B90F34FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E586C7B-A39C-4F50-98D3-AADD14338C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E586C7B-A39C-4F50-98D3-AADD14338C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E586C7B-A39C-4F50-98D3-AADD14338C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E586C7B-A39C-4F50-98D3-AADD14338C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
