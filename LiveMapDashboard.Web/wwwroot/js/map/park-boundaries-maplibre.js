@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const jsonArea = JSON.stringify(translateCoordinates(coordinates));
             document.querySelector('#Area').value = jsonArea;
         } catch (error) {
-            console.log(error);
+            showAlert('error', 'Could not submit map boundaries.');
         }
     });
 
