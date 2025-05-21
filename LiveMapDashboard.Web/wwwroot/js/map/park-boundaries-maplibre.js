@@ -86,7 +86,6 @@ function onAreaChanged() {
 // </Map API methods>
 
 function hasDrawing() {
-    console.log(draw.getAll().features);
     return draw.getAll().features.length > 0;
 }
 
