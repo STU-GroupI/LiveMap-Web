@@ -69,11 +69,10 @@
     </div>
 
     @foreach (
-       var deleteModal in Model.Result.Items.Select(map => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
+        var deleteModal in Model.Result.Items.Select(map => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
         {
             ModalId = $"delete-alert-{map.Id}",
             ModalTitle = $"Delete Map: {map.Name}",
-            FormMethod = "post",
             FormController = "Map",
             FormAction = "Delete",
             DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
@@ -82,8 +81,8 @@
                     { "Id", map.Id.ToString() }
                 }
         }
-       )
-   )
+        )
+    )
     {
         @await Html.PartialAsync("~/Views/Shared/Components/MapList/_DeleteModal.cshtml", deleteModal)
     }

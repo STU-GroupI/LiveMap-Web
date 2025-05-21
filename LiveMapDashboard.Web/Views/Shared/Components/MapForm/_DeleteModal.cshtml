@@ -4,11 +4,6 @@
 }
 
 @section ModalContent {
-    @if (!string.IsNullOrWhiteSpace(Model.WarningMessage))
-    {
-        <p class="text-gray-500 dark:text-neutral-500">@Model.WarningMessage</p>
-    }
-
     @if (!string.IsNullOrWhiteSpace(Model.DangerMessage))
     {
         <div class="mt-3">
