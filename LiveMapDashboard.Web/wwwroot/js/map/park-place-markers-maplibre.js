@@ -224,8 +224,8 @@ map.on('load', () => {
         type: 'geojson',
         data: geoJsonPois,
         cluster: true,
-        clusterRadius: 80,
-        clusterMaxZoom: 13
+        clusterRadius: 60,
+        clusterMaxZoom: 15
     });
 
     // Circles for clusters
@@ -262,7 +262,7 @@ map.on('load', () => {
     map.on('zoom', () => {
         const z = map.getZoom();
         //If zoom level is below 14, which is pretty zoomed out, remove the markers from the map for clustering :)
-        const hide = z < 14;
+        const hide = z < 16;
         //Obviously, we can only do this if there are multiple markers, if there is only one present, it's no use to hide it
         if (markers.length > 1) {
             markers.forEach(marker => {
