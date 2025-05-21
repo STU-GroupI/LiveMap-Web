@@ -13,7 +13,6 @@ public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest>
     }
     public async Task<bool> Handle(DeleteSingleRequest request)
     {
-        bool response = await _pointOfInterestRepository.DeleteSingle(request.Id);
-        return response;
+        return await _pointOfInterestRepository.DeleteSingle(request.Id);
     }
 }
