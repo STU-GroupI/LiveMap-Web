@@ -1,4 +1,4 @@
-﻿using LiveMap.Domain.Models;
+﻿using Model = LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +8,7 @@ using Models = LiveMap.Domain.Models;
 public sealed record MapListViewModel(
     int? Skip,
     int? Take,
-    PaginatedResult<Models.Map> Result
+    PaginatedResult<Model.Map> Result
     ) : IValidatableObject
 {
     public static MapListViewModel Empty => new(null, null, PaginatedResult<Models.Map>.Default);

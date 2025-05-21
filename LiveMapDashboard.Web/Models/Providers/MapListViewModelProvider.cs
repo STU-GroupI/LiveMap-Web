@@ -2,7 +2,6 @@
 using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Models.Map;
 
-
 namespace LiveMapDashboard.Web.Models.Providers
 {
     using Models = LiveMap.Domain.Models;

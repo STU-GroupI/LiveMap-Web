@@ -1,4 +1,5 @@
-﻿using LiveMap.Application.Map.Persistance;
+﻿using Bogus.DataSets;
+using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
@@ -93,5 +94,56 @@ public class MapRepository : IMapRepository
         await _context.SaveChangesAsync();
 
         return newMap.ToDomainMap();
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        SqlMap? map = await _context.Maps
+            .Where(map => map.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (map is null)
+        {
+            return false;
+        }
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            var suggestedPoisToDelete = await _context.SuggestedPointsOfInterest
+                .Where(sugPoi => sugPoi.MapId == id)
+                .ToListAsync();
+
+            var poisToDelete = await _context.PointsOfInterest
+                .Where(poi => poi.MapId == id)
+                .ToListAsync();
+
+            var requestsForChangeToDelete = await _context.RequestsForChange
+                .Where(rfc => (rfc.Poi != null && poisToDelete.Contains(rfc.Poi)) ||
+                              (rfc.SuggestedPoi != null && suggestedPoisToDelete.Contains(rfc.SuggestedPoi)))
+                .ToListAsync();
+
+            foreach (var request in requestsForChangeToDelete)
+            {
+                request.SuggestedPoi = null;
+                request.Poi = null;
+            }
+
+            _context.SuggestedPointsOfInterest.RemoveRange(suggestedPoisToDelete);
+            _context.RequestsForChange.RemoveRange(requestsForChangeToDelete);
+            _context.PointsOfInterest.RemoveRange(poisToDelete);
+            _context.Maps.Remove(map);
+            
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return true;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

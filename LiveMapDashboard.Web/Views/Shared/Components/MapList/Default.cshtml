@@ -47,6 +47,9 @@
                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
                                                     Edit
                                                 </a>
+                                                <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@map.Id" data-hs-overlay="#delete-alert-@map.Id">
+                                                    Delete
+                                                </button>
                                             </td>
                                         </tr>
                                     }
@@ -64,4 +67,24 @@
             </div>
         </div>
     </div>
+
+    @foreach (
+       var deleteModal in Model.Result.Items.Select(map => new LiveMapDashboard.Web.Models.Modal.DeleteModalViewModel
+        {
+            ModalId = $"delete-alert-{map.Id}",
+            ModalTitle = $"Delete Map: {map.Name}",
+            FormMethod = "post",
+            FormController = "Map",
+            FormAction = "Delete",
+            DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
+            HiddenInputs = new Dictionary<string, string>
+                {
+                    { "Id", map.Id.ToString() }
+                }
+        }
+       )
+   )
+    {
+        @await Html.PartialAsync("~/Views/Shared/Components/MapList/_DeleteModal.cshtml", deleteModal)
+    }
 }

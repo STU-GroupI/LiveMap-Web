@@ -13,5 +13,6 @@ public interface IMapRepository
     public Task<PaginatedResult<Models.Map>> GetMultiple(int? skip, int? take);
 
     public Task<Models.Map?> Update(Models.Map map);
-}
 
+    public Task<bool> Delete(Guid id);
+}
