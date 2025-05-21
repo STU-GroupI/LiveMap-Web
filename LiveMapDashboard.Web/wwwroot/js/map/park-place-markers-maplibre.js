@@ -33,12 +33,17 @@ function centerOnMap() {
         return;
     }
 
-    const points = markers.map(marker => turf.point([marker.getLngLat().lng, marker.getLngLat().lat]));
-    const featureCollection = turf.featureCollection(points);
-    const center = turf.center(featureCollection);
+    let center = [clickedLngLat.lng, clickedLngLat.lat];
+
+    //This centering method is impressive, but the question is if we want to center the map between markers if there are more than 1 present.
+    if (markers.length === 1) {
+        const points = markers.map(marker => turf.point([marker.getLngLat().lng, marker.getLngLat().lat]));
+        const featureCollection = turf.featureCollection(points);
+        center = turf.center(featureCollection).geometry.coordinates;
+    }
 
     map.flyTo({
-        center: center.geometry.coordinates,
+        center: center,
         zoom: 17,
         speed: 1.2,     // Adjust speed (default: 1.2)
         curve: 1.42,    // Adjust curvature (default: 1.42)
@@ -161,7 +166,13 @@ function PlaceDefaultMarker(shouldCenter) {
 
 document.querySelector('[id$="Category"]').addEventListener('change', () => {
     if (clickedLngLat) {
-        placeMarkerOnMap(false); // Update the marker's appearance
+        if (markers.length > 0) {
+            const lastIndex = markers.length - 1;
+            const lastMarker = markers.pop();
+            lastMarker.remove();
+            pois.splice(lastIndex, 1)
+        }
+        placeMarkerOnMap(false);
     }
 });
 
