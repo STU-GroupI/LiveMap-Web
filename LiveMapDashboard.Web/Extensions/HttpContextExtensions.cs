@@ -5,13 +5,15 @@ public static class HttpContextExtensions
     private const string COOKIE_NAME = "SelectedMapId";
     public static Guid? GetCurrentMapId(this HttpContext context)
     {
-        if (context.Request.Cookies.TryGetValue(COOKIE_NAME, out var value) && Guid.TryParse(value, out var cookieId))
-        {
-            return cookieId;
-        } 
-        else if (context.Items.TryGetValue(COOKIE_NAME, out object? obj) && Guid.TryParse(obj as string, out var itemsId))
+        /*I have switched these statements as the second statement could only be applicable in the next request, explaining why the mapId
+         * would never update instantly and refreshes were needed*/
+        if (context.Items.TryGetValue(COOKIE_NAME, out object? obj) && Guid.TryParse(obj as string, out var itemsId))
         {
             return itemsId;
+        }
+        else if (context.Request.Cookies.TryGetValue(COOKIE_NAME, out var value) && Guid.TryParse(value, out var cookieId))
+        {
+            return cookieId;
         }
 
         return null;
