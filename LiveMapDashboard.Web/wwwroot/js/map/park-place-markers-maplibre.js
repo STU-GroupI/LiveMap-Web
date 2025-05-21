@@ -112,7 +112,9 @@ function placeMarkerOnMap(shouldCenter) {
             }
         }))
     };
-    map.getSource('pois').setData(updatedGeoJson);
+   if (map.getSource('pois')) {
+        map.getSource('pois').setData(updatedGeoJson);
+    }
 
     if (iconName) {
         // Use the Material Design Icons (mdi) library to get the SVG path
