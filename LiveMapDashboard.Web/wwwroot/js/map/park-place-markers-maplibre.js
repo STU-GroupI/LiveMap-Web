@@ -250,7 +250,8 @@ map.on('load', () => {
     });
 
     map.on('zoom', () => {
-        const z = map.getZoom();const hide = z < 16;
+        const z = map.getZoom();
+        const hide = z < 16;
         if (markers.length > 1) {
             markers.forEach(marker => {
                 const el = marker.getElement();
