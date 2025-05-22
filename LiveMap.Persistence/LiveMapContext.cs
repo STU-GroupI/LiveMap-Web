@@ -63,7 +63,7 @@ public class LiveMapContext : DbContext
             entityBuilder.ToTable("Map")
                 .HasKey(e => e.Id);
             entityBuilder.Property(e => e.Border).HasColumnType("geometry");
-            entityBuilder.Property(e => e.Position).HasColumnType("geometry");
+            entityBuilder.Property(e => e.Bounds).HasColumnType("geometry");
         });
 
         modelBuilder.Entity<Category>(entityBuilder =>

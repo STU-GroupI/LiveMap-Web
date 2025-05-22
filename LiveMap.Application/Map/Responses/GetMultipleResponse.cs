@@ -1,2 +1,4 @@
-﻿namespace LiveMap.Application.Map.Responses;
-public sealed record GetMultipleResponse(ICollection<Domain.Models.Map> Maps);
+﻿using LiveMap.Domain.Pagination;
+
+namespace LiveMap.Application.Map.Responses;
+public sealed record GetMultipleResponse(PaginatedResult<Domain.Models.Map> Result);
