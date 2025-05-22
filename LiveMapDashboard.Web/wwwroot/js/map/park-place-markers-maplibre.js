@@ -10,21 +10,19 @@ let pois = [];
 
 const map = MapFactory.createMap('map', [4.729, 52.045], 15);
 
-//Prevent the map from zooming in when double clicking
 map.doubleClickZoom.disable();
 
 const markers = [];
 let clickedLngLat = null;
 
-// Event listener voor single click
 map.on('click', (e) => {
     onMapClick(e);
 });
 
 function onMapClick(e) {
     const { lngLat } = e;
-    clickedLngLat = lngLat; // Store the clicked coordinates
-    placeMarkerOnMap(true); // Call the function to place the marker
+    clickedLngLat = lngLat;
+    placeMarkerOnMap(true);
 }
 
 function centerOnMap() {
@@ -45,9 +43,9 @@ function centerOnMap() {
     map.flyTo({
         center: center,
         zoom: 17,
-        speed: 1.2,     // Adjust speed (default: 1.2)
-        curve: 1.42,    // Adjust curvature (default: 1.42)
-        easing: t => t  // Optionally adjust the easing function
+        speed: 1.2,
+        curve: 1.42,
+        easing: t => t
     });
 }
 
@@ -66,9 +64,9 @@ function placeMarkerOnMap(shouldCenter) {
     // If a marker already exists, remove it before adding a new one
     //REMOVE THE IF-STATEMENT BELOW TO ESSENTIALLY ACTIVATE CLUSTERING AND MULTIPLE POIS(Although the last added POI will only be saved :P)
     if (markers.length > 0) {
-        markers[0].remove(); // Remove the existing marker
-        markers.length = 0; // Clear the markers array
-        pois.length = 0; // Clears the POI array
+        markers[0].remove();
+        markers.length = 0;
+        pois.length = 0;
     }
 
     // Get the selected category's icon name
@@ -126,16 +124,12 @@ function placeMarkerOnMap(shouldCenter) {
                 </svg>
             `;
 
-
-            // Add the custom marker to the map
             const marker = new maplibregl.Marker({ element: markerElement })
                 .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
                 .addTo(map);
 
-            // Store the marker in the markers array
             markers.push(marker);
 
-            // Center the map on the new marker
             if (shouldCenter) {
                 centerOnMap();
             }
@@ -151,17 +145,15 @@ function placeMarkerOnMap(shouldCenter) {
 }
 
 function PlaceDefaultMarker(shouldCenter) {
-    // Add the marker at the clicked position
     const marker = new maplibregl.Marker()
         .setLngLat([clickedLngLat.lng, clickedLngLat.lat])
         .addTo(map);
 
     window.mapCenter = marker;
 
-    // Store the marker in the markers array
     markers.push(marker);
     if (shouldCenter) {
-        centerOnMap(); // Center the map on the new marker
+        centerOnMap();
     }
 }
 
@@ -189,7 +181,6 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
 });
 
 map.on('load', () => {
-    // If there is an existing marker, place it
     const long = parseFloat(document.getElementById('Coordinate_Longitude').value.replace(',', '.'))
     const lat = parseFloat(document.getElementById('Coordinate_Latitude').value.replace(',', '.'))
 
@@ -242,7 +233,7 @@ map.on('load', () => {
         }
     });
 
-    // Add Cluster count labels to show contents of cluster
+    // Cluster count labels
     map.addLayer({
         id: 'cluster-count',
         type: 'symbol',
@@ -258,16 +249,11 @@ map.on('load', () => {
         }
     });
 
-    // If-statement to present markers based on zoom level
     map.on('zoom', () => {
-        const z = map.getZoom();
-        //If zoom level is below 14, which is pretty zoomed out, remove the markers from the map for clustering :)
-        const hide = z < 16;
-        //Obviously, we can only do this if there are multiple markers, if there is only one present, it's no use to hide it
+        const z = map.getZoom();const hide = z < 16;
         if (markers.length > 1) {
             markers.forEach(marker => {
                 const el = marker.getElement();
-                // either use display or visibility
                 el.style.display = hide ? 'none' : '';
             });
         }
