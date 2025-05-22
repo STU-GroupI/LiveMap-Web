@@ -43,7 +43,7 @@ public class MapRepository : IMapRepository
             return new();
         }
 
-        return new([.. result.Select(map => map.ToDomainMap())], take, skip, totalCount);
+        return new(result.Select(map => map.ToDomainMap()).ToList(), take, skip, totalCount);
     }
 
     public async Task<Map?> GetSingle(Guid id)
@@ -73,27 +73,23 @@ public class MapRepository : IMapRepository
 
     public async Task<Map?> Update(Map map)
     {
-        var newMap = await _context.Maps
+        var foundMap = await _context.Maps
             .Where(m => m.Id == map.Id)
             .FirstOrDefaultAsync();
 
-        if (newMap is null)
+        if (foundMap is null)
         {
             return null;
         }
-        
-        newMap.Name = map.Name;
-        newMap.Bounds = map.Bounds.ToPolygon();
-        newMap.Border = map.Area.ToPolygon();
 
-        if(map.ImageUrl is not null)
-        {
-            newMap.ImageUrl = map.ImageUrl;
-        }
+        foundMap.Name = map.Name;
+        foundMap.Bounds = map.Bounds.ToPolygon();
+        foundMap.Border = map.Area.ToPolygon();
+        foundMap.ImageUrl = map.ImageUrl ?? null;
 
         await _context.SaveChangesAsync();
 
-        return newMap.ToDomainMap();
+        return foundMap.ToDomainMap();
     }
 
     public async Task<bool> Delete(Guid id)

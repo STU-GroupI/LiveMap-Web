@@ -145,7 +145,7 @@ public class MapController : ControllerBase
     /// <response code="404">Map not found.</response>
     [HttpDelete("{id}")]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Map>(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(
         [FromRoute] string id,
