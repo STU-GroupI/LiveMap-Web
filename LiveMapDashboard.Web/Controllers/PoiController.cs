@@ -15,10 +15,10 @@ public class PoiController : Controller
         [FromRoute] string mapId,
         [FromServices] IViewModelProvider<PoiListViewModel> provider)
     {
-        var viewModel = await provider.Provide() with
+        var viewModel = await provider.Hydrate(new PoiListViewModel()
         {
             MapId = Guid.Parse(mapId),
-        };
+        });
         return View(viewModel);
     }
 

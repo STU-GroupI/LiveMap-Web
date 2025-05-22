@@ -1,4 +1,5 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
+using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Models.Poi;
 
 namespace LiveMapDashboard.Web.Models.Providers;
@@ -23,10 +24,16 @@ public class PoiListViewModelProvider : IViewModelProvider<PoiListViewModel>
 
     public async Task<PoiListViewModel> Hydrate(PoiListViewModel viewModel)
     {
-        var mapsResult = await _mapService.Get(0, 1);
-        var map = mapsResult.Value?.FirstOrDefault();
+        var mapsResult = await _mapService.Get(viewModel.MapId);
 
-        var poisResult = await _pointOfInterestService.Get(map!.Id.ToString(), null, null);
+        if(mapsResult is not { IsSuccess: true, Value: not null })
+        {
+            throw new MapNotFoundException(viewModel.MapId.ToString());
+        }
+
+        var map = mapsResult.Value;
+
+        var poisResult = await _pointOfInterestService.Get(map.Id.ToString(), null, null);
         var pois = poisResult.Value ?? [];
 
         return viewModel with
