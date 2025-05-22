@@ -1,0 +1,172 @@
+﻿@using LiveMapDashboard.Web.Models.Modal
+@model LiveMapDashboard.Web.Models.Map.MapCrudformViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_GridDoubleLayout.cshtml";
+
+    const string leaveChangesModalId = "modal-leave-changes";
+    var leaveChangesModalModel = new LeaveChangesModalViewModel
+    {
+        ModalId = leaveChangesModalId,
+        ModalTitle = "Leave changes",
+        ModalMessage = "Are you sure you would like to abandon your changes?",
+    };
+
+    var deleteModalId = $"delete-map-{Model.Id?.Replace(' ', '-').ToLower() ?? "modal"}";
+    var deleteModalModel = (!string.IsNullOrEmpty(Model.Id) && Model.Id != Guid.Empty.ToString() && Model.Id != "00000000-0000-0000-0000-000000000000") ? new DeleteModalViewModel
+    {
+        ModalId = deleteModalId,
+        ModalTitle = $"Delete Map: {Model.Name}",
+        FormController = "Map",
+        FormAction = "Delete",
+        DangerMessage = "WARNING: Permanently remove the map and all of its contents, including: points of interest and requests for change. This action is irreversible. Are you sure you want to continue?",
+        HiddenInputs = new Dictionary<string, string>
+        {
+            { "Id", Model.Id }
+        }
+    } : null;
+}
+
+@section TopBarActions
+{
+    @if (!string.IsNullOrEmpty(Model.Id))
+    {
+        <a asp-controller="Map" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+            </span>
+            Go back
+        </a>
+    }
+    else
+    {
+        <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+            </span>
+            Go back
+        </button>
+    }
+
+    @await Html.PartialAsync("~/Views/Shared/Components/MapForm/_GoBackModal.cshtml", leaveChangesModalModel)
+
+    @if (deleteModalModel != null)
+    {
+        <div class="text-center">
+            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                Delete
+            </button>
+        </div>
+
+        @await Html.PartialAsync("~/Views/Shared/Components/MapForm/_DeleteModal.cshtml", deleteModalModel)
+    }
+}
+
+@section GridLeftContent
+{
+    <div class="flex flex-col">
+        <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+            <div class="card-body w-full h-full">
+                <div id="map" class="h-[50vh] w-full rounded-lg"></div>
+            </div>
+        </div>
+        <div class="mt-4 p-4 card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+            <div>
+                <button type="button" id="drawMap" class="py-2.5 sm:py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <div class="flex flex-col text-start">
+                        <p>Click to start drawing on the map</p>
+                        <p><small>Click on the map to set the boundaries.</small></p>
+                    </div>
+                </button>
+                <button type="button" id="deleteBoundaries" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-hidden focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
+                    <div class="flex flex-col text-start">
+                        <p>Remove boundaries from map</p>
+                        <p><small>Removes existing boundaries on the map.</small></p>
+                    </div>
+                </button>
+            </div>
+            <p class="text-sm text-red-600 mt-2">
+                @Html.ValidationMessageFor(model => model.Area)
+            </p>
+        </div>
+    </div>
+}
+
+@section GridRightContent
+{
+    <form method="post" asp-controller="map" asp-action="submit" id="map_form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Area" />
+
+        <div>
+            <div class="mb-6 border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-lg">
+                @Html.EditorFor(m => m.Name, new ViewDataDictionary(ViewData) {
+                    { "Placeholder", "Enter Name..." },
+                    { "Label", "Name" }
+                })
+            </div>
+
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                @Html.EditorFor(m => m.ImageUrl, new ViewDataDictionary(ViewData) {
+                    { "Label", "Image (URL)" },
+                })
+                <div class="flex justify-center">
+                    <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+
+                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image" />
+                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                </div>
+            </div>
+
+            <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Map geo coordinates</label>
+                <p class="text-xs text-gray-500 dark:text-gray-400">In order to set the location of the given map image and its bounds, the exact bottom and top coordinates are needed. With this the map can be optimized for the user's experience. </p>
+            
+                <div class="flex pt-4">
+                    @Html.EditorFor(m => m.TopLeft, new ViewDataDictionary(ViewData) {
+                        { "Label", "Top left" }
+                    })
+                    @Html.EditorFor(m => m.TopRight, new ViewDataDictionary(ViewData) {
+                        { "Label", "Top right" }
+                    })
+                </div>
+                <div class="flex pt-2">
+                    @Html.EditorFor(m => m.BottomLeft, new ViewDataDictionary(ViewData) {
+                        { "Label", "Bottom left" }
+                    })
+                    @Html.EditorFor(m => m.BottomRight, new ViewDataDictionary(ViewData) {
+                        { "Label", "Bottom right" }
+                    })
+                </div>
+            </div>
+
+            <div class="mt-2 py-4 relative z-10">
+                <div class="flex justify-end gap-3 w-full">
+                    @if (!string.IsNullOrEmpty(Model.Id))
+                    {
+                        <a asp-controller="Map" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                            Cancel
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                            Cancel
+                        </a>
+                    }
+
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        @((!string.IsNullOrEmpty(Model.Id) && Model.Id != Guid.Empty.ToString() && Model.Id != "00000000-0000-0000-0000-000000000000") ? "Update" : "Create")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="~/js/preview-map-image.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/map/park-boundaries-maplibre.js" asp-append-version="true" type="module"></script>
+}

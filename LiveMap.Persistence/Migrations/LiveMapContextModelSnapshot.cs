@@ -68,13 +68,15 @@ namespace LiveMap.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("geometry");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Point>("Position")
+                    b.Property<Polygon>("Bounds")
                         .IsRequired()
                         .HasColumnType("geometry");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

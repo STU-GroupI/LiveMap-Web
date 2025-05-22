@@ -24,7 +24,7 @@ public class PoiListViewModelProvider : IViewModelProvider<PoiListViewModel>
     public async Task<PoiListViewModel> Hydrate(PoiListViewModel viewModel)
     {
         var mapsResult = await _mapService.Get(0, 1);
-        var map = mapsResult.Value?.FirstOrDefault();
+        var map = mapsResult.Value?.Items.FirstOrDefault();
 
         var poisResult = await _pointOfInterestService.Get(map!.Id.ToString(), null, null);
         var pois = poisResult.Value ?? [];
