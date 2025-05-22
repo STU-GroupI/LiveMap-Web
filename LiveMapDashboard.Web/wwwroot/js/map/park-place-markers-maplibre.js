@@ -119,7 +119,7 @@ function PlaceDefaultMarker(shouldCenter) {
         .addTo(map);
 
     window.mapCenter = marker;
-    
+
     // Store the marker in the markers array
     markers.push(marker);
     if (shouldCenter) {
@@ -129,7 +129,7 @@ function PlaceDefaultMarker(shouldCenter) {
 
 
 document.querySelector('[id$="Category"]').addEventListener('change', () => {
-        placeMarkerOnMap(false); // Update the marker's appearance
+    placeMarkerOnMap(false); // Update the marker's appearance
 });
 
 document.getElementById('applyLocationButton').addEventListener('click', () => {
@@ -138,17 +138,19 @@ document.getElementById('applyLocationButton').addEventListener('click', () => {
         return;
     }
 
-    updateCoordinateFields(clickedLngLat.lat, clickedLngLat.lng);
+    document.getElementById('Coordinate_Latitude').value = clickedLngLat.lat.toString();
+    document.getElementById('Coordinate_Longitude').value = clickedLngLat.lng.toString();
 });
 
 map.on('load', () => {
-    const coords = getCoordinateFromFields();
+    const long = parseFloat(document.getElementById('Coordinate_Longitude').value.replace(',', '.'))
+    const lat = parseFloat(document.getElementById('Coordinate_Latitude').value.replace(',', '.'))
 
-    if (coords && (coords.lng !== 0 || coords.lat !== 0)) {
-        const clampedLong = Math.max(Math.min(coords.lng, 90), -90);
-        const clampedLat = Math.max(Math.min(coords.lat, 90), -90);
+    if ((long && lat) && (long !== 0 && lat !== 0)) {
+        const clampedLong = Math.max(Math.min(long, 90), -90);
+        const clampedLat = Math.max(Math.min(lat, 90), -90);
 
-        clickedLngLat = {lng: clampedLong, lat: clampedLat};
+        clickedLngLat = { lng: clampedLong, lat: clampedLat };
         placeMarkerOnMap(true);
     }
 });
