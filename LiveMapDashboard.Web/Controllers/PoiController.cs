@@ -1,4 +1,5 @@
 using LiveMap.Application.Infrastructure.Services;
+using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
@@ -15,10 +16,19 @@ public class PoiController : Controller
         [FromRoute] string mapId,
         [FromServices] IViewModelProvider<PoiListViewModel> provider)
     {
-        var viewModel = await provider.Hydrate(new PoiListViewModel()
+        var viewModel = new PoiListViewModel()
         {
             MapId = Guid.Parse(mapId),
-        });
+        };
+        try
+        {
+            viewModel = await provider.Hydrate(viewModel);
+        }
+        catch(MapNotFoundException e)
+        {
+            return View(viewModel);
+        }
+        
         return View(viewModel);
     }
 

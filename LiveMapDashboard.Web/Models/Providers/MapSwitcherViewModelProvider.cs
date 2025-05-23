@@ -40,8 +40,8 @@ public class MapSwitcherViewModelProvider : IViewModelProvider<MapSwitcherViewMo
 
         IEnumerable<(string id, string name)> maps = await _mapService.Get(null, null) switch
         {
-            var result when result is { IsSuccess: true, Value: { Length: >0 } } 
-                => result.Value
+            var result when result is { IsSuccess: true, Value: { TotalCount: >0 } } 
+                => result.Value.Items
                     .Select(map => (map.Id.ToString(), map.Name))
                     .AsEnumerable(),
 

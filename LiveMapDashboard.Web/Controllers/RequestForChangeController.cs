@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
@@ -76,7 +77,20 @@ public class RequestForChangeController : Controller
         [FromQuery] bool? ascending,
         [FromServices] IViewModelProvider<RequestForChangeListViewModel> provider)
     {
-        var viewModel = await provider.Hydrate(new RequestForChangeListViewModel(Guid.Parse(mapId), skip, take, ascending, PaginatedResult<RequestForChange>.Default));
+        var viewModel = new RequestForChangeListViewModel(Guid.Parse(mapId), skip, take, ascending, PaginatedResult<RequestForChange>.Default);
+        try
+        {
+            viewModel = await provider.Hydrate(new RequestForChangeListViewModel(Guid.Parse(mapId), skip, take, ascending, PaginatedResult<RequestForChange>.Default));
+        }
+        catch (MapNotFoundException ex)
+        {
+            const string errorMessage = "The given mapId does not belong to a known map";
+
+            ModelState.AddModelError(string.Empty, errorMessage);
+            ViewData["Error"] = errorMessage;
+            
+            return View(viewModel);
+        }
         return View(viewModel);
     }
 }

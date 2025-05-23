@@ -27,9 +27,9 @@ public class MapSelectionMiddleware
         }
 
         var serviceResult = await mapService.Get(0, 1);
-        if (serviceResult.IsSuccess && serviceResult.Value is { Length: > 0 })
+        if (serviceResult.IsSuccess && serviceResult.Value is { TotalCount: > 0 })
         {
-            var firstMapId = serviceResult.Value[0].Id;
+            var firstMapId = serviceResult.Value.Items[0].Id;
             context.SetSelectedMapId(firstMapId);
         }
 
