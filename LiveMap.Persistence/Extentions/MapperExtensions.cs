@@ -160,8 +160,7 @@ public static class MapperExtensions
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             SubmittedOn = requestForChange.SubmittedOn,
             PoiId = requestForChange.PoiId,
-            Message = requestForChange.Message,
-            ApprovalStatusProp = new ApprovalStatus { Status = requestForChange.ApprovalStatus }
+            Message = requestForChange.Message
         };
     }
 

@@ -21,9 +21,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
 
         rfc.SubmittedOn = DateTime.UtcNow;
         rfc.ApprovalStatus = ApprovalStatus.PENDING;
-        rfc.ApprovalStatusProp = new ApprovalStatus { Status = ApprovalStatus.PENDING };
-        
-        _context.Entry(rfc.ApprovalStatusProp).State = EntityState.Unchanged;
+
         var result = await _context.RequestsForChange.AddAsync(rfc);
         await _context.SaveChangesAsync();
 
@@ -65,6 +63,7 @@ public class RequestForChangeRepository : IRequestForChangeRepository
         return requestForChange?.ToDomainRequestForChange() ?? null;
     }
 
+    // TODO: Add explicit ordering to ensure deterministic paging results
     public async Task<PaginatedResult<RequestForChange>> GetMultiple(Guid parkId, int? skip, int? take, bool? ascending, bool? IsPending)
     {
         if (take != null && take == 0)

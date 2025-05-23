@@ -17,6 +17,7 @@ public class MapRepository : IMapRepository
         _context = context;
     }
 
+    // TODO: Add explicit ordering to ensure deterministic paging results
     public async Task<PaginatedResult<Map>> GetMultiple(int? skip, int? take)
     {
         if (take != null && take == 0)

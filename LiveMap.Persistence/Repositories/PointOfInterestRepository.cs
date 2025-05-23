@@ -15,6 +15,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         _context = context;
     }
 
+    // TODO: Add explicit ordering to ensure deterministic paging results
     public async Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var query = _context.PointsOfInterest
@@ -89,6 +90,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         poi.Image = pointOfInterest.Image;
         poi.CategoryName = pointOfInterest.CategoryName;
         poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
+        poi.StatusName = pointOfInterest.StatusName;
         poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;
 
         // Track opening hours to remove

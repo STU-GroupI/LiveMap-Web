@@ -143,6 +143,7 @@ public class CategoryRepository : ICategoryRepository
         }
     }
 
+    // TODO: Add explicit ordering to ensure deterministic paging results
     public async Task<Category[]> GetMultiple(int? skip, int? take)
     {
         var query = _context.Categories.AsQueryable();
