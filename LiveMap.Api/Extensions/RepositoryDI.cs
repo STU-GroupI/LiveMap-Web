@@ -1,9 +1,9 @@
 ﻿using LiveMap.Persistence.Repositories;
-using PointOfInterest = LiveMap.Application.PointOfInterest;
-using SuggestedPoi = LiveMap.Application.SuggestedPoi;
-using Rfc = LiveMap.Application.RequestForChange;
-using Map = LiveMap.Application.Map;
 using Category = LiveMap.Application.Category;
+using Map = LiveMap.Application.Map;
+using PointOfInterest = LiveMap.Application.PointOfInterest;
+using Rfc = LiveMap.Application.RequestForChange;
+using SuggestedPoi = LiveMap.Application.SuggestedPoi;
 
 
 namespace LiveMap.Api.Extensions;
@@ -14,7 +14,7 @@ public static class RepositoryDI
         services.AddTransient<
             PointOfInterest.Persistance.IPointOfInterestRepository,
             PointOfInterestRepository>();
-        
+
         services.AddTransient<
             Category.Persistance.ICategoryRepository,
             CategoryRepository>();

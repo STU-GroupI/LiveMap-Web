@@ -13,7 +13,7 @@ public class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSi
         _requestForChangeRepository = requestForChangeRepository;
     }
 
-public async Task<UpdateSingleResponse> Handle(UpdateSingleRequest request)
+    public async Task<UpdateSingleResponse> Handle(UpdateSingleRequest request)
     {
         return new UpdateSingleResponse(await _requestForChangeRepository.UpdateAsync(request.Rfc));
     }

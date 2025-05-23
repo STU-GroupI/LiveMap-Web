@@ -95,7 +95,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
 
         // Track opening hours to remove
         var openingHoursToRemove = new List<SqlOpeningHours>();
-        
+
         foreach (var openingHour in poi.OpeningHours)
         {
             var data = pointOfInterest.OpeningHours?.FirstOrDefault(oh =>
@@ -125,7 +125,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             {
                 continue;
             }
-            
+
             var newSqlOpeningHour = new SqlOpeningHours
             {
                 Id = Guid.NewGuid(),
@@ -178,7 +178,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             // Currently, we can do it this way. But if an exception is thrown within the scope
             // of an active transaction, it is automagically rolled back. Thats why you don't
             // see me do it in the cascading delete of the suggested POI's
-            
+
             await transaction.RollbackAsync();
             throw;
         }

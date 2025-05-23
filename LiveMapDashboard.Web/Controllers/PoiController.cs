@@ -26,13 +26,13 @@ namespace LiveMapDashboard.Web.Controllers
             {
                 var back = HttpContext?.Request?.Headers?.ContainsKey("Referer") ?? false;
 
-                string backValue = back 
-                    ? HttpContext!.Request.Headers["Referer"].ToString() 
+                string backValue = back
+                    ? HttpContext!.Request.Headers["Referer"].ToString()
                     : string.Empty;
-                return back 
-                    ? Redirect(backValue) 
+                return back
+                    ? Redirect(backValue)
                     : RedirectToAction(nameof(Index));
-                    
+
             }
 
             var viewModel = await provider.Hydrate(PoiCrudformViewModel.Empty with
@@ -64,21 +64,21 @@ namespace LiveMapDashboard.Web.Controllers
             var poiId = viewModel.Id is not null
                 ? Guid.Parse(viewModel.Id)
                 : Guid.Empty;
-            
+
             if (poiId == Guid.Empty)
             {
                 ViewData["ErrorMessage"] = "The point of interest was not found.";
                 return View("PoiForm", await provider.Provide());
             }
-            
+
             var result = await service.Delete(poiId);
-            
+
             if (result.IsSuccess)
             {
                 ViewData["SuccessMessage"] = "The point of interest and its contents where successfully deleted!";
                 return RedirectToAction(nameof(Index));
             }
-            
+
             ViewData["ErrorMessage"] = result.StatusCode switch
             {
                 HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
@@ -86,7 +86,7 @@ namespace LiveMapDashboard.Web.Controllers
                 HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
                 _ => "Something went wrong while trying to contact the application. Please try again later"
             };
-            
+
             return View("PoiForm", await provider.Provide());
         }
 
@@ -115,7 +115,7 @@ namespace LiveMapDashboard.Web.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            
+
             if (result.IsSuccess)
             {
                 ViewData["SuccessMessage"] = "Your request was successfully processed!";
@@ -130,7 +130,7 @@ namespace LiveMapDashboard.Web.Controllers
                     _ => "Something went wrong while trying to contact the application. Please try again later"
                 };
             }
-            
+
             return View("PoiForm", await provider.Hydrate(viewModel));
         }
     }

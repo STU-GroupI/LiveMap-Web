@@ -4,7 +4,6 @@ using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using System.Text;
 using System.Text.Json;
-using static NetTopologySuite.Geometries.Utilities.GeometryMapper;
 
 namespace LiveMap.Infrastructure.Services;
 

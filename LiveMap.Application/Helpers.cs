@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace LiveMap.Application;
 
@@ -33,8 +28,8 @@ public static class Helpers
             .Where(type => !type.IsAbstract && !type.IsInterface)
             .SelectMany(type =>
                 type.GetInterfaces()
-                    .Where(i => i.IsGenericType && 
-                        (i.GetGenericTypeDefinition() == handlerTypeTemplate 
+                    .Where(i => i.IsGenericType &&
+                        (i.GetGenericTypeDefinition() == handlerTypeTemplate
                         || i.GetGenericTypeDefinition() == fireAndForgetHandlerTemplate))
                     .Select(i => new AssemblyScanResult(assembly, i, type))
             );

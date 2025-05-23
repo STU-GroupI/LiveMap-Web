@@ -1,10 +1,6 @@
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Repositories;
 using Shouldly;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace LiveMapDashboard.Tests.Perstistance.RepositoryTests;
 

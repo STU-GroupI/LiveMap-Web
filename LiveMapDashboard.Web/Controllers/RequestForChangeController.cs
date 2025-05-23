@@ -18,14 +18,15 @@ namespace LiveMapDashboard.Web.Controllers
             [FromServices] IViewModelProvider<RequestForChangeFormViewModel> provider)
         {
             var viewModel = await provider.Hydrate(new RequestForChangeFormViewModel(
-                Rfc: new() { 
-                    Id = Guid.Parse(id), 
-                    SubmittedOn = default, 
+                Rfc: new()
+                {
+                    Id = Guid.Parse(id),
+                    SubmittedOn = default,
                     ApprovalStatus = ApprovalStatus.PENDING,
-                }, 
+                },
                 CrudformViewModel: PoiCrudformViewModel.Empty));
-            
-            if(viewModel.Rfc.ApprovalStatus != ApprovalStatus.PENDING)
+
+            if (viewModel.Rfc.ApprovalStatus != ApprovalStatus.PENDING)
             {
                 return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });
             }
@@ -40,12 +41,12 @@ namespace LiveMapDashboard.Web.Controllers
             [FromServices] IViewModelProvider<RequestForChangeListViewModel> indexProvider,
             [FromServices] IRequestForChangeService requestForChangeService)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View("form", await formProvider.Hydrate(viewModel));
             }
             var result = await requestForChangeService.ApproveRequestForChange(
-                viewModel.Rfc, 
+                viewModel.Rfc,
                 viewModel.CrudformViewModel.ToDomainPointOfInterest());
 
             return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });

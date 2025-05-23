@@ -1,7 +1,6 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Infrastructure.Extensions;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace LiveMap.Infrastructure.Services;

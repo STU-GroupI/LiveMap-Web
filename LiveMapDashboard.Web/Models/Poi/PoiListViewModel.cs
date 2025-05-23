@@ -1,6 +1,4 @@
-﻿using LiveMap.Domain.Models;
-
-namespace LiveMapDashboard.Web.Models.Poi
+﻿namespace LiveMapDashboard.Web.Models.Poi
 {
     public sealed record PoiListViewModel()
     {

@@ -1,5 +1,4 @@
 ﻿using LiveMap.Api.Models.PointOfInterest;
-using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
@@ -114,7 +113,7 @@ public class PointOfInterestController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
-    
+
     /// <summary>
     /// Updates a POI for the given request data
     /// </summary>
@@ -164,7 +163,7 @@ public class PointOfInterestController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
-    
+
     /// <summary>
     /// Deletes a POI with the given id
     /// </summary>
@@ -182,7 +181,7 @@ public class PointOfInterestController : ControllerBase
     {
         var request = new DeleteSingleRequest(Guid.Parse(id));
         var result = await handler.Handle(request);
-        if(!result)
+        if (!result)
         {
             return NotFound();
         }

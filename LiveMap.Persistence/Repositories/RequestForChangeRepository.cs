@@ -31,12 +31,12 @@ public class RequestForChangeRepository : IRequestForChangeRepository
     public async Task<RequestForChange?> UpdateAsync(RequestForChange requestForChange)
     {
         var existingRfc = await _context.RequestsForChange.FirstOrDefaultAsync(r => r.Id == requestForChange.Id);
-        
+
         if (existingRfc == null)
         {
             return null;
         }
-        
+
         existingRfc.ApprovalStatus = requestForChange.ApprovalStatus;
         existingRfc.ApprovedOn = requestForChange.ApprovedOn;
         existingRfc.Message = requestForChange.Message;
@@ -79,14 +79,14 @@ public class RequestForChangeRepository : IRequestForChangeRepository
                 .Include(rfc => rfc.SuggestedPoi)
                 .Where(rfc => parkId == (rfc.PoiId == null ? rfc.SuggestedPoi!.MapId : rfc.Poi!.MapId))
                 .AsQueryable();
-        } 
+        }
         catch (Exception)
         {
             throw new Exception($"If you ever see this being called, some of your RFC data is corrupt");
         }
 
 
-        if(IsPending is bool isPendingValue)
+        if (IsPending is bool isPendingValue)
         {
             query = isPendingValue switch
             {

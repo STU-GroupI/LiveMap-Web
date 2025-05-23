@@ -32,10 +32,10 @@ public class CategoryController : ControllerBase
             var request = new GetSingleRequest(name);
             GetSingleResponse response = await handler.Handle(request);
 
-        if (response.Category is null)
-        {
-            return NotFound();
-        }
+            if (response.Category is null)
+            {
+                return NotFound();
+            }
 
             var category = response.Category;
             return Ok(category);

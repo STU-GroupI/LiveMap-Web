@@ -1,6 +1,5 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.Net;
 
 namespace LiveMapDashboard.Web.Extensions.Controllers;
@@ -30,12 +29,12 @@ public static class ControllerExtensions
             messages: messages);
     }
     public static void BuildResponseMessage<T>(
-        this Controller controller, 
+        this Controller controller,
         BackendApiHttpResponse<T> result,
         IDictionary<string, object?> dataStore,
         Dictionary<string, string>? messages = null)
     {
-        if(messages is null)
+        if (messages is null)
         {
             messages = controller.CreateMessageDictionary();
         }
@@ -70,7 +69,7 @@ public static class ControllerExtensions
             dataStore: controller.ViewData,
             messages: messages);
     }
-    
+
     public static void BuildResponseMessageForRedirect(
         this Controller controller,
         BackendApiHttpResponse result,
@@ -81,7 +80,7 @@ public static class ControllerExtensions
             dataStore: controller.TempData,
             messages: messages);
     }
-   
+
     public static void BuildResponseMessage(
         this Controller controller,
         BackendApiHttpResponse result,
@@ -108,13 +107,13 @@ public static class ControllerExtensions
             };
         }
     }
-    
+
     #endregion Response message non-generic
-    
+
     public static Dictionary<string, string> CreateMessageDictionary(
         this Controller controller,
-        string success = "Your request was successfully processed!", 
-        string error = "The submitted data was invalid. Please check the data you submitted.") 
+        string success = "Your request was successfully processed!",
+        string error = "The submitted data was invalid. Please check the data you submitted.")
     {
         return new Dictionary<string, string>
         {

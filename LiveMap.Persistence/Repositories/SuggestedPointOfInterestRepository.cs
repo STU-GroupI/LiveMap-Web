@@ -3,12 +3,6 @@ using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Persistence.Repositories;
 public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepository
@@ -47,8 +41,8 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
     public async Task DeleteWithoutCommitAsync(Guid id)
     {
         var poi = await _context.SuggestedPointsOfInterest.FindAsync(id);
-        
-        if (poi is null) 
+
+        if (poi is null)
             return;
 
         _context.SuggestedPointsOfInterest.Remove(poi);

@@ -1,5 +1,4 @@
-﻿using LiveMap.Domain.Models;
-using LiveMap.Domain.Pagination;
+﻿using LiveMap.Domain.Pagination;
 
 namespace LiveMap.Application.Map.Persistance;
 using Models = Domain.Models;

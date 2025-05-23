@@ -1,12 +1,10 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Text.Json;
 
 namespace LiveMapDashboard.Web.Controllers
 {

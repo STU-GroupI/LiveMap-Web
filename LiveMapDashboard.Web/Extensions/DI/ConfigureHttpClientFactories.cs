@@ -19,7 +19,7 @@ namespace LiveMapDashboard.Web.Extensions.DI
             this IServiceCollection services)
         {
             services.AddHttpClient(
-                IHttpClientFactoryExtensions.BackendClientName, 
+                IHttpClientFactoryExtensions.BackendClientName,
                 (serviceProvider, client) =>
                 {
                     var options = serviceProvider

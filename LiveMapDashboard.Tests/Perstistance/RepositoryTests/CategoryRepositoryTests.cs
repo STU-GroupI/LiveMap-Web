@@ -3,8 +3,6 @@ using LiveMap.Persistence;
 using LiveMap.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace LiveMapDashboard.Tests.Perstistance.RepositoryTests;
 

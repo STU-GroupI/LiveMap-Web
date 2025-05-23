@@ -7,10 +7,10 @@ using Models = LiveMap.Domain.Models;
 
 public sealed record PoiCrudformViewModel(
     string? Id,
-    string Title, 
-    string Category, 
+    string Title,
+    string Category,
     string? Image,
-    string Description, 
+    string Description,
     bool IsWheelchairAccessible,
     string MapId,
     Models.Coordinate Coordinate,

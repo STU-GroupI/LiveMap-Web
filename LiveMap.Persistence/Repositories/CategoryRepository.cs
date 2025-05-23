@@ -1,12 +1,6 @@
 ﻿using LiveMap.Application.Category.Persistance;
 using LiveMap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiveMap.Persistence.Repositories;
 public class CategoryRepository : ICategoryRepository
@@ -52,7 +46,7 @@ public class CategoryRepository : ICategoryRepository
                 await transaction.RollbackAsync();
                 return false;
             }
-            
+
             if (oldName == newName)
             {
                 // Just update icon name
@@ -62,7 +56,7 @@ public class CategoryRepository : ICategoryRepository
 
                 return true;
             }
-            
+
             //Create a new category entity with the new name
             Category newCategory = new Category
             {
@@ -163,13 +157,13 @@ public class CategoryRepository : ICategoryRepository
         {
             ComputeCategoryInUse(category);
         }
-        
+
         return categories;
     }
 
     public async Task<Category?> GetSingle(string name)
     {
-        if(name == Category.EMPTY)
+        if (name == Category.EMPTY)
         {
             return null;
         }
@@ -179,10 +173,10 @@ public class CategoryRepository : ICategoryRepository
         {
             ComputeCategoryInUse(category);
         }
-        
+
         return await _context.Categories.FindAsync(name);
     }
-    
+
     private void ComputeCategoryInUse(Category category)
     {
         category.InUse = _context.PointsOfInterest.Any(poi => poi.CategoryName == category.CategoryName);

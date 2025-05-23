@@ -1,5 +1,4 @@
-﻿using Bogus.DataSets;
-using LiveMap.Application.Map.Persistance;
+﻿using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
@@ -131,7 +130,7 @@ public class MapRepository : IMapRepository
             _context.RequestsForChange.RemoveRange(requestsForChangeToDelete);
             _context.PointsOfInterest.RemoveRange(poisToDelete);
             _context.Maps.Remove(map);
-            
+
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();

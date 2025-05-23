@@ -15,8 +15,8 @@ public class ApproveRfcUnitOfWork : IApproveRfcUnitOfWork
     public ApproveRfcUnitOfWork(
         LiveMapContext liveMapContext)
     {
-        _rfcRepository = new (liveMapContext);
-        _pointOfInterestRepository = new (liveMapContext);
+        _rfcRepository = new(liveMapContext);
+        _pointOfInterestRepository = new(liveMapContext);
         _suggestedPointOfInterestRepository = new(liveMapContext);
         _liveMapContext = liveMapContext;
     }
@@ -29,7 +29,7 @@ public class ApproveRfcUnitOfWork : IApproveRfcUnitOfWork
         }
 
         PointOfInterest? poi = null;
-        
+
         try
         {
             await using var transaction = await _liveMapContext.Database.BeginTransactionAsync();
