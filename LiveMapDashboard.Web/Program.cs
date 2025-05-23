@@ -1,5 +1,6 @@
 using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Extensions.DI;
+using System.Globalization;
 using LiveMapDashboard.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,9 @@ builder.Services.ConfigureHttpClients();
 builder.Services.RegisterServices();
 builder.Services.RegisterViewModelProviders();
 
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +27,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseMiddleware<MapNotFoundExceptionHandlingMiddleware>();
+
+
 
 app.UseHttpsRedirection();
 app.UseRouting();

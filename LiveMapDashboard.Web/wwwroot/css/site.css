@@ -36,8 +36,7 @@ body {
 #alertContainer {
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 20px;
     z-index: 1050; /* Make sure the alert is above other content */
 }
 
@@ -71,4 +70,9 @@ body {
     padding: 1px;
     background-color: white;
     border: 2px solid black;
+}
+
+.iconList{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
 }

@@ -1,5 +1,7 @@
-﻿using LiveMap.Application.Map.Persistance;
+﻿using Bogus.DataSets;
+using LiveMap.Application.Map.Persistance;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +17,15 @@ public class MapRepository : IMapRepository
         _context = context;
     }
 
-    public async Task<ICollection<Map>> GetMultiple(int? skip, int? take)
+    public async Task<PaginatedResult<Map>> GetMultiple(int? skip, int? take)
     {
+        if (take != null && take == 0)
+        {
+            take = 1;
+        }
+
         var query = _context.Maps.AsQueryable();
+        int totalCount = await query.CountAsync();
 
         if (skip is int fromValue)
         {
@@ -30,14 +38,12 @@ public class MapRepository : IMapRepository
         }
 
         var result = await query.ToListAsync();
-
         if (result is not { Count: > 0 })
         {
-            return [];
+            return new();
         }
 
-        return result.Select(map => map.ToDomainMap())
-            .ToList();
+        return new(result.Select(map => map.ToDomainMap()).ToList(), take, skip, totalCount);
     }
 
     public async Task<Map?> GetSingle(Guid id)
@@ -55,40 +61,85 @@ public class MapRepository : IMapRepository
         return map.ToDomainMap();
     }
 
-    public async Task<bool> UpdateMapBorder(Guid id, Coordinate[] coords)
+    public async Task<Map> CreateAsync(Map map)
     {
-        SqlMap? map = await _context.Maps.FindAsync(id);
+        var newMap = map.ToSqlMap();
+
+        var result = await _context.Maps.AddAsync(newMap);
+        await _context.SaveChangesAsync();
+
+        return result.Entity.ToDomainMap();
+    }
+
+    public async Task<Map?> Update(Map map)
+    {
+        var foundMap = await _context.Maps
+            .Where(m => m.Id == map.Id)
+            .FirstOrDefaultAsync();
+
+        if (foundMap is null)
+        {
+            return null;
+        }
+
+        foundMap.Name = map.Name;
+        foundMap.Bounds = map.Bounds.ToPolygon();
+        foundMap.Border = map.Area.ToPolygon();
+        foundMap.ImageUrl = map.ImageUrl ?? null;
+
+        await _context.SaveChangesAsync();
+
+        return foundMap.ToDomainMap();
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        SqlMap? map = await _context.Maps
+            .Where(map => map.Id == id)
+            .FirstOrDefaultAsync();
 
         if (map is null)
         {
             return false;
         }
-        map.Border = coords.ToPolygon();
 
-        /*
-         * An example of what could go wrong. In an ideal scenario you would pass back a Result<T> object. A result could be a success or a failure, containing detailed information.
-         * We would return a Success<T>(T Value) or a Failure<TParams, TMessage>(TParams Parameters, TMessage Message)
-         * 
-         * Currently we handle this with straight up exceptions, but if we want to pass a more detailed result back, the above should be considered.
-        */
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
         try
         {
-            _context.Maps.Update(map);
-            _context.SaveChanges();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            return false;
-        }
-        catch (DbUpdateException)
-        {
-            return false;
+            var suggestedPoisToDelete = await _context.SuggestedPointsOfInterest
+                .Where(sugPoi => sugPoi.MapId == id)
+                .ToListAsync();
+
+            var poisToDelete = await _context.PointsOfInterest
+                .Where(poi => poi.MapId == id)
+                .ToListAsync();
+
+            var requestsForChangeToDelete = await _context.RequestsForChange
+                .Where(rfc => (rfc.Poi != null && poisToDelete.Contains(rfc.Poi)) ||
+                              (rfc.SuggestedPoi != null && suggestedPoisToDelete.Contains(rfc.SuggestedPoi)))
+                .ToListAsync();
+
+            foreach (var request in requestsForChangeToDelete)
+            {
+                request.SuggestedPoi = null;
+                request.Poi = null;
+            }
+
+            _context.SuggestedPointsOfInterest.RemoveRange(suggestedPoisToDelete);
+            _context.RequestsForChange.RemoveRange(requestsForChangeToDelete);
+            _context.PointsOfInterest.RemoveRange(poisToDelete);
+            _context.Maps.Remove(map);
+            
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return true;
         }
         catch (Exception)
         {
-            return false;
+            await transaction.RollbackAsync();
+            throw;
         }
-
-        return true;
     }
 }

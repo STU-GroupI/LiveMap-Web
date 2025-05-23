@@ -57,10 +57,10 @@ public class CategoryController : Controller
         {
             var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
                 => await categoryService.UpdateSingle(
-                    new() { CategoryName = vm.CategoryName!, IconName = viewModel.IconName },
-                    new() { CategoryName = vm.NewValue, IconName = viewModel.IconName }),
+                    new() { CategoryName = vm.CategoryName!, IconName = "mdi" + viewModel.IconName },
+                    new() { CategoryName = vm.NewValue, IconName = "mdi" + viewModel.IconName }),
             _ => await categoryService.CreateSingle(
-                    new() { CategoryName = viewModel.NewValue, IconName = viewModel.IconName })
+                    new() { CategoryName = viewModel.NewValue, IconName = "mdi" + viewModel.IconName })
         };
 
         this.BuildResponseMessageForRedirect(result);
