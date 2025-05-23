@@ -7,7 +7,11 @@
 @section TopBarActions
 {
     <div class="py-4 flex justify-end">
-        <a asp-controller="Poi" asp-action="PoiCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <a asp-controller="Poi" 
+           asp-action="PoiCreateForm" 
+           asp-route-mapId="@Model.MapId" 
+           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+           
             New Point Of Interest
         </a>
     </div>    
@@ -21,21 +25,21 @@
                 <div class="border border-gray-200 rounded-lg overflow-hidden dark:border-neutral-700">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                         <thead>
-                        <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Id
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Name
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
-                                Action
-                            </th>
-                        </tr>
-                        </thead>
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                    Id
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                    Name
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
+                                    Action
+                                </th>
+                            </tr>
+                            </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                         @foreach (var poi in Model.Pois)
                         {
@@ -47,10 +51,13 @@
                                     @poi.Name
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                    <a asp-action="form" asp-controller="Poi" asp-route-id="@poi.Id"
-                                       class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
-                                        Edit
-                                    </a>
+                                        <a asp-action="PoiUpdateForm"
+                                           asp-controller="Poi"
+                                           asp-route-mapId="@Model.MapId"
+                                           asp-route-id="@poi.Id"
+                                           class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
+                                            Edit
+                                        </a>
 
                                     <button type="button" class="inline-flex items-center gap-x-2 pl-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 focus:outline-hidden focus:text-red-800 disabled:opacity-50 disabled:pointer-events-none dark:text-red-500 dark:hover:text-red-400 dark:focus:text-red-400" aria-haspopup="dialog" aria-expanded="false" aria-controls="delete-alert-@poi.Id" data-hs-overlay="#delete-alert-@poi.Id">
                                         Delete
