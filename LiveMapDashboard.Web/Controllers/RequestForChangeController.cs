@@ -82,7 +82,7 @@ public class RequestForChangeController : Controller
         {
             viewModel = await provider.Hydrate(new RequestForChangeListViewModel(Guid.Parse(mapId), skip, take, ascending, PaginatedResult<RequestForChange>.Default));
         }
-        catch (MapNotFoundException ex)
+        catch (MapNotFoundException)
         {
             const string errorMessage = "The given mapId does not belong to a known map";
 

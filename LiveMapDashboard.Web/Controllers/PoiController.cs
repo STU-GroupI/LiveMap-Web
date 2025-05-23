@@ -24,7 +24,7 @@ public class PoiController : Controller
         {
             viewModel = await provider.Hydrate(viewModel);
         }
-        catch(MapNotFoundException e)
+        catch(MapNotFoundException)
         {
             return View(viewModel);
         }
