@@ -50,10 +50,9 @@
                     </a>
                     <a class="font-medium @(currentController == "Dashboard" && currentAction == "Park" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
-                       asp-controller="Dashboard"
-                       asp-action="Park"
-                       asp-route-mapId="@mapId">
-                        Park Management
+                       asp-controller="Map"
+                       asp-action="Index">
+                        Map Management
                     </a>
                     <a class="font-medium @(currentController == "Poi" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
