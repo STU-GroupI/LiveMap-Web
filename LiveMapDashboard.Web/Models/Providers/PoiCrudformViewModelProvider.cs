@@ -24,15 +24,12 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
     public async Task<PoiCrudformViewModel> Hydrate(PoiCrudformViewModel viewModel)
     {
         Models.Category[] categories = (await _categoryService.Get(null, null)).Value ?? [];
-        var map = (await _mapService.Get(null, null)).Value?.Items;
-        var mapId = map is { Count: > 1 } ? map[0].Id : Guid.Empty;
 
         if (!Guid.TryParse(viewModel.Id, out var poiId))
         {
             return viewModel with
             {
-                Categories = categories,
-                MapId = mapId.ToString(),
+                Categories = categories
             };
         }
 

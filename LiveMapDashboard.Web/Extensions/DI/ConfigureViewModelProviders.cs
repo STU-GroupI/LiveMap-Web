@@ -1,4 +1,5 @@
 ﻿using LiveMapDashboard.Web.Models.Category;
+using LiveMapDashboard.Web.Models.Dashboard;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
@@ -32,6 +33,9 @@ public static class ConfigureViewModelProviders
                 CategoryCrudFormViewModelProvider>()
             .AddTransient<
                 IViewModelProvider<RequestForChangeFormViewModel>,
-                RequestForChangeFormViewModelProvider>();
+                RequestForChangeFormViewModelProvider>()
+            .AddTransient<
+                IViewModelProvider<MapSwitcherViewModel>,
+                MapSwitcherViewModelProvider>();
     }
 }
