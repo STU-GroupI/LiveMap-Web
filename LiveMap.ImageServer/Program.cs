@@ -24,6 +24,7 @@ namespace LiveMap.ImageServer
             app.UseAuthorization();
 
 
+            app.UseStaticFiles();
             app.MapControllers();
 
             app.Run();
