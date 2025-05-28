@@ -1,5 +1,6 @@
 ﻿using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using System.Text.Json;
 
 namespace LiveMap.Persistence.Extensions;
 public static class NetTopologyExtensions
@@ -11,6 +12,8 @@ public static class NetTopologyExtensions
     public static Domain.Models.Coordinate[] ToDomainCoordinates(this Polygon polygon) => polygon.Coordinates
         .Select(x => x.ToDomainCoordinate())
         .ToArray();
+
+    public static string ToJsonCoordinates(this Domain.Models.Coordinate[] coordinates) => JsonSerializer.Serialize(coordinates);
 
     public static Point ToSqlPoint(this Domain.Models.Coordinate coordinate)
     {

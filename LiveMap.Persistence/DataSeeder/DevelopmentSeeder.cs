@@ -13,17 +13,25 @@ public static class DevelopmentSeeder
 {
     private static Faker<SqlMap> GetMapFaker()
     {
+        var random = new Random();
+        Point randomPoint = new Point(
+           random.NextDouble() * 180 - 90,  // Latitude: Random value between -90 and 90
+           random.NextDouble() * 360 - 180 // Longitude: Random value between -180 and 180
+        );
+
         return new Faker<SqlMap>()
             .RuleFor(m => m.Id, f => f.Random.Guid())
             .RuleFor(m => m.Name, f => f.Lorem.Word())
-            .RuleFor(m => m.Position, f => new(
-                f.Address.Latitude(),
-                f.Address.Longitude()))
             .RuleFor(m => m.Border, (f, m) => CreateIrregularPolygon(
-                m.Position.X,
-                m.Position.Y,
+                randomPoint.X,
+                randomPoint.Y,
                 radius: f.Random.Double(0.01d, 0.05d),  // Random radius between 0.01 and 0.05 degrees
-                numberOfPoints: f.Random.Int(25, 70)));  // Random points between 25 and 70 for irregularity
+                numberOfPoints: 4))  // Random points between 25 and 70 for irregularity
+            .RuleFor(m => m.Bounds, (f, m) => CreateIrregularPolygon(
+                randomPoint.X,
+                randomPoint.Y,
+                radius: f.Random.Double(0.05d, 0.055d),  // Random radius between 0.01 and 0.05 degrees
+                numberOfPoints: 4));  // Random points between 25 and 70 for irregularity
     }
 
     private static Polygon CreateIrregularPolygon(double centerX, double centerY, double radius, int numberOfPoints = 40)

@@ -1,0 +1,17 @@
+﻿@using LiveMapDashboard.Web.Models.Dashboard;
+@model MapSwitcherViewModel
+
+@{
+    ViewData["Title"] = $"Dashboard: {Model.MapName ?? string.Empty}";
+}
+
+<h1>@ViewData["Title"]</h1>
+@if (Model.MapId is null)
+{
+    <p>
+        Currently no park has been selected. In order to proceed with using the application,
+        please select a park you wish to manage
+    </p>
+}
+
+@await Html.PartialAsync("Components/Dashboard/MapSwitcher", Model)
