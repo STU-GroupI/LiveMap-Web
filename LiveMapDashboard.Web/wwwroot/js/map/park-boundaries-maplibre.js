@@ -6,6 +6,7 @@ MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
 const map = MapFactory.createMap('map', [4.729, 52.045], 15);
+window.MapRegistry.formMap = map;
 
 const draw = new MapboxDraw({
     displayControlsDefault: false,

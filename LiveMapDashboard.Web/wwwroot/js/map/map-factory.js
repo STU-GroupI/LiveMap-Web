@@ -136,3 +136,4 @@ const MapFactory = (() => {
 })();
 
 window.MapFactory = MapFactory;
+window.MapRegistry = window.mapRegistry || {};
