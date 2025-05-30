@@ -1,4 +1,5 @@
 using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Extensions.Mappers;
@@ -118,7 +119,8 @@ public class PoiController : Controller
     [Route("[controller]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(
-        [FromServices] IPointOfInterestService service,
+        [FromServices] IPointOfInterestService poiService,
+        [FromServices] IImageServerService imageService,
         [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
         PoiCrudformViewModel viewModel,
         string action)
@@ -128,12 +130,24 @@ public class PoiController : Controller
             return View("PoiForm", await provider.Hydrate(viewModel));
         }
 
+        // Image
+        if (viewModel.ImageFile is IFormFile imageFile)
+        {
+            try
+            {
+                var imageResult = await imageService.Create(ToImage(imageFile));
+                viewModel = viewModel with { Image = imageResult.Value };
+            }
+            catch (Exception) { }
+        }
+
+        // POI
         var poi = viewModel.ToDomainPointOfInterest();
         var isNewPoi = poi.Id == Guid.Empty || poi.Id.ToString() == string.Empty;
 
         var result = isNewPoi
-            ? await service.CreateSingle(poi)
-            : await service.UpdateSingle(poi);
+            ? await poiService.CreateSingle(poi)
+            : await poiService.UpdateSingle(poi);
 
         if (isNewPoi)
         {
@@ -159,5 +173,13 @@ public class PoiController : Controller
         }
         
         return View("PoiForm", await provider.Hydrate(viewModel));
+    }
+
+    public static Image ToImage(IFormFile imageFile)
+    {
+        using var memoryStream = new MemoryStream();
+        imageFile.CopyTo(memoryStream);
+        byte[] imageBytes = memoryStream.ToArray();
+        return new(Convert.ToBase64String(imageBytes));
     }
 }
