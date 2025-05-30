@@ -1,4 +1,7 @@
-// src/modules/canvasState.js
+/**
+ * A simple state object to hold the current state of the canvas.
+ * @type {{offsetX: number, offsetY: number, scale: number, imagePoints: *[]}}
+ */
 export const state = {
     imagePoints: [],
     scale: 1,
@@ -6,6 +9,9 @@ export const state = {
     offsetY: 0,
 };
 
+/**
+ * Resets the state of the canvas to its initial values.
+ */
 export function resetState() {
     state.imagePoints.length = 0;
     state.scale = 1;

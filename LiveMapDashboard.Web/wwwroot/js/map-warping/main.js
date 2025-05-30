@@ -1,4 +1,3 @@
-// src/main.js
 import { ImageUploader } from './modules/ImageUploader.js';
 import { MarkerList } from './modules/MarkerList.js';
 import { CanvasManager } from './modules/CanvasManager.js';
@@ -10,6 +9,7 @@ import {drawCanvas} from "./modules/canvasUtils.js";
 const canvasEl = document.getElementById('image-canvas');
 const image = new Image();
 const mapContainerId = 'warping-map';
+
 
 const canvasManager = new CanvasManager(canvasEl, image);
 const mapManager = new MapManager(mapContainerId, image);
@@ -23,6 +23,8 @@ new ImageUploader({
     }
 });
 
+
+// Updaters and listeners
 MarkerList.update('image-marker-list', state.imagePoints);
 MarkerList.update('map-marker-list', mapPoints);
 

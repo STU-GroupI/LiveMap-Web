@@ -1,3 +1,13 @@
+/**
+ * Computes the affine transformation matrix from a set of source points to set destination points.
+ * * The transformation is defined by this equation:
+ * *   [u]   [a b c] [x]
+ * *   [v] = [d e f] [y]
+ * * where (x, y) are the source points and (u, v) are the destination points.
+ * @param src
+ * @param dst
+ * @returns {*}
+ */
 export function computeAffine(src, dst) {
     const A = [], b = [];
 
@@ -15,6 +25,13 @@ export function computeAffine(src, dst) {
     return numeric.solve(ATA, ATb);
 }
 
+/**
+ * Applies the affine transformation to a point (x, y).
+ * @param t
+ * @param x
+ * @param y
+ * @returns {*[]}
+ */
 export function applyAffine(t, x, y) {
     const [a, b, c, d, e, f] = t;
     return [

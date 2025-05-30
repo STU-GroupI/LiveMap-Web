@@ -2,6 +2,9 @@ import { drawCanvas } from './canvasUtils.js';
 import { setupCanvasEvents } from './canvasEvents.js';
 import { state, resetState } from './canvasState.js';
 
+/**
+ * Manages the canvas for image related operations such as points, scaling, and panning.
+ */
 export class CanvasManager {
     constructor(canvas, image) {
         this.canvas = canvas;

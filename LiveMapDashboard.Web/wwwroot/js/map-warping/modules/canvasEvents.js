@@ -1,6 +1,12 @@
 import { state } from './canvasState.js';
 import { drawCanvas } from './canvasUtils.js';
 
+/**
+ * Sets up event listeners for canvas interactions.
+ * @param canvas
+ * @param image
+ * @param ctx
+ */
 export function setupCanvasEvents(canvas, image, ctx) {
     let dragging = false;
     let lastX, lastY;

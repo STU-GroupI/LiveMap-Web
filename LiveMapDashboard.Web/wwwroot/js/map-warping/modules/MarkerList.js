@@ -1,4 +1,7 @@
-// src/modules/MarkerList.js
+/**
+ * MarkerList module for displaying a list of markers accessible across all modules if needed
+ * @type {{update(*, *): void}}
+ */
 export const MarkerList = {
     update(containerId, points) {
         const container = document.getElementById(containerId);

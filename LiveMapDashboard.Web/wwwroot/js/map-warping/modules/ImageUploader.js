@@ -1,8 +1,10 @@
-// src/modules/ImageUploader.js
 import { drawCanvas } from './canvasUtils.js';
 import { state } from './canvasState.js';
 import { mapPoints, clearMarkers } from './mapState.js';
 
+/**
+ * Handles image uploading and initialization for the canvas.
+ */
 export class ImageUploader {
     constructor({ image, canvasManager, onImageLoaded }) {
         this.canvasManager = canvasManager;
@@ -39,6 +41,7 @@ export class ImageUploader {
 
                         clearMarkers();
                         this.onImageLoaded?.();
+                        showAlert('success', 'Image loaded successfully!');
                     });
                 };
 

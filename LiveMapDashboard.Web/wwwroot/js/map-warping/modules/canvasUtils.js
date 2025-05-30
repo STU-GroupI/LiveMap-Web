@@ -1,5 +1,13 @@
 import { state } from './canvasState.js';
 
+/**
+ * Draws the image on the canvas with the specified scale and offset.
+ * @param ctx
+ * @param image
+ * @param scale
+ * @param offsetX
+ * @param offsetY
+ */
 export function drawCanvas(ctx, image, scale, offsetX, offsetY) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
