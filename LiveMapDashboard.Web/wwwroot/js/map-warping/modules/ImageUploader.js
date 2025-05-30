@@ -21,10 +21,10 @@ export class ImageUploader {
         input.addEventListener('change', (e) => {
             const file = e.target.files[0];
 
+            if (!file) return;
+            
             bottomToolkit.classList.add('opacity-20', 'pointer-events-none');
             step2.classList.add('opacity-20', 'pointer-events-none');
-
-            if (!file) return;
 
             const reader = new FileReader();
             reader.onload = (event) => {

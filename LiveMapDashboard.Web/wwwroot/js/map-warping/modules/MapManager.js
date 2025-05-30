@@ -219,7 +219,7 @@ export class MapManager {
             type: 'raster',
             source: 'image-overlay',
             paint: { 'raster-opacity': 0.8 }
-        });
+        }, 'housenumber');
 
         mapReference.fitBounds([corners[0], corners[2]], { padding: 20 });
     }

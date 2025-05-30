@@ -5,7 +5,9 @@ MapboxDraw.constants.classes.CONTROL_BASE  = 'maplibregl-ctrl';
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
-const map = MapFactory.createMap('map', [4.729, 52.045], 15);
+const map = MapFactory.createMap('map', [4.729, 52.045], 15, {
+    layerToggle: true
+});
 window.MapRegistry.formMap = map;
 
 const draw = new MapboxDraw({
@@ -48,6 +50,7 @@ const draw = new MapboxDraw({
     ]
 });
 map.addControl(draw);
+
 
 map.on('draw.create', onCreateArea);
 map.on('draw.delete', onDeleteArea);

@@ -174,11 +174,12 @@
                     </div>
                 </div>
             </form>
-            <script src="~/js/preview-map-image.js" asp-append-version="true" type="module"></script>
-            <script src="~/js/map/park-boundaries-maplibre.js" asp-append-version="true" type="module"></script>
         </div>
     </div>
-    
+
+    <script src="~/js/preview-map-image.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/map/park-boundaries-maplibre.js" asp-append-version="true" type="module"></script>
+        
     <div id="tab-with-map-background" class="hidden" role="tabpanel" aria-labelledby="tab-with-map-background-item">
         @await Html.PartialAsync("~/Views/Shared/Components/MapForm/_MapWarping.cshtml", Model)
     </div>
@@ -199,7 +200,7 @@
                     </a>
                 }
 
-                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="document.getElementById('map_form').submit();">
+                <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="document.getElementById('map_form').requestSubmit();">
                     @((!string.IsNullOrEmpty(Model.Id) && Model.Id != Guid.Empty.ToString() && Model.Id != "00000000-0000-0000-0000-000000000000") ? "Update" : "Create")
                 </button>
             </div>
