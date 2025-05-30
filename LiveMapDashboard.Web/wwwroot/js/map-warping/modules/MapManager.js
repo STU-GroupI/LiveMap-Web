@@ -135,8 +135,13 @@ export class MapManager {
     addGenerateHandler() {
         document.getElementById('generate').addEventListener('click', () => {
             try {
-                if (state.imagePoints.length < 6 || mapPoints.length < 6 || state.imagePoints.length !== mapPoints.length) {
+                if (state.imagePoints.length < 6 || mapPoints.length < 6) {
                     showAlert('error', 'You need at least 6 matching points on both image and map.');
+                    return;
+                }
+                
+                if (state.imagePoints.length !== mapPoints.length) {
+                    showAlert('error', 'The number of points on the image and map must match.');
                     return;
                 }
 

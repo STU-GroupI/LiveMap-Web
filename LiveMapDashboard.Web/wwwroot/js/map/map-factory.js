@@ -120,6 +120,8 @@ const MapFactory = (() => {
                         button.addEventListener('animationend', () => {
                             button.classList.remove('failShake');
                         }, { once: true });
+                        
+                        showAlert('error', `The background is not set or found. Please create a background first!`);
                     }
                 });
 
