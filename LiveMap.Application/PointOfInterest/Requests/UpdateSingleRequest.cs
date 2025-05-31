@@ -1,5 +1,4 @@
-﻿using Models = LiveMap.Domain.Models;
+﻿namespace LiveMap.Application.PointOfInterest.Requests;
+using Domain.Models;
 
-namespace LiveMap.Application.PointOfInterest.Requests;
-
-public sealed record UpdateSingleRequest(Models.PointOfInterest Poi);
+public sealed record UpdateSingleRequest(PointOfInterest Poi);
