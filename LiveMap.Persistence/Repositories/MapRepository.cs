@@ -5,6 +5,10 @@ using LiveMap.Domain.Pagination;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Prepared;
+using System.Diagnostics;
 
 namespace LiveMap.Persistence.Repositories;
 
@@ -141,5 +145,24 @@ public class MapRepository : IMapRepository
             await transaction.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<Map?> GetClosest(double latitude, double longitude)
+    {
+        var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+
+        // longitude and latitude are swapped here to be in line with the polygon of a map's border
+        var userLocationPoint = geometryFactory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(longitude, latitude));
+
+        SqlMap? closestSqlMap = await _context.Maps
+        .Where(m => m.Border.Intersects(userLocationPoint))
+        .FirstOrDefaultAsync();
+
+        if (closestSqlMap is null)
+        {
+            return null;
+        }
+
+        return closestSqlMap.ToDomainMap();
     }
 }
