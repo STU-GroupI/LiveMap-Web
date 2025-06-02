@@ -22,10 +22,15 @@
 }
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
-    @await RenderSectionAsync("GridTopContent", required: false)
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        @await RenderSectionAsync("GridLeftContent", required: false)
-        @await RenderSectionAsync("GridRightContent", required: false)
+    <div class="flex flex-wrap">
+        <div class="border-gray-200 dark:border-neutral-700">
+            <nav class="flex gap-x-3" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+                @await RenderSectionAsync("VerticalTabButtons", required: false)
+            </nav>
+        </div>
+
+        <div class="mt-3">
+            @await RenderSectionAsync("VerticalTabContent", required: false)
+        </div>
     </div>
-    @await RenderSectionAsync("GridBottomContent", required: false)
 </div>
