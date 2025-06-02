@@ -11,6 +11,7 @@ namespace LiveMapDashboard.Web.Extensions.DI
         {
             services.AddHttpClient();
             services.RegisterBackendHttpClient();
+            services.RegisterImageHttpClient();
 
             return services;
         }
@@ -26,6 +27,23 @@ namespace LiveMapDashboard.Web.Extensions.DI
                         .GetRequiredService<IOptions<BackendConfigurationOptions>>().Value;
 
                     client.BaseAddress = new Uri($"{options.Url}/{options.Api}/");
+                    //client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
+                });
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterImageHttpClient(
+            this IServiceCollection services)
+        {
+            services.AddHttpClient(
+                IHttpClientFactoryExtensions.ImageClientName,
+                (serviceProvider, client) =>
+                {
+                    var options = serviceProvider
+                        .GetRequiredService<IOptions<ImageConfigurationOptions>>().Value;
+
+                    client.BaseAddress = new Uri($"{options.Url}/");
                     //client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
                 });
 

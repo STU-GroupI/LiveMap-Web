@@ -120,7 +120,7 @@ public class PoiController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(
         [FromServices] IPointOfInterestService poiService,
-        [FromServices] IImageServerService imageService,
+        [FromServices] IImageService imageService,
         [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
         PoiCrudformViewModel viewModel,
         string action)

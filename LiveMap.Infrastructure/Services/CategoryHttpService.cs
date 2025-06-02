@@ -16,7 +16,7 @@ public class CategoryHttpService : ICategoryService
         _backendApiService = backendApiService;
     }
 
-    public async Task<BackendApiHttpResponse<Category>> Get(string name)
+    public async Task<ExternalHttpResponse<Category>> Get(string name)
     {
         var uri = new Uri($"{_ENDPOINT}/{name}", UriKind.Relative);
 
@@ -28,7 +28,7 @@ public class CategoryHttpService : ICategoryService
             });
     }
 
-    public async Task<BackendApiHttpResponse<Category[]>> Get(int? skip, int? take)
+    public async Task<ExternalHttpResponse<Category[]>> Get(int? skip, int? take)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
@@ -40,7 +40,7 @@ public class CategoryHttpService : ICategoryService
                 RequestUri = uri
             });
     }
-    public async Task<BackendApiHttpResponse<Category>> CreateSingle(Category category)
+    public async Task<ExternalHttpResponse<Category>> CreateSingle(Category category)
     {
         var uri = new Uri($"{_ENDPOINT}", UriKind.Relative);
         return await _backendApiService.SendRequest<Category>(new HttpRequestMessage
@@ -50,7 +50,7 @@ public class CategoryHttpService : ICategoryService
             Content = new StringContent(JsonSerializer.Serialize(new { CategoryName = category.CategoryName, IconName = category.IconName}), Encoding.UTF8, "application/json")
         });
     }
-    public async Task<BackendApiHttpResponse> Delete(Category category)
+    public async Task<ExternalHttpResponse> Delete(Category category)
     {
         var uri = new Uri($"{_ENDPOINT}/{category.CategoryName}", UriKind.Relative);
         return await _backendApiService.SendRequest(new HttpRequestMessage
@@ -60,7 +60,7 @@ public class CategoryHttpService : ICategoryService
         });
     }
 
-    public async Task<BackendApiHttpResponse<Category>> UpdateSingle(Category oldVal, Category newVal)
+    public async Task<ExternalHttpResponse<Category>> UpdateSingle(Category oldVal, Category newVal)
     {
         var uri = new Uri($"{_ENDPOINT}/{oldVal.CategoryName}", UriKind.Relative);
         return await _backendApiService.SendRequest<Category>(new HttpRequestMessage

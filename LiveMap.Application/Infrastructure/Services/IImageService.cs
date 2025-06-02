@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.Infrastructure.Services;
 
-public interface IImageServerService
+public interface IImageService
 {
-    Task<BackendApiHttpResponse<string>> Create(Image image); // returns url to image
+    Task<ExternalHttpResponse<string>> Create(Image image); // returns url to image
 }

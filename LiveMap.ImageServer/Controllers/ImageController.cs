@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LiveMap.ImageServer.Controllers
 {
-    [Route("apiuwu/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ImageController : Controller
     {
