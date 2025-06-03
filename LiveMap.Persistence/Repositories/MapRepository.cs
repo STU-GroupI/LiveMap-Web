@@ -6,6 +6,7 @@ using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
+using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Prepared;
 using System.Diagnostics;
@@ -152,16 +153,15 @@ public class MapRepository : IMapRepository
         var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
         // longitude and latitude are swapped here to be in line with the polygon of a map's border
-        var userLocationPoint = geometryFactory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(longitude, latitude));
+        var coordinate = geometryFactory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(longitude, latitude));
 
         SqlMap? closestSqlMap = await _context.Maps
-        .Where(m => m.Border.Intersects(userLocationPoint))
+        .Where(m => m.Border.Intersects(coordinate))
         .FirstOrDefaultAsync();
 
-        if (closestSqlMap is null)
-        {
-            return null;
-        }
+        closestSqlMap ??= await _context.Maps
+            .OrderBy(m => m.Border.Distance(coordinate))
+            .FirstOrDefaultAsync();
 
         return closestSqlMap.ToDomainMap();
     }
