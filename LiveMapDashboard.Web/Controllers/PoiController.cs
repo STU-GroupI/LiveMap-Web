@@ -173,11 +173,6 @@ public class PoiController : Controller
 
     public static string ToImage(IFormFile imageFile)
     {
-        //using var memoryStream = new MemoryStream();
-        //imageFile.CopyTo(memoryStream);
-        //byte[] imageBytes = memoryStream.ToArray();
-        //return Convert.ToBase64String(imageBytes);
-
         using var memoryStream = new MemoryStream();
         imageFile.CopyTo(memoryStream);
         byte[] imageBytes = memoryStream.ToArray();

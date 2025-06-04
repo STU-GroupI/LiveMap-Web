@@ -7,6 +7,6 @@ public class CreateSingleHandler : IRequestHandler<CreateSingleRequest, CreateSi
 {
     public async Task<CreateSingleResponse> Handle(CreateSingleRequest request)
     {
-        return new(request.Idk);
+        return new(request.ImageUrl);
     }
 }

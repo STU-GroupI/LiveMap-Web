@@ -1,3 +1,3 @@
 ﻿namespace LiveMap.Application.Images.Requests;
 
-public sealed record CreateSingleRequest(string Idk);
+public sealed record CreateSingleRequest(string ImageUrl);

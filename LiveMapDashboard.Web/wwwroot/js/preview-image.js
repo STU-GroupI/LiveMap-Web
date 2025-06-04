@@ -9,6 +9,7 @@
     });
 });
 
+// KEEP THIS CODE!!!
 //document.addEventListener('DOMContentLoaded', () => {
 //    const imageInput = document.querySelector('#imageUpload');
 //    const previewImage = document.querySelector('#previewImage');
