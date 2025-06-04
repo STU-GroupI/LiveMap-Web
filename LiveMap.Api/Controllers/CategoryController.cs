@@ -2,6 +2,7 @@
 using LiveMap.Application;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
+using LiveMap.Application.Category.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -68,6 +69,14 @@ public class CategoryController : ControllerBase
         };
 
         var request = new CreateSingleRequest(category);
+        var validationResults = new CreateSingleValidator().Validate(request);
+
+        if(!validationResults.IsValid)
+        {
+            var errorMessages = string.Join("\\r", validationResults.Errors.Select(e => e.ErrorMessage));
+            return StatusCode(500, errorMessages);
+        }
+        
         CreateSingleResponse response = await handler.Handle(request);
         return Created("", response.Category);
     }

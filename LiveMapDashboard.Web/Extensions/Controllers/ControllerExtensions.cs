@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Text;
 
 namespace LiveMapDashboard.Web.Extensions.Controllers;
 
@@ -44,13 +45,18 @@ public static class ControllerExtensions
         {
             dataStore["SuccessMessage"] = messages["SuccessMessage"];
         }
+        else if(result.ErrorMessage is not null)
+        {
+            dataStore["ErrorMessage"] = result.ErrorMessage.Value.Message;
+        }
+
         else
         {
             dataStore["ErrorMessage"] = result.StatusCode switch
             {
                 HttpStatusCode.BadRequest => messages["ErrorMessage"],
                 HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
+                HttpStatusCode.ServiceUnavailable => "The application is unavailable. Please try again later.",
                 _ => "Something went wrong while trying to contact the application. Please try again later"
             };
         }
@@ -103,18 +109,19 @@ public static class ControllerExtensions
             {
                 HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
                 HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
+                HttpStatusCode.InternalServerError => result.ErrorMessage.Value.Message, 
+                HttpStatusCode.ServiceUnavailable => "The application is unavailable. Please try again later.",
                 _ => "Something went wrong while trying to contact the application. Please try again later"
             };
         }
     }
-    
+
     #endregion Response message non-generic
-    
+
     public static Dictionary<string, string> CreateMessageDictionary(
         this Controller controller,
-        string success = "Your request was successfully processed!", 
-        string error = "The submitted data was invalid. Please check the data you submitted.") 
+        string success = "Your request was successfully processed!",
+        string error = "The submitted data was invalid. Please check the data you submitted.")
     {
         return new Dictionary<string, string>
         {
