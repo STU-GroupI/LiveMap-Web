@@ -1,4 +1,6 @@
 
+using LiveMap.ImageServer.Extensions;
+
 namespace LiveMap.ImageServer
 {
     public class Program
@@ -8,6 +10,7 @@ namespace LiveMap.ImageServer
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.RegisterRequestHandlers();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

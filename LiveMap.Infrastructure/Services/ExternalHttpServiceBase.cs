@@ -23,7 +23,6 @@ public abstract class ExternalHttpServiceBase
 
             if (result.IsSuccessStatusCode)
             {
-
                 var contentStream = await result.Content.ReadAsStreamAsync();
                 if (contentStream is null || contentStream.Length == 0)
                 {
@@ -33,15 +32,23 @@ public abstract class ExternalHttpServiceBase
                     );
                 }
                 string temp = await result.Content.ReadAsStringAsync();
+                if (typeof(TResult).Equals(typeof(string)))
+                {
+                    return ExternalHttpResponse<TResult>.Success(
+                        statusCode: result.StatusCode,
+                        value: temp as TResult
+                    );
+                }
+
                 TResult? data = await JsonSerializer.DeserializeAsync<TResult>(contentStream, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 });
 
                 return ExternalHttpResponse<TResult>.Success(
-                    statusCode: result.StatusCode,
-                    value: data
-                );
+                        statusCode: result.StatusCode,
+                        value: data
+                    );
             }
 
             string message = (await result.Content.ReadAsStringAsync()) ?? string.Empty;

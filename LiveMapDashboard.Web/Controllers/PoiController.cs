@@ -133,12 +133,8 @@ public class PoiController : Controller
         // Image
         if (viewModel.ImageFile is IFormFile imageFile)
         {
-            try
-            {
-                var imageResult = await imageService.Create(ToImage(imageFile));
-                viewModel = viewModel with { Image = imageResult.Value };
-            }
-            catch (Exception) { }
+            var imageResult = await imageService.Create(new(ToImage(imageFile)));
+            viewModel = viewModel with { Image = imageResult.Value };
         }
 
         // POI
@@ -175,11 +171,21 @@ public class PoiController : Controller
         return View("PoiForm", await provider.Hydrate(viewModel));
     }
 
-    public static Image ToImage(IFormFile imageFile)
+    public static string ToImage(IFormFile imageFile)
     {
+        //using var memoryStream = new MemoryStream();
+        //imageFile.CopyTo(memoryStream);
+        //byte[] imageBytes = memoryStream.ToArray();
+        //return Convert.ToBase64String(imageBytes);
+
         using var memoryStream = new MemoryStream();
         imageFile.CopyTo(memoryStream);
         byte[] imageBytes = memoryStream.ToArray();
-        return new(Convert.ToBase64String(imageBytes));
+
+        // Get content type (e.g., image/png, image/jpeg)
+        string contentType = imageFile.ContentType;
+
+        // Return data URI
+        return $"data:{contentType};base64,{Convert.ToBase64String(imageBytes)}";
     }
 }

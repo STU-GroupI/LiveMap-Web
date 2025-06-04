@@ -4,6 +4,7 @@ using LiveMap.Application.Images.Requests;
 using LiveMap.Application.Images.Responses;
 using LiveMap.ImageServer.Models.Image;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace LiveMap.ImageServer.Controllers
 {
@@ -18,68 +19,54 @@ namespace LiveMap.ImageServer.Controllers
             _env = env;
         }
 
-        //[HttpPost("upload")]
-        //public async Task<IActionResult> Upload(IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //        return BadRequest("No file uploaded.");
-
-        //    var uploadsFolder = Path.Combine(_env.WebRootPath, "images");
-
-        //    if (!Directory.Exists(uploadsFolder))
-        //        Directory.CreateDirectory(uploadsFolder);
-
-        //    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-        //    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        //    using (var stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        await file.CopyToAsync(stream);
-        //    }
-
-        //    var url = $"{Request.Scheme}://{Request.Host}/images/{uniqueFileName}";
-        //    return Ok(new { imageUrl = url });
-        //}
-
-        [HttpPost("upload")]
+        [HttpPost("")]
         public async Task<IActionResult> Upload(
             [FromBody] CreateSingleImageWebRequest webRequest,
             [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
         {
-            if (webRequest.imageFile == null || webRequest.imageFile.Length == 0)
+            if (string.IsNullOrWhiteSpace(webRequest.Image.Base64Image))
             {
-                return StatusCode(StatusCodes.Status400BadRequest, "No file uploaded.");
+                return BadRequest("No image data provided.");
             }
 
             try
             {
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "images");
 
-                // For first time use
                 if (!Directory.Exists(uploadsFolder))
                 {
                     Directory.CreateDirectory(uploadsFolder);
                 }
 
-                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(webRequest.imageFile.FileName);
+                // Extract the base64 part (in case it's a data URL)
+                var base64Data = GetBase64FromDataUri(webRequest.Image.Base64Image);
+                var imageBytes = Convert.FromBase64String(base64Data);
+
+                var uniqueFileName = Guid.NewGuid().ToString() + ".png"; // Or infer format from data URI
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await webRequest.imageFile.CopyToAsync(stream);
-                }
+                await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
                 var url = $"{Request.Scheme}://{Request.Host}/images/{uniqueFileName}";
-
                 var request = new CreateSingleRequest(url);
-
                 CreateSingleResponse response = await handler.Handle(request);
-                return Created("", response.ImageUrl);
+
+                return Created("", response);
+            }
+            catch (FormatException)
+            {
+                return BadRequest("Invalid Base64 string.");
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
             }
+        }
+
+        private static string GetBase64FromDataUri(string dataUri)
+        {
+            var commaIndex = dataUri.IndexOf(",");
+            return commaIndex >= 0 ? dataUri.Substring(commaIndex + 1) : dataUri;
         }
     }
 }
