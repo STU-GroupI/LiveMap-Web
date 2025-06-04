@@ -14,7 +14,7 @@ public static class ConfigurationDI
         services.Configure<ImageConfigurationOptions>(options =>
         {
             config.GetSection(ImageConfigurationOptions.Position).Bind(options);
-            options.Url = Environment.GetEnvironmentVariable("IMAGE_URL") ?? options.Url;
+            options.Url = Environment.GetEnvironmentVariable("IMAGE_SERVER_URL") ?? options.Url;
         });
 
         return services;
