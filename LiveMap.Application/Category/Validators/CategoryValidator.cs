@@ -4,14 +4,13 @@ using Domain.Models;
 
 public class CategoryValidator : AbstractValidator<Category>
 {
-    public CategoryValidator() 
+    public CategoryValidator()
     {
-        RuleFor(category => category.CategoryName).NotEmpty();
         RuleFor(category => category.CategoryName)
-            .Matches("^[a-zA-Z0-9]+$")
-            .WithMessage("Category name must contain only letters and numbers.");
+            .Matches("^[a-zA-Z0-9&]+$")
+            .WithMessage("Category can only contain letters, numbers, and '&' symbols.");
         RuleFor(category => category.CategoryName)
             .MaximumLength(30)
-            .WithMessage("Category name should not be longer than 30 characters");
+            .WithMessage("Category should not be longer than 30 characters");
     }
 }

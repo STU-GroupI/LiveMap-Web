@@ -63,8 +63,13 @@ public class CategoryController : Controller
                     new() { CategoryName = viewModel.NewValue, IconName = "mdi" + viewModel.IconName })
         };
 
-        this.BuildResponseMessageForRedirect(result);
+        if(result.ErrorMessage.HasValue)
+        {
+            this.BuildResponseMessage(result);
+            return View("CategoryForm", await provider.Hydrate(viewModel));
+        }
 
+        this.BuildResponseMessageForRedirect(result);
         return RedirectToAction("index");
     }
 

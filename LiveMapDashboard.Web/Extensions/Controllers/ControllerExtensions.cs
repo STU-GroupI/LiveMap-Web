@@ -49,7 +49,6 @@ public static class ControllerExtensions
         {
             dataStore["ErrorMessage"] = result.ErrorMessage.Value.Message;
         }
-
         else
         {
             dataStore["ErrorMessage"] = result.StatusCode switch
@@ -103,13 +102,16 @@ public static class ControllerExtensions
         {
             dataStore["SuccessMessage"] = "Your request was successfully processed!";
         }
+        else if (result.ErrorMessage is not null)
+        {
+            dataStore["ErrorMessage"] = result.ErrorMessage.Value.Message;
+        }
         else
         {
             dataStore["ErrorMessage"] = result.StatusCode switch
             {
                 HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
                 HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                HttpStatusCode.InternalServerError => result.ErrorMessage.Value.Message, 
                 HttpStatusCode.ServiceUnavailable => "The application is unavailable. Please try again later.",
                 _ => "Something went wrong while trying to contact the application. Please try again later"
             };

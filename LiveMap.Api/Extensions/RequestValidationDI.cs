@@ -14,7 +14,6 @@ public static class RequestValidationDI
 {
     public static IServiceCollection RegisterRequestValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<CategoryApp.Validators.CreateSingleValidator>();
 
         return services;
     }

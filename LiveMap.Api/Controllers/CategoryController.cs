@@ -1,4 +1,5 @@
-﻿using LiveMap.Api.Models.Category;
+﻿using FluentValidation;
+using LiveMap.Api.Models.Category;
 using LiveMap.Application;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
@@ -71,14 +72,21 @@ public class CategoryController : ControllerBase
         var request = new CreateSingleRequest(category);
         var validationResults = new CreateSingleValidator().Validate(request);
 
-        if(!validationResults.IsValid)
+        try
         {
-            var errorMessages = string.Join("\\r", validationResults.Errors.Select(e => e.ErrorMessage));
-            return StatusCode(500, errorMessages);
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
+            CreateSingleResponse response = await handler.Handle(request);
+            return Created("", response.Category);
         }
-        
-        CreateSingleResponse response = await handler.Handle(request);
-        return Created("", response.Category);
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+        }
     }
 
     /// <summary>
@@ -118,13 +126,27 @@ public class CategoryController : ControllerBase
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
         var request = new UpdateSingleRequest(oldName, webRequest.CategoryName, webRequest.IconName);
-        var response = await handler.Handle(request);
+        var validationResults = new UpdateSingleValidator().Validate(request);
 
-        return Ok(new Category
+        try
         {
-            CategoryName = response.NewName,
-            IconName = response.iconName
-        });
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
+            UpdateSingleResponse response = await handler.Handle(request);
+            return Ok(new Category
+            {
+                CategoryName = response.NewName,
+                IconName = response.iconName
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+        }
     }
 
     /// <summary>

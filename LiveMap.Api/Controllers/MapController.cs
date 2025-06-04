@@ -2,6 +2,7 @@
 using LiveMap.Application;
 using LiveMap.Application.Map.Requests;
 using LiveMap.Application.Map.Responses;
+using LiveMap.Application.Map.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -87,15 +88,22 @@ public class MapController : ControllerBase
             ImageUrl = webRequest.ImageUrl,
         };
         var request = new CreateSingleRequest(map);
+        var validationResults = new CreateSingleValidator().Validate(request);
 
         try
         {
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Map);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
 
@@ -124,15 +132,22 @@ public class MapController : ControllerBase
             ImageUrl = webRequest.ImageUrl
         };
         var request = new UpdateSingleRequest(map);
+        var validationResults = new UpdateSingleValidator().Validate(request);
 
         try
         {
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
             UpdateSingleResponse response = await handler.Handle(request);
             return Ok(response.map);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
 
