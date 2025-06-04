@@ -51,7 +51,7 @@ namespace LiveMap.ImageServer.Controllers
                 var request = new CreateSingleRequest(url);
                 CreateSingleResponse response = await handler.Handle(request);
 
-                return Created("", response);
+                return Created("", response.ImageUrl);
             }
             catch (FormatException)
             {
