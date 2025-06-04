@@ -163,6 +163,12 @@ public class MapRepository : IMapRepository
             .OrderBy(m => m.Border.Distance(coordinate))
             .FirstOrDefaultAsync();
 
+        if(closestSqlMap == null)
+        {
+            return null;
+        }
+
+
         return closestSqlMap.ToDomainMap();
     }
 }
