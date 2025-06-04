@@ -5,8 +5,8 @@ namespace LiveMap.Application.Images.Handlers;
 
 public class CreateSingleHandler : IRequestHandler<CreateSingleRequest, CreateSingleResponse>
 {
-    public async Task<CreateSingleResponse> Handle(CreateSingleRequest request)
+    public Task<CreateSingleResponse> Handle(CreateSingleRequest request)
     {
-        return new(request.ImageUrl);
+        return Task.FromResult(new CreateSingleResponse(request.ImageUrl));
     }
 }
