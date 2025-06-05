@@ -147,28 +147,29 @@
                         </div>
                     </div>
 
-                    <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                        <label class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Map geo coordinates</label>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">In order to set the location of the given map image and its bounds, the exact bottom and top coordinates are needed. With this the map can be optimized for the user's experience. </p>
-
+                    <div>
                         <div class="grid grid-cols-2 gap-4 mt-2">
                             @Html.EditorFor(m => m.TopLeft, new ViewDataDictionary(ViewData) {
                                 { "Label", "Top left" },
-                                { "Readonly", true }
+                                { "Readonly", true },
+                                { "Hidden", true }
                             })
                             @Html.EditorFor(m => m.TopRight, new ViewDataDictionary(ViewData) {
                                 { "Label", "Top right" },
-                                { "Readonly", true }
+                                { "Readonly", true },
+                                { "Hidden", true }
                             })
                         </div>
                         <div class="grid grid-cols-2 gap-4 mt-2">
                             @Html.EditorFor(m => m.BottomLeft, new ViewDataDictionary(ViewData) {
                                 { "Label", "Bottom left" },
-                                { "Readonly", true }
+                                { "Readonly", true },
+                                { "Hidden", true }
                             })
                             @Html.EditorFor(m => m.BottomRight, new ViewDataDictionary(ViewData) {
                                 { "Label", "Bottom right" },
-                                { "Readonly", true }
+                                { "Readonly", true },
+                                { "Hidden", true }
                             })
                         </div>
                     </div>
