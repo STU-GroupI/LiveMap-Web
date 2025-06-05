@@ -1,3 +1,4 @@
+using Bogus;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +30,28 @@ public class MapRepositoryTests : TestBase
         };
     }
 
-    [Fact]
-    public async Task CreateAsync_Should_Add_Map_And_Return_It()
+    public static IEnumerable<object[]> CreateMapData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.Department() + faker.Random.Number(10000)
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CreateMapData))]
+    public async Task CreateAsync_Should_Add_Map_And_Return_It(string name)
     {
         var repo = new MapRepository(Context);
 
-        var map = CreateDomainMap();
+        var map = CreateDomainMap(name);
         var result = await repo.CreateAsync(map);
 
         result.ShouldNotBeNull();
@@ -47,12 +64,28 @@ public class MapRepositoryTests : TestBase
         dbMap.Bounds.ShouldNotBeNull();
     }
 
-    [Fact]
-    public async Task GetSingle_Should_Return_Map_If_Exists()
+    public static IEnumerable<object[]> GetSingleMapData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.Department() + faker.Random.Number(10000)
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetSingleMapData))]
+    public async Task GetSingle_Should_Return_Map_If_Exists(string name)
     {
         var repo = new MapRepository(Context);
 
-        var map = CreateDomainMap();
+        var map = CreateDomainMap(name);
         // Use repository to create so mapping is correct
         var created = await repo.CreateAsync(map);
 
@@ -72,22 +105,44 @@ public class MapRepositoryTests : TestBase
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task GetMultiple_Should_Return_Paginated_Maps()
+    public static IEnumerable<object[]> GetMultipleMapData
+    {
+        get
+        {
+            // Generate 3 sets of map names for pagination
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                var names = new[]
+                {
+                    faker.Commerce.Department() + faker.Random.Number(10000),
+                    faker.Commerce.Department() + faker.Random.Number(10000),
+                    faker.Commerce.Department() + faker.Random.Number(10000)
+                };
+                yield return new object[] { 1, 1, names, names[1] };
+                yield return new object[] { 0, 2, names, names[0] };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetMultipleMapData))]
+    public async Task GetMultiple_Should_Return_Paginated_Maps(int skip, int take, string[] names, string expectedName)
     {
         var repo = new MapRepository(Context);
 
         // Add 3 maps
-        var map1 = await repo.CreateAsync(CreateDomainMap("A"));
-        var map2 = await repo.CreateAsync(CreateDomainMap("B"));
-        var map3 = await repo.CreateAsync(CreateDomainMap("C"));
+        foreach (var name in names)
+        {
+            await repo.CreateAsync(CreateDomainMap(name));
+        }
 
-        var result = await repo.GetMultiple(skip: 1, take: 1);
+        var result = await repo.GetMultiple(skip: skip, take: take);
 
         result.ShouldNotBeNull();
-        result.Items.Count.ShouldBe(1);
-        result.TotalCount.ShouldBe(3);
-        result.Items[0].Name.ShouldBe("B");
+        result.Items.Count.ShouldBe(take);
+        result.TotalCount.ShouldBe(names.Length);
+        result.Items[0].Name.ShouldBe(expectedName);
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using Bogus;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Repositories;
 using Shouldly;
@@ -35,12 +36,28 @@ public class RequestForChangeRepositoryTests : TestBase
             SubmittedOn = DateTime.UtcNow
         };
 
-    [Fact]
-    public async Task CreateAsync_Should_Add_Rfc_And_Return_It()
+    public static IEnumerable<object[]> CreateRfcData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Lorem.Sentence()
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CreateRfcData))]
+    public async Task CreateAsync_Should_Add_Rfc_And_Return_It(string message)
     {
         var repo = new RequestForChangeRepository(Context);
 
-        var rfc = CreateRfc();
+        var rfc = CreateRfc(message: message);
         var result = await repo.CreateAsync(rfc);
 
         result.ShouldNotBeNull();
@@ -48,12 +65,28 @@ public class RequestForChangeRepositoryTests : TestBase
         result.ApprovalStatus.ShouldBe(ApprovalStatus.PENDING);
     }
 
-    [Fact]
-    public async Task GetSingle_Should_Return_Rfc_If_Exists()
+    public static IEnumerable<object[]> GetSingleRfcData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Lorem.Sentence()
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetSingleRfcData))]
+    public async Task GetSingle_Should_Return_Rfc_If_Exists(string message)
     {
         var repo = new RequestForChangeRepository(Context);
 
-        var rfc = await repo.CreateAsync(CreateRfc());
+        var rfc = await repo.CreateAsync(CreateRfc(message: message));
         var result = await repo.GetSingle(rfc.Id);
 
         result.ShouldNotBeNull();
@@ -96,21 +129,42 @@ public class RequestForChangeRepositoryTests : TestBase
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task GetMultiple_Should_Return_Paginated_Rfcs()
+    public static IEnumerable<object[]> GetMultipleRfcData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                var messages = new[]
+                {
+                    faker.Lorem.Word(),
+                    faker.Lorem.Word(),
+                    faker.Lorem.Word()
+                };
+                yield return new object[] { 1, 1, messages, messages[1] };
+                yield return new object[] { 0, 2, messages, messages[0] };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetMultipleRfcData))]
+    public async Task GetMultiple_Should_Return_Paginated_Rfcs(int skip, int take, string[] messages, string expectedMessage)
     {
         var repo = new RequestForChangeRepository(Context);
 
-        var rfc1 = await repo.CreateAsync(CreateRfc(message: "A"));
-        var rfc2 = await repo.CreateAsync(CreateRfc(message: "B"));
-        var rfc3 = await repo.CreateAsync(CreateRfc(message: "C"));
+        foreach (var message in messages)
+        {
+            await repo.CreateAsync(CreateRfc(message: message));
+        }
 
         // Use a dummy parkId (not used in current implementation)
-        var result = await repo.GetMultiple(Guid.Empty, skip: 1, take: 1, ascending: null, IsPending: null);
+        var result = await repo.GetMultiple(Guid.Empty, skip: skip, take: take, ascending: null, IsPending: null);
 
         result.ShouldNotBeNull();
-        result.Items.Count.ShouldBe(1);
-        result.TotalCount.ShouldBe(3);
-        result.Items[0].Message.ShouldBe("B");
+        result.Items.Count.ShouldBe(take);
+        result.TotalCount.ShouldBe(messages.Length);
+        result.Items[0].Message.ShouldBe(expectedMessage);
     }
 }

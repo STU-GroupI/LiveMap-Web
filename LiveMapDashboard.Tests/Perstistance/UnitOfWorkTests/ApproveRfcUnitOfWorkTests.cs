@@ -64,7 +64,25 @@ public class ApproveRfcUnitOfWorkTests : TestBase
         Context.SaveChanges();
     }
 
-    // Helper: Create a PointOfInterest (domain model)
+
+    // Data generators for [Theory] tests
+    public static IEnumerable<object[]> PoiData
+    {
+        get
+        {
+            var faker = new Bogus.Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    Category.STORE, // Always use seeded category
+                    PointOfInterestStatus.PENDING // Always use seeded status
+                };
+            }
+        }
+    }
+
     private PointOfInterest CreatePoi(Guid? id = null, string? title = null, string? category = null, string? status = null)
         => new PointOfInterest
         {
@@ -78,7 +96,23 @@ public class ApproveRfcUnitOfWorkTests : TestBase
             IsWheelchairAccessible = false
         };
 
-    // Helper: Create a SuggestedPointOfInterest (domain model)
+
+    public static IEnumerable<object[]> SuggestedPoiData
+    {
+        get
+        {
+            var faker = new Bogus.Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    Category.STORE // Always use seeded category
+                };
+            }
+        }
+    }
+
     private SuggestedPointOfInterest CreateSuggestedPoi(Guid? id = null, string? title = null, string? category = null)
         => new SuggestedPointOfInterest
         {
@@ -103,14 +137,16 @@ public class ApproveRfcUnitOfWorkTests : TestBase
             Message = "Test RFC"
         };
 
-    [Fact]
-    public async Task CommitAsync_Should_Approve_Rfc_With_SuggestedPoi()
+
+    [Theory]
+    [MemberData(nameof(SuggestedPoiData))]
+    public async Task CommitAsync_Should_Approve_Rfc_With_SuggestedPoi(string title, string category)
     {
         // Arrange
         var uow = new ApproveRfcUnitOfWork(Context);
 
         // 1. Create and save the suggested POI
-        var suggestedPoi = CreateSuggestedPoi();
+        var suggestedPoi = CreateSuggestedPoi(title: title, category: category);
         var sqlSuggestedPoi = suggestedPoi.ToSqlSuggestedPointOfInterest();
         Context.SuggestedPointsOfInterest.Add(sqlSuggestedPoi);
         await Context.SaveChangesAsync();
@@ -142,13 +178,15 @@ public class ApproveRfcUnitOfWorkTests : TestBase
         createdPoi.StatusName.ShouldBe(PointOfInterestStatus.ACTIVE);
     }
 
-    [Fact]
-    public async Task CommitAsync_Should_Approve_Rfc_With_ExistingPoi()
+
+    [Theory]
+    [MemberData(nameof(PoiData))]
+    public async Task CommitAsync_Should_Approve_Rfc_With_ExistingPoi(string title, string category, string status)
     {
         // Arrange
         var uow = new ApproveRfcUnitOfWork(Context);
 
-        var poi = CreatePoi();
+        var poi = CreatePoi(title: title, category: category, status: status);
         Context.PointsOfInterest.Add(poi.ToSqlPointOfInterest());
         await Context.SaveChangesAsync();
 

@@ -1,3 +1,4 @@
+using Bogus;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Repositories;
 using Shouldly;
@@ -84,23 +85,44 @@ public class SuggestedPointOfInterestRepositoryTests : TestBase
     }
 
     private SuggestedPointOfInterest CreateSuggestedPoi(Guid? id = null, string? title = null, string? category = null, Guid? mapId = null)
-        => new SuggestedPointOfInterest
+    {
+        var faker = new Faker();
+        return new SuggestedPointOfInterest
         {
             Id = id ?? Guid.NewGuid(),
-            Title = title ?? $"TestSuggestedPoi_{Guid.NewGuid()}",
-            Description = "Test Description",
-            CategoryName = category ?? "TestCategory",
+            Title = title ?? faker.Lorem.Sentence(3),
+            Description = faker.Lorem.Paragraph(),
+            // Always use a valid seeded category
+            CategoryName = category ?? RequiredCategories[0],
             Coordinate = new(0, 0),
+            // Always use a valid seeded mapId
             MapId = mapId ?? _testMapId,
-            IsWheelchairAccessible = false
+            IsWheelchairAccessible = faker.Random.Bool()
         };
+    }
 
-    [Fact]
-    public async Task CreateSuggestedPointOfInterest_Should_Add_And_Return_It()
+    public static IEnumerable<object[]> CreateSuggestedPoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    RequiredCategories[0] // Always use seeded category
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CreateSuggestedPoiData))]
+    public async Task CreateSuggestedPointOfInterest_Should_Add_And_Return_It(string title, string category)
     {
         var repo = new SuggestedPointOfInterestRepository(Context);
-
-        var poi = CreateSuggestedPoi();
+        var poi = CreateSuggestedPoi(title: title, category: category);
         var result = await repo.CreateSuggestedPointOfInterest(poi);
 
         result.ShouldNotBeNull();
@@ -109,33 +131,74 @@ public class SuggestedPointOfInterestRepositoryTests : TestBase
         result.MapId.ShouldBe(poi.MapId);
     }
 
-    [Fact]
-    public async Task ReadSingle_Should_Return_Poi_If_Exists()
+    public static IEnumerable<object[]> ReadSinglePoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    RequiredCategories[0] // Always use seeded category
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ReadSinglePoiData))]
+    public async Task ReadSingle_Should_Return_Poi_If_Exists(string title, string category)
     {
         var repo = new SuggestedPointOfInterestRepository(Context);
-
-        var poi = await repo.CreateSuggestedPointOfInterest(CreateSuggestedPoi());
+        var poi = await repo.CreateSuggestedPointOfInterest(CreateSuggestedPoi(title: title, category: category));
         var result = await repo.ReadSingle(poi.Id);
 
         result.ShouldNotBeNull();
         result.Id.ShouldBe(poi.Id);
     }
 
-    [Fact]
-    public async Task ReadSingle_Should_Return_Null_If_Not_Exists()
+
+    public static IEnumerable<object[]> NotExistingPoiIds
+    {
+        get
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[] { Guid.NewGuid() };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(NotExistingPoiIds))]
+    public async Task ReadSingle_Should_Return_Null_If_Not_Exists(Guid id)
     {
         var repo = new SuggestedPointOfInterestRepository(Context);
-
-        var result = await repo.ReadSingle(Guid.NewGuid());
+        var result = await repo.ReadSingle(id);
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task DeleteWithoutCommitAsync_Should_Remove_Poi_If_Exists()
+
+    public static IEnumerable<object[]> DeletePoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[] { faker.Commerce.ProductName(), RequiredCategories[0] };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(DeletePoiData))]
+    public async Task DeleteWithoutCommitAsync_Should_Remove_Poi_If_Exists(string title, string category)
     {
         var repo = new SuggestedPointOfInterestRepository(Context);
-
-        var poi = await repo.CreateSuggestedPointOfInterest(CreateSuggestedPoi());
+        var poi = await repo.CreateSuggestedPointOfInterest(CreateSuggestedPoi(title: title, category: category));
         await repo.DeleteWithoutCommitAsync(poi.Id);
         await Context.SaveChangesAsync();
 
@@ -143,12 +206,12 @@ public class SuggestedPointOfInterestRepositoryTests : TestBase
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task DeleteWithoutCommitAsync_Should_Not_Throw_If_Poi_Does_Not_Exist()
+
+    [Theory]
+    [MemberData(nameof(NotExistingPoiIds))]
+    public async Task DeleteWithoutCommitAsync_Should_Not_Throw_If_Poi_Does_Not_Exist(Guid id)
     {
         var repo = new SuggestedPointOfInterestRepository(Context);
-
-        var id = Guid.NewGuid();
         await repo.DeleteWithoutCommitAsync(id);
         await Context.SaveChangesAsync();
 

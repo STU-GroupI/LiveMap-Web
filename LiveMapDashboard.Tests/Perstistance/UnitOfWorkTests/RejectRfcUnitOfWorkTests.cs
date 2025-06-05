@@ -4,6 +4,7 @@ using LiveMap.Persistence.Extensions;
 using LiveMap.Persistence.UnitsOfWork.RequestForChange;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using Bogus;
 
 namespace LiveMapDashboard.Tests.Perstistance.UnitOfWorkTests;
 
@@ -92,14 +93,32 @@ public class RejectRfcUnitOfWorkTests : TestBase
             Message = "Test RFC"
         };
 
-    [Fact]
-    public async Task CommitAsync_Should_Reject_Rfc_With_SuggestedPoi()
+    // Data generators for [Theory] tests
+    public static IEnumerable<object[]> SuggestedPoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    Category.STORE // Always use seeded category
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(SuggestedPoiData))]
+    public async Task CommitAsync_Should_Reject_Rfc_With_SuggestedPoi(string title, string category)
     {
         // Arrange
         var uow = new RejectRfcUnitOfWork(Context);
 
         // 1. Create and save the suggested POI
-        var suggestedPoi = CreateSuggestedPoi();
+        var suggestedPoi = CreateSuggestedPoi(title: title, category: category);
         var sqlSuggestedPoi = suggestedPoi.ToSqlSuggestedPointOfInterest();
         Context.SuggestedPointsOfInterest.Add(sqlSuggestedPoi);
         await Context.SaveChangesAsync();

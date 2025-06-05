@@ -1,3 +1,4 @@
+using Bogus;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Repositories;
 using Shouldly;
@@ -96,27 +97,60 @@ public class PointOfInterestRepositoryTests : TestBase
             IsWheelchairAccessible = false
         };
 
-    [Fact]
-    public async Task Create_Should_Add_Poi_And_Return_It()
+    public static IEnumerable<object[]> CreatePoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 3; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    faker.Commerce.Department(),
+                    faker.PickRandom(new[]{ PointOfInterestStatus.ACTIVE, PointOfInterestStatus.INACTIVE, PointOfInterestStatus.PENDING })
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CreatePoiData))]
+    public async Task Create_Should_Add_Poi_And_Return_It(string title, string category, string status)
     {
         var repo = new PointOfInterestRepository(Context);
-
-        var poi = CreatePoi();
+        var poi = CreatePoi(title: title, category: category, status: status);
         var result = await repo.Create(poi);
 
         result.ShouldNotBeNull();
         result.Title.ShouldBe(poi.Title);
         result.CategoryName.ShouldBe(poi.CategoryName);
-        result.StatusName.ShouldBe(PointOfInterestStatus.ACTIVE);
+        result.StatusName.ShouldBe(poi.StatusName);
         result.MapId.ShouldBe(poi.MapId);
     }
 
-    [Fact]
-    public async Task GetSingle_Should_Return_Poi_If_Exists()
+    public static IEnumerable<object[]> GetSinglePoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                yield return new object[]
+                {
+                    faker.Commerce.ProductName(),
+                    faker.Commerce.Department()
+                };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetSinglePoiData))]
+    public async Task GetSingle_Should_Return_Poi_If_Exists(string title, string category)
     {
         var repo = new PointOfInterestRepository(Context);
-
-        var poi = await repo.Create(CreatePoi());
+        var poi = await repo.Create(CreatePoi(title: title, category: category));
         var result = await repo.GetSingle(poi.Id);
 
         result.ShouldNotBeNull();
@@ -132,21 +166,41 @@ public class PointOfInterestRepositoryTests : TestBase
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task GetMultiple_Should_Return_Paginated_Pois()
+    public static IEnumerable<object[]> GetMultiplePoiData
+    {
+        get
+        {
+            var faker = new Faker();
+            for (int i = 0; i < 2; i++)
+            {
+                var titles = new[]
+                {
+                    faker.Commerce.ProductName(),
+                    faker.Commerce.ProductName(),
+                    faker.Commerce.ProductName()
+                };
+                yield return new object[] { 1, 1, titles, titles[1] };
+                yield return new object[] { 0, 2, titles, titles[0] };
+            }
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(GetMultiplePoiData))]
+    public async Task GetMultiple_Should_Return_Paginated_Pois(int skip, int take, string[] titles, string expectedTitle)
     {
         var repo = new PointOfInterestRepository(Context);
-
         var mapId = _testMapId;
-        await repo.Create(CreatePoi(title: "A", mapId: mapId));
-        await repo.Create(CreatePoi(title: "B", mapId: mapId));
-        await repo.Create(CreatePoi(title: "C", mapId: mapId));
+        foreach (var title in titles)
+        {
+            await repo.Create(CreatePoi(title: title, mapId: mapId));
+        }
 
-        var result = await repo.GetMultiple(mapId, skip: 1, take: 1);
+        var result = await repo.GetMultiple(mapId, skip: skip, take: take);
 
         result.ShouldNotBeNull();
-        result.Count.ShouldBe(1);
-        result.First().Title.ShouldBe("B");
+        result.Count.ShouldBe(take);
+        result.First().Title.ShouldBe(expectedTitle);
     }
 
     [Fact]
