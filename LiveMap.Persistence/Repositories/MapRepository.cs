@@ -152,7 +152,6 @@ public class MapRepository : IMapRepository
     {
         var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
-        // longitude and latitude are swapped here to be in line with the polygon of a map's border
         var coordinate = geometryFactory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(latitude, longitude));
 
         SqlMap? closestSqlMap = await _context.Maps
