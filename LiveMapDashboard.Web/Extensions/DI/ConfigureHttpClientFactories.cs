@@ -44,7 +44,6 @@ namespace LiveMapDashboard.Web.Extensions.DI
                         .GetRequiredService<IOptions<ImageConfigurationOptions>>().Value;
 
                     client.BaseAddress = new Uri($"{options.Url}/");
-                    //client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
                 });
 
             return services;

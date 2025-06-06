@@ -21,8 +21,7 @@ namespace LiveMap.ImageServer.Controllers
 
         [HttpPost("")]
         public async Task<IActionResult> Upload(
-            [FromBody] CreateSingleImageWebRequest webRequest,
-            [FromServices] IRequestHandler<CreateSingleRequest, CreateSingleResponse> handler)
+            [FromBody] CreateSingleImageWebRequest webRequest)
         {
             if (string.IsNullOrWhiteSpace(webRequest.Image.Base64Image))
             {
@@ -49,7 +48,7 @@ namespace LiveMap.ImageServer.Controllers
 
                 var url = $"{Request.Scheme}://{Request.Host}/images/{uniqueFileName}";
                 var request = new CreateSingleRequest(url);
-                CreateSingleResponse response = await handler.Handle(request);
+                CreateSingleResponse response = new(request.ImageUrl);
 
                 return Created("", response.ImageUrl);
             }
