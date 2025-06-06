@@ -11,6 +11,11 @@
         "Path": "LiveMap.Api\\LiveMap.Api.csproj",
         "Action": "Start",
         "DebugTarget": "http"
+      },
+      {
+        "Path": "LiveMap.ImageServer\\LiveMap.ImageServer.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
       }
     ]
   }

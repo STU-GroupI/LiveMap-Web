@@ -1,4 +1,5 @@
 using LiveMap.Application.Infrastructure.Services;
+using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Extensions;
 using LiveMapDashboard.Web.Extensions.Mappers;
@@ -118,7 +119,8 @@ public class PoiController : Controller
     [Route("[controller]")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(
-        [FromServices] IPointOfInterestService service,
+        [FromServices] IPointOfInterestService poiService,
+        [FromServices] IImageService imageService,
         [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
         PoiCrudformViewModel viewModel,
         string action)
@@ -128,12 +130,20 @@ public class PoiController : Controller
             return View("PoiForm", await provider.Hydrate(viewModel));
         }
 
+        // Image
+        if (viewModel.ImageFile is IFormFile imageFile)
+        {
+            var imageResult = await imageService.Create(new(ImageHelpers.ToImage(imageFile)));
+            viewModel = viewModel with { Image = imageResult.Value };
+        }
+
+        // POI
         var poi = viewModel.ToDomainPointOfInterest();
         var isNewPoi = poi.Id == Guid.Empty || poi.Id.ToString() == string.Empty;
 
         var result = isNewPoi
-            ? await service.CreateSingle(poi)
-            : await service.UpdateSingle(poi);
+            ? await poiService.CreateSingle(poi)
+            : await poiService.UpdateSingle(poi);
 
         if (isNewPoi)
         {
