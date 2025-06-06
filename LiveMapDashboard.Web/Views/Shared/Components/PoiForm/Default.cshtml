@@ -33,9 +33,9 @@
     @if (!string.IsNullOrEmpty(Model.Id))
     {
         <a asp-controller="Poi" 
-           asp-action="Index" 
-           asp-route-mapId="@Model.MapId"
-           class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
+        asp-action="Index" 
+        asp-route-mapId="@Model.MapId"
+        class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
             <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             </span>
@@ -68,18 +68,18 @@
 
 @section GridLeftContent
 {
-    <div>
-        <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
-            <div class="card-body w-full h-full">
-                <div id="map" class="h-[50vh] w-full rounded-lg"></div>
-            </div>
+<div>
+    <div class="card w-full z-10 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg">
+        <div class="card-body w-full h-full">
+            <div id="map" class="h-[50vh] w-full rounded-lg"></div>
         </div>
     </div>
+</div>
 }
 
 @section GridRightContent
 {
-    <form method="post" asp-controller="poi" asp-action="submit">
+    <form method="post" asp-controller="poi" asp-action="submit" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
@@ -97,13 +97,13 @@
                         <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
                     </div>
                     <button type="button"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-                            id="applyLocationButton">
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                    id="applyLocationButton">
                         + Add location
                     </button>
                 </div>
             </div>
-            
+
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
                 @Html.EditorFor(m => m.Title, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Title..." },
@@ -115,7 +115,7 @@
                     { "IconNames", Model.Categories?.Select(c => c.IconName) },
                     { "Label", "Category" }
                 })
-                
+
                 @Html.EditorFor(m => m.Description, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Description..." },
                     { "Label", "Description" },
@@ -128,18 +128,33 @@
             </div>
 
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
-                { "Label", "Image (URL)" },
-                })
+                <div class="group flex flex-col bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    <label for="imageUpload" class="flex flex-col items-center justify-center w-full cursor-pointer">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400 font-semibold">Click to upload</p>
+                        </div>
+                        <input id="imageUpload" name="ImageFile" type="file" class="hidden" accept=".png, .jpg, .jpeg" />
+                    </label>
+                </div>
 
                 <div class="flex justify-center">
                     <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
                         <span class="sr-only">Loading...</span>
                     </div>
 
-                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image"/>
-                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                    <img id="preview" class="mt-2 w-full rounded-lg hidden" alt="POI main image" />
+                     <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
                 </div>
+
+                @if (Model.Image != null)
+                {
+                    <p class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Original Image</p>
+                    <img class="mt-2 w-full rounded-lg" src="@Model.Image" />
+                }
+                
             </div>
             
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LiveMap.Application.Infrastructure.Services;
 
-public interface ISuggestedPointOfInterestService
+public interface IImageService
 {
-    public Task<ExternalHttpResponse<SuggestedPointOfInterest>> Get(Guid id);
+    Task<ExternalHttpResponse<string>> Create(Image image); // returns url to image
 }

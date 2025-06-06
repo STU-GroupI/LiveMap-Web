@@ -53,7 +53,7 @@ public class CategoryController : Controller
             return View("CategoryForm", await provider.Hydrate(viewModel));
         }
 
-        BackendApiHttpResponse<Models.Category> result = viewModel switch
+        ExternalHttpResponse<Models.Category> result = viewModel switch
         {
             var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
                 => await categoryService.UpdateSingle(
