@@ -9,6 +9,7 @@ public sealed record MapCrudformViewModel(
     string? Id,
     string Name,
     string? ImageUrl,
+    IFormFile? ImageFile,
     Models.Coordinate TopLeft,
     Models.Coordinate TopRight,
     Models.Coordinate BottomLeft,
@@ -21,7 +22,8 @@ public sealed record MapCrudformViewModel(
         Id: string.Empty,
         Name: string.Empty,
         ImageUrl: string.Empty,
-
+        ImageFile: null,
+        
         TopLeft: new(0.0, 0.0),
         TopRight: new(0.0, 0.0),
         BottomLeft: new(0.0, 0.0),
