@@ -23,5 +23,8 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
+      - name: Pull required Docker image
+        run: docker pull mcr.microsoft.com/mssql/server:2022-latest
+
       - name: Test
         run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"

@@ -107,7 +107,7 @@ public class PointOfInterestRepositoryTests : TestBase
                 yield return new object[]
                 {
                     faker.Commerce.ProductName(),
-                    faker.Commerce.Department(),
+                    faker.PickRandom(RequiredCategories),
                     faker.PickRandom(new[]{ PointOfInterestStatus.ACTIVE, PointOfInterestStatus.INACTIVE, PointOfInterestStatus.PENDING })
                 };
             }
@@ -139,7 +139,7 @@ public class PointOfInterestRepositoryTests : TestBase
                 yield return new object[]
                 {
                     faker.Commerce.ProductName(),
-                    faker.Commerce.Department()
+                    faker.PickRandom(RequiredCategories),
                 };
             }
         }
