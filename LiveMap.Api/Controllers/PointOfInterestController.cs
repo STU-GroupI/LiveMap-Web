@@ -1,5 +1,4 @@
 ﻿using LiveMap.Api.Models.PointOfInterest;
-using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
@@ -104,15 +103,14 @@ public class PointOfInterestController : ControllerBase
         };
         var request = new CreateSingleRequest(poi);
 
-        try
+        CreateSingleResponse response = await handler.Handle(request);
+
+        if(response.Poi is null)
         {
-            CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Poi);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create POI.");
         }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+
+        return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
     }
     
     /// <summary>
@@ -154,15 +152,14 @@ public class PointOfInterestController : ControllerBase
         };
         var request = new UpdateSingleRequest(poi);
 
-        try
+        UpdateSingleResponse response = await handler.Handle(request);
+        
+        if(response.Poi is null)
         {
-            UpdateSingleResponse response = await handler.Handle(request);
-            return Ok(response.Poi);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update POI.");
         }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+
+        return Ok(response.Poi);
     }
     
     /// <summary>

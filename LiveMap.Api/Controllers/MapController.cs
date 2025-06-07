@@ -88,15 +88,8 @@ public class MapController : ControllerBase
         };
         var request = new CreateSingleRequest(map);
 
-        try
-        {
-            CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Map);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        CreateSingleResponse response = await handler.Handle(request);
+        return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
     }
 
     /// <summary>
@@ -123,17 +116,16 @@ public class MapController : ControllerBase
             Area = webRequest.Area,
             ImageUrl = webRequest.ImageUrl
         };
+
         var request = new UpdateSingleRequest(map);
 
-        try
+        UpdateSingleResponse response = await handler.Handle(request);
+        if (response.Map is null)
         {
-            UpdateSingleResponse response = await handler.Handle(request);
-            return Ok(response.map);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update map.");
         }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+
+        return Ok(response.Map);
     }
 
     /// <summary>
