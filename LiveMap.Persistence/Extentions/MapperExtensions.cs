@@ -1,6 +1,5 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
-using NetTopologySuite.Geometries;
 
 namespace LiveMap.Persistence.Extensions;
 public static class MapperExtensions
@@ -160,8 +159,7 @@ public static class MapperExtensions
             SuggestedPoiId = requestForChange.SuggestedPoiId,
             SubmittedOn = requestForChange.SubmittedOn,
             PoiId = requestForChange.PoiId,
-            Message = requestForChange.Message,
-            ApprovalStatusProp = new ApprovalStatus { Status = requestForChange.ApprovalStatus }
+            Message = requestForChange.Message
         };
     }
 

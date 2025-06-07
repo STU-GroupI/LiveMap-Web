@@ -3,7 +3,6 @@ using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using System.Text;
 using System.Text.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Infrastructure.Services;
 public class PointOfInterestHttpService : IPointOfInterestService

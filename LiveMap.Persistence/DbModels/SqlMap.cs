@@ -8,7 +8,7 @@ public class SqlMap
     public required string Name { get; set; }
     public required Polygon Border { get; set; }
     public required Polygon Bounds { get; set; }
-    public string? ImageUrl { get; set; }   
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<SqlPointOfInterest> PointOfInterests { get; set; } = [];
 }

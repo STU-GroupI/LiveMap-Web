@@ -71,8 +71,8 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
         Models.Category[] categories)
     {
         var poiResult = await _pointOfInterestService.Get(poiId);
-        
-        if (poiResult is not { IsSuccess: true, Value: not null } )
+
+        if (poiResult is not { IsSuccess: true, Value: not null })
         {
             throw new Exception($"The poi for the given ID was not found while hydrating from {this.GetType().FullName}");
         }

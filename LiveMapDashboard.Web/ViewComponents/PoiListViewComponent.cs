@@ -1,6 +1,7 @@
 ﻿using LiveMapDashboard.Web.Models.Poi;
 
-namespace LiveMapDashboard.Web.ViewComponents {
+namespace LiveMapDashboard.Web.ViewComponents
+{
     using Microsoft.AspNetCore.Mvc;
 
     public class PoiListViewComponent : ViewComponent

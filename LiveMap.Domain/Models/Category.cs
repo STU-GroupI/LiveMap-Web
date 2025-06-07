@@ -12,7 +12,7 @@ public class Category
     public const string EMPTY = "Empty";
     public required string CategoryName { get; set; }
     public string IconName { get; set; } = string.Empty;
-    
+
     [NotMapped]
     public bool? InUse { get; set; }
 }

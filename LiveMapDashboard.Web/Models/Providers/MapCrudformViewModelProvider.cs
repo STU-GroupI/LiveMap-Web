@@ -1,7 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
-using LiveMapDashboard.Web.Models.Map;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.Extensions;
+using LiveMapDashboard.Web.Models.Map;
 
 namespace LiveMapDashboard.Web.Models.Providers;
 using Models = LiveMap.Domain.Models;

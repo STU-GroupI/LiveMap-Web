@@ -1,5 +1,4 @@
-﻿using LiveMapDashboard.Web.Models.Category;
-using LiveMapDashboard.Web.Models.Rfc;
+﻿using LiveMapDashboard.Web.Models.Rfc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LiveMapDashboard.Web.ViewComponents;

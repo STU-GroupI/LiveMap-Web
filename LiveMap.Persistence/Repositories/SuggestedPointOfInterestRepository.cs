@@ -3,12 +3,6 @@ using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using LiveMap.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Persistence.Repositories;
 public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepository
@@ -27,7 +21,6 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
             SubmittedOn = DateTime.UtcNow,
             ApprovalStatus = ApprovalStatus.PENDING,
             Id = default,
-            ApprovalStatusProp = new ApprovalStatus { Status = ApprovalStatus.PENDING },
         };
 
         var sqlData = suggestedPoi.ToSqlSuggestedPointOfInterest();
@@ -36,7 +29,6 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
         if (sqlData.Map is not null) _context.Entry(sqlData.Map).State = EntityState.Unchanged;
         if (sqlData.Category is not null) _context.Entry(sqlData.Category).State = EntityState.Unchanged;
 
-        _context.Entry(sqlData.RFC.ApprovalStatusProp).State = EntityState.Unchanged;
         var entity = await _context.SuggestedPointsOfInterest.AddAsync(sqlData);
         await _context.SaveChangesAsync();
 
@@ -49,8 +41,8 @@ public class SuggestedPointOfInterestRepository : ISuggestedPointOfInterestRepos
     public async Task DeleteWithoutCommitAsync(Guid id)
     {
         var poi = await _context.SuggestedPointsOfInterest.FindAsync(id);
-        
-        if (poi is null) 
+
+        if (poi is null)
             return;
 
         _context.SuggestedPointsOfInterest.Remove(poi);

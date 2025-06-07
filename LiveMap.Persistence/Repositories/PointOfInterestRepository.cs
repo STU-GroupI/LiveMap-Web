@@ -15,6 +15,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         _context = context;
     }
 
+    // TODO: Add explicit ordering to ensure deterministic paging results
     public async Task<ICollection<PointOfInterest>> GetMultiple(Guid mapId, int? skip, int? take)
     {
         var query = _context.PointsOfInterest
@@ -89,11 +90,12 @@ public class PointOfInterestRepository : IPointOfInterestRepository
         poi.Image = pointOfInterest.Image;
         poi.CategoryName = pointOfInterest.CategoryName;
         poi.Position = pointOfInterest.Coordinate.ToSqlPoint();
+        poi.StatusName = pointOfInterest.StatusName;
         poi.IsWheelchairAccessible = pointOfInterest.IsWheelchairAccessible;
 
         // Track opening hours to remove
         var openingHoursToRemove = new List<SqlOpeningHours>();
-        
+
         foreach (var openingHour in poi.OpeningHours)
         {
             var data = pointOfInterest.OpeningHours?.FirstOrDefault(oh =>
@@ -123,7 +125,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             {
                 continue;
             }
-            
+
             var newSqlOpeningHour = new SqlOpeningHours
             {
                 Id = Guid.NewGuid(),
@@ -176,7 +178,7 @@ public class PointOfInterestRepository : IPointOfInterestRepository
             // Currently, we can do it this way. But if an exception is thrown within the scope
             // of an active transaction, it is automagically rolled back. Thats why you don't
             // see me do it in the cascading delete of the suggested POI's
-            
+
             await transaction.RollbackAsync();
             throw;
         }

@@ -1,6 +1,5 @@
 ﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Application.PointOfInterest.Requests;
-using LiveMap.Application.PointOfInterest.Responses;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 

@@ -1,5 +1,4 @@
 ﻿using Bogus;
-using Bogus.DataSets;
 using LiveMap.Domain.Models;
 using LiveMap.Persistence.DbModels;
 using NetTopologySuite;
@@ -236,10 +235,10 @@ public static class DevelopmentSeeder
             { Category.ENTERTAINMENT, "mdiMovieOpenOutline" },
             { Category.EMPTY, "mdiHelpBoxOutline" },
         };
-        
+
         foreach (var category in categories)
         {
-            if (string.IsNullOrEmpty(category.IconName) 
+            if (string.IsNullOrEmpty(category.IconName)
                 && defaultIcons.TryGetValue(category.CategoryName, out var iconName))
             {
                 category.IconName = iconName;
@@ -264,7 +263,7 @@ public static class DevelopmentSeeder
         foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
         {
             int skip = ((int)day) * 50;
-            
+
             foreach (var hour in openingHours.Skip(skip).Take(50))
             {
                 hour.DayOfWeek = day;

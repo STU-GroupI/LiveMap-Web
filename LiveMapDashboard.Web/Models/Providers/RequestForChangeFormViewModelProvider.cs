@@ -99,7 +99,7 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
     {
         throw new NotImplementedException();
     }
-    
+
     private OpeningHoursViewModel[] NormalizeOpeningHours(List<OpeningHours> existingHours)
     {
         var allDays = Enum.GetValues<DayOfWeek>();
