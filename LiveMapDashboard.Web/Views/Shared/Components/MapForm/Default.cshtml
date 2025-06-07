@@ -128,7 +128,7 @@
                 <input type="hidden" asp-for="ImageUrl" />
 
                 <div>
-                    <div class="mb-6 border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-lg">
+                    <div class="mb-6 border border-gray-200 bg-white dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-lg">
                         @Html.EditorFor(m => m.Name, new ViewDataDictionary(ViewData) {
                             { "Placeholder", "Enter Name..." },
                             { "Label", "Name" }
@@ -157,7 +157,7 @@
                             <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
                         </div>
 
-                        @if (Model.ImageUrl != null)
+                        @if (!Model.ImageUrl.IsNullOrEmpty())
                         {
                             <p class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Original Image</p>
                             <img id="uploadedImage" class="mt-2 w-full rounded-lg" src="@Model.ImageUrl" />
