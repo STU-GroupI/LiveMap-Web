@@ -1,0 +1,42 @@
+﻿@using LiveMapDashboard.Web.Models.Dashboard
+@model MapSwitcherViewModel
+
+<div role="option" tabindex="-1" aria-labelledby="hs-map-option-label">
+    <div class="border border-gray-200 bg-white dark:bg-neutral-900 dark:border-neutral-700 p-4 rounded-lg">
+        <label for="mapSelector" class="block text-sm font-medium mb-2 dark:text-white">Select a park</label>
+        @if (Model.Maps.Any())
+        {
+            <select
+                id="mapSelector"
+                asp-for="MapId"
+                onchange="navigateToSelectedMap()"
+                class="py-3 px-2 pe-9 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+            >
+                @foreach ((string id, string name) in Model.Maps)
+                {
+                    if (Model.MapId.Equals(id))
+                    {
+                        <option selected value="@id">
+                            @name
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@id">
+                            @name
+                        </option>
+                    }
+                }
+            </select>
+        } else {
+            <p class="text-sm text-gray-500 dark:text-neutral-400">No parks available.</p>
+        }
+    </div>
+    
+    <script>
+        function navigateToSelectedMap() {
+            const mapId = document.getElementById("mapSelector").value;
+            window.location.href = `/${mapId}`;
+        }
+    </script>
+</div>

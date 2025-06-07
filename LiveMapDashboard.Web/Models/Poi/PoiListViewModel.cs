@@ -2,6 +2,7 @@
 {
     public sealed record PoiListViewModel()
     {
+        public Guid MapId { get; set; }
         public List<PoiListEntryViewModel> Pois { get; init; } = new();
     }
 

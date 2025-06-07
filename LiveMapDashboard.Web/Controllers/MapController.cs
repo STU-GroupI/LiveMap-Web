@@ -61,6 +61,7 @@ namespace LiveMapDashboard.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(
             [FromServices] IMapService service,
+            [FromServices] IImageService imageService,
             [FromServices] IViewModelProvider<MapCrudformViewModel> provider,
             MapCrudformViewModel viewModel,
             string action)
@@ -68,6 +69,12 @@ namespace LiveMapDashboard.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return View("MapForm", await provider.Hydrate(viewModel));
+            }
+            
+            if (viewModel.ImageFile is IFormFile imageFile)
+            {
+                var imageResult = await imageService.Create(new(ImageHelpers.ToImage(imageFile)));
+                viewModel = viewModel with { ImageUrl = imageResult.Value };
             }
 
             Guid mapId = Guid.TryParse(viewModel.Id, out Guid outMapId) ? outMapId : Guid.Empty;

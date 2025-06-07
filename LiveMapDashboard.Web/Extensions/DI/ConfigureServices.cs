@@ -10,6 +10,10 @@ namespace LiveMapDashboard.Web.Extensions.DI
         {
             return services
                 .AddTransient<IBackendApiHttpService, BackendApiHttpService>()
+
+                .AddTransient<IImageServerHttpService, ImageServerHttpService>()
+                .AddTransient<IImageService, ImageHttpService>()
+
                 .AddTransient<IPointOfInterestService, PointOfInterestHttpService>()
                 .AddTransient<ICategoryService, CategoryHttpService>()
                 .AddTransient<IMapService, MapHttpService>()

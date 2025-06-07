@@ -29,18 +29,18 @@ public class RequestForChangeFormViewModelProvider : IViewModelProvider<RequestF
     public async Task<RequestForChangeFormViewModel> Hydrate(RequestForChangeFormViewModel viewModel)
     {
         // get RFC
-        BackendApiHttpResponse<RequestForChange> rfcResponse = await _requestForChangeService.Get(viewModel.Rfc.Id);
+        ExternalHttpResponse<RequestForChange> rfcResponse = await _requestForChangeService.Get(viewModel.Rfc.Id);
         RequestForChange rfc = rfcResponse.Value
             ?? throw new Exception($"RFC not found during hydration from {this.GetType().FullName} for {viewModel.ToString()}");
         // if RFC has POI, get THAT one
-        BackendApiHttpResponse<PointOfInterest>? poiResult = rfc.PoiId switch
+        ExternalHttpResponse<PointOfInterest>? poiResult = rfc.PoiId switch
         {
             var poiId when poiId is not null => await _pointOfInterestService.Get(rfc.PoiId!.Value),
             _ => null
         };
 
         // if RFC has suggested POI, get THAT one
-        BackendApiHttpResponse<SuggestedPointOfInterest>? suggestedPoiResult = rfc.SuggestedPoiId switch
+        ExternalHttpResponse<SuggestedPointOfInterest>? suggestedPoiResult = rfc.SuggestedPoiId switch
         {
             var poiId when poiId is not null => await _suggestedPointOfInterestService.Get(rfc.SuggestedPoiId!.Value),
             _ => null

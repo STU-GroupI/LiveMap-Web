@@ -7,6 +7,8 @@ public interface IMapRepository
 {
     public Task<Models.Map?> GetSingle(Guid id);
 
+    public Task<Models.Map?> GetClosest(double latitude, double longitude);
+
     public Task<Models.Map> CreateAsync(Models.Map map);
 
     public Task<PaginatedResult<Models.Map>> GetMultiple(int? skip, int? take);

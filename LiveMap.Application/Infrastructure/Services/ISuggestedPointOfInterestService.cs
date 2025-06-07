@@ -5,5 +5,5 @@ namespace LiveMap.Application.Infrastructure.Services;
 
 public interface ISuggestedPointOfInterestService
 {
-    public Task<BackendApiHttpResponse<SuggestedPointOfInterest>> Get(Guid id);
+    public Task<ExternalHttpResponse<SuggestedPointOfInterest>> Get(Guid id);
 }

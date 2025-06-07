@@ -17,7 +17,7 @@ public class RequestForChangeHttpService : IRequestForChangeService
         _backendApiService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<RequestForChange>> Get(Guid id)
+    public async Task<ExternalHttpResponse<RequestForChange>> Get(Guid id)
     {
         var uri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative);
 
@@ -29,7 +29,7 @@ public class RequestForChangeHttpService : IRequestForChangeService
             });
     }
 
-    public async Task<BackendApiHttpResponse<PaginatedResult<RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending, bool? isPending)
+    public async Task<ExternalHttpResponse<PaginatedResult<RequestForChange>>> GetMultiple(Guid? mapId, int? skip, int? take, bool? ascending, bool? isPending)
     {
         var query = $"{nameof(mapId)}={mapId.ToString()}&{nameof(skip)}={skip}&{nameof(take)}={take}&{nameof(ascending)}={ascending}&{nameof(isPending)}={isPending}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
@@ -42,7 +42,7 @@ public class RequestForChangeHttpService : IRequestForChangeService
             });
     }
 
-    public async Task<BackendApiHttpResponse> ApproveRequestForChange(RequestForChange rfc, PointOfInterest poi)
+    public async Task<ExternalHttpResponse> ApproveRequestForChange(RequestForChange rfc, PointOfInterest poi)
     {
         return await _backendApiService
             .SendRequest(new HttpRequestMessage
@@ -53,7 +53,7 @@ public class RequestForChangeHttpService : IRequestForChangeService
             });
     }
 
-    public async Task<BackendApiHttpResponse> RejectRequestForChange(Guid rfcId)
+    public async Task<ExternalHttpResponse> RejectRequestForChange(Guid rfcId)
     {
         return await _backendApiService
             .SendRequest(new HttpRequestMessage

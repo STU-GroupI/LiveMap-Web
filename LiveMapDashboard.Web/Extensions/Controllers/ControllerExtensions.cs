@@ -10,7 +10,7 @@ public static class ControllerExtensions
 
     public static void BuildResponseMessage<T>(
         this Controller controller,
-        BackendApiHttpResponse<T> result,
+        ExternalHttpResponse<T> result,
         Dictionary<string, string>? messages = null)
     {
         controller.BuildResponseMessage(
@@ -20,7 +20,7 @@ public static class ControllerExtensions
     }
     public static void BuildResponseMessageForRedirect<T>(
         this Controller controller,
-        BackendApiHttpResponse<T> result,
+        ExternalHttpResponse<T> result,
         Dictionary<string, string>? messages = null)
     {
         controller.BuildResponseMessage(
@@ -29,8 +29,8 @@ public static class ControllerExtensions
             messages: messages);
     }
     public static void BuildResponseMessage<T>(
-        this Controller controller,
-        BackendApiHttpResponse<T> result,
+        this Controller controller, 
+        ExternalHttpResponse<T> result,
         IDictionary<string, object?> dataStore,
         Dictionary<string, string>? messages = null)
     {
@@ -61,7 +61,7 @@ public static class ControllerExtensions
 
     public static void BuildResponseMessage(
         this Controller controller,
-        BackendApiHttpResponse result,
+        ExternalHttpResponse result,
         Dictionary<string, string>? messages = null)
     {
         controller.BuildResponseMessage(
@@ -72,7 +72,7 @@ public static class ControllerExtensions
 
     public static void BuildResponseMessageForRedirect(
         this Controller controller,
-        BackendApiHttpResponse result,
+        ExternalHttpResponse result,
         Dictionary<string, string>? messages = null)
     {
         controller.BuildResponseMessage(
@@ -83,7 +83,7 @@ public static class ControllerExtensions
 
     public static void BuildResponseMessage(
         this Controller controller,
-        BackendApiHttpResponse result,
+        ExternalHttpResponse result,
         IDictionary<string, object?> dataStore,
         Dictionary<string, string>? messages = null)
     {
