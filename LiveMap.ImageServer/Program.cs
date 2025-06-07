@@ -9,6 +9,26 @@ namespace LiveMap.ImageServer
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Set WebRootPath explicitly if not detected or present
+            if (string.IsNullOrEmpty(builder.Environment.WebRootPath))
+            {
+                var currentDir = Directory.GetCurrentDirectory();
+                var webRoot = Path.Combine(currentDir, "wwwroot");
+                builder.Environment.WebRootPath = webRoot;
+            }
+            
+            // CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             // Add services to the container.
             builder.Services.RegisterRequestHandlers();
 
@@ -17,7 +37,9 @@ namespace LiveMap.ImageServer
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
-
+            
+            app.UseCors("AllowAll");
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
