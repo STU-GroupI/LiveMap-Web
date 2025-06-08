@@ -123,8 +123,7 @@ public class PoiController : Controller
         [FromServices] IPointOfInterestService poiService,
         [FromServices] IImageService imageService,
         [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
-        PoiCrudformViewModel viewModel,
-        string action)
+        PoiCrudformViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {

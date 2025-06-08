@@ -41,11 +41,6 @@ public sealed record MapCrudformViewModel(
             results.Add(new ValidationResult("The Name field is required", new[] { nameof(Name) }));
         }
 
-        if (!string.IsNullOrWhiteSpace(Name) && !Regex.IsMatch(Name, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
-        {
-            results.Add(new ValidationResult("Name can only contain alphanumeric characters and basic symbols.", new[] { nameof(Name) }));
-        }
-
         return results;
     }
 

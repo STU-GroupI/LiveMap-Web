@@ -8,12 +8,19 @@ public class PointOfInterestValidator : AbstractValidator<PointOfInterest>
     public PointOfInterestValidator()
     {
         RuleFor(poi => poi.Title)
+            .Matches("^[a-zA-Z ]+$")
+            .WithMessage("Title must contain only letters.");
+        RuleFor(poi => poi.Title)
             .MaximumLength(30)
             .WithMessage("Title should not be longer than 30 characters.");
 
         RuleFor(poi => poi.Description)
             .MaximumLength(1000)
             .WithMessage("Description should not be longer than 1000 characters.");
+
+        RuleFor(poi => poi.CategoryName)
+            .NotNull()
+            .WithMessage("Category should not be null");
 
         RuleFor(poi => poi.Image)
             .Must(image => string.IsNullOrEmpty(image) || Uri.IsWellFormedUriString(image, UriKind.Absolute))

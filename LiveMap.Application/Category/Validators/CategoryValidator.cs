@@ -8,7 +8,7 @@ public class CategoryValidator : AbstractValidator<Category>
     public CategoryValidator()
     {
         RuleFor(category => category.CategoryName)
-            .Matches("^[a-zA-Z0-9&]+$")
+            .Matches("^[a-zA-Z0-9& ]+$")
             .WithMessage("Category can only contain letters, numbers, and '&' symbols.");
         RuleFor(category => category.CategoryName)
             .MaximumLength(30)
