@@ -1,6 +1,4 @@
-﻿using FluentValidation;
 using LiveMap.Api.Models.PointOfInterest;
-using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
@@ -116,7 +114,12 @@ public class PointOfInterestController : ControllerBase
             }
 
             CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Poi);
+            if(response.Poi is null)
+            {
+                throw new ArgumentException("Failed to create POI.");
+            }
+
+            return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
         }
         catch (Exception ex)
         {
@@ -163,7 +166,7 @@ public class PointOfInterestController : ControllerBase
         };
         var request = new UpdateSingleRequest(poi);
         var validationResults = new UpdateSingleValidator().Validate(request);
-
+        
         try
         {
             if (!validationResults.IsValid)
@@ -173,6 +176,9 @@ public class PointOfInterestController : ControllerBase
             }
 
             UpdateSingleResponse response = await handler.Handle(request);
+            if (response.Poi is null)
+                throw new ArgumentException("Failed to update POI.");
+
             return Ok(response.Poi);
         }
         catch (Exception ex)

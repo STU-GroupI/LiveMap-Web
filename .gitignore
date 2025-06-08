@@ -402,3 +402,6 @@ FodyWeavers.xsd
 
 # PostCSS
 LiveMapDashboard.Web/wwwroot/css/styles.css
+
+# Image files
+LiveMap.ImageServer/wwwroot/images/*

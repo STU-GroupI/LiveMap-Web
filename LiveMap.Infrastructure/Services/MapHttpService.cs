@@ -16,7 +16,7 @@ public class MapHttpService : IMapService
         _backendApiService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<Map>> CreateSingle(Map map)
+    public async Task<ExternalHttpResponse<Map>> CreateSingle(Map map)
     {
         // Setup for Backend communication
         return await _backendApiService
@@ -28,7 +28,7 @@ public class MapHttpService : IMapService
             });
     }
 
-    public async Task<BackendApiHttpResponse<Map>> Get(Guid id)
+    public async Task<ExternalHttpResponse<Map>> Get(Guid id)
     {
         return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage
@@ -38,7 +38,7 @@ public class MapHttpService : IMapService
             });
     }
 
-    public async Task<BackendApiHttpResponse<PaginatedResult<Map>>> Get(int? skip, int? take)
+    public async Task<ExternalHttpResponse<PaginatedResult<Map>>> Get(int? skip, int? take)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
@@ -52,7 +52,7 @@ public class MapHttpService : IMapService
     }
 
 
-    public async Task<BackendApiHttpResponse<Map>> UpdateSingle(Map map)
+    public async Task<ExternalHttpResponse<Map>> UpdateSingle(Map map)
     {
         // Setup for Backend communication
         return await _backendApiService
@@ -64,7 +64,7 @@ public class MapHttpService : IMapService
             });
     }
 
-    public async Task<BackendApiHttpResponse> Delete(Guid id)
+    public async Task<ExternalHttpResponse> Delete(Guid id)
     {
         return await _backendApiService
             .SendRequest(new HttpRequestMessage

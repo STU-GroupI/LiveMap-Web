@@ -22,8 +22,10 @@
 }
 
 <div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+    @await RenderSectionAsync("GridTopContent", required: false)
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         @await RenderSectionAsync("GridLeftContent", required: false)
         @await RenderSectionAsync("GridRightContent", required: false)
     </div>
+    @await RenderSectionAsync("GridBottomContent", required: false)
 </div>

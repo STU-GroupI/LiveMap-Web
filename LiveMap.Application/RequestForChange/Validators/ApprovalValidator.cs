@@ -9,7 +9,6 @@ public class ApprovalValidator : AbstractValidator<ApprovalRequest>
 {
     public ApprovalValidator()
     {
-        RuleFor(request => request.Rfc).SetValidator(new RequestForChangeValidator());
         RuleFor(request => request.Poi).SetValidator(new PointOfInterestValidator());
     }
 }

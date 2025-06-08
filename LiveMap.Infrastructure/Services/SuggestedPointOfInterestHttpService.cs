@@ -19,7 +19,7 @@ public class SuggestedPointOfInterestHttpService : ISuggestedPointOfInterestServ
         _backendApiHttpService = backendApiHttpService;
     }
 
-    public async Task<BackendApiHttpResponse<SuggestedPointOfInterest>> Get(Guid id)
+    public async Task<ExternalHttpResponse<SuggestedPointOfInterest>> Get(Guid id)
     {
         return await _backendApiHttpService.SendRequest<SuggestedPointOfInterest>(new HttpRequestMessage
         {

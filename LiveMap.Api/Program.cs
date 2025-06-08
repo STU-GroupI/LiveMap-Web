@@ -33,12 +33,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// This handles any 500 errors that might occur in the application. Anything we do not catch, this thing will.
+app.UseDefaultExceptionHandlingMiddleware();
+
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization();
@@ -47,4 +50,3 @@ app.MapControllers();
 await app.SeedDatabaseAsync();
 
 app.Run();
-

@@ -29,23 +29,36 @@ public class CategoryController : ControllerBase
         [FromRoute] string name,
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
-        try
-        {
-            var request = new GetSingleRequest(name);
-            GetSingleResponse response = await handler.Handle(request);
+        var request = new GetSingleRequest(name);
+        GetSingleResponse response = await handler.Handle(request);
 
         if (response.Category is null)
         {
             return NotFound();
         }
 
-            var category = response.Category;
-            return Ok(category);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
+        var category = response.Category;
+        return Ok(category);
+    }
+
+    /// <summary>
+    /// Get multiple categories with optional filtering.
+    /// </summary>
+    /// <param name="name">Optional name filter (contains).</param>
+    /// <param name="skip">Items to skip.</param>
+    /// <param name="take">Items to take.</param>
+    /// <returns>Filtered category list</returns>
+    [HttpGet]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<List<Category>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMultiple(
+        [FromQuery] int? skip,
+        [FromQuery] int? take,
+        [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
+    {
+        var request = new GetMultipleRequest(skip, take);
+        var response = await handler.Handle(request);
+        return Ok(response.Categories);
     }
 
     /// <summary>
@@ -81,7 +94,15 @@ public class CategoryController : ControllerBase
             }
 
             CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Category);
+            if (response.Category is null)
+            {
+                throw new ArgumentException("Failed to create category.");
+            }
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { name = response.Category.CategoryName },
+                response.Category);
         }
         catch (Exception ex)
         {
@@ -89,25 +110,6 @@ public class CategoryController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get multiple categories with optional filtering.
-    /// </summary>
-    /// <param name="name">Optional name filter (contains).</param>
-    /// <param name="skip">Items to skip.</param>
-    /// <param name="take">Items to take.</param>
-    /// <returns>Filtered category list</returns>
-    [HttpGet]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType<List<Category>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetMultiple(
-        [FromQuery] int? skip,
-        [FromQuery] int? take,
-        [FromServices] IRequestHandler<GetMultipleRequest, GetMultipleResponse> handler)
-    {
-        var request = new GetMultipleRequest(skip, take);
-        var response = await handler.Handle(request);
-        return Ok(response.Categories);
-    }
 
     /// <summary>
     /// Creates a new category
@@ -137,6 +139,11 @@ public class CategoryController : ControllerBase
             }
 
             UpdateSingleResponse response = await handler.Handle(request);
+            if (!response.Success)
+            {
+                return NotFound("Category not found");
+            }
+
             return Ok(new Category
             {
                 CategoryName = response.NewName,
@@ -165,17 +172,12 @@ public class CategoryController : ControllerBase
     {
         var request = new DeleteSingleRequest(name);
 
-        try
+        var response = await handler.Handle(request);
+        if (!response.Success)
         {
-            var response = await handler.Handle(request);
-            if (!response.Success)
-                return NotFound("Category not found");
+            return NotFound("Category not found");
+        }
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.ToString());
-        }
+        return NoContent();
     }
 }

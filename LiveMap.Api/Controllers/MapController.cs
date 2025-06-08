@@ -29,8 +29,8 @@ public class MapController : ControllerBase
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
         var request = new GetSingleRequest(Guid.Parse(id));
+        
         GetSingleResponse response = await handler.Handle(request);
-
         if (response.Map is null)
         {
             return NotFound();
@@ -99,7 +99,12 @@ public class MapController : ControllerBase
             }
 
             CreateSingleResponse response = await handler.Handle(request);
-            return Created("", response.Map);
+            if (response.Map is null)
+            {
+                throw new ArgumentException("Failed to create map.");
+            }
+
+            return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
         }
         catch (Exception ex)
         {
@@ -131,6 +136,7 @@ public class MapController : ControllerBase
             Area = webRequest.Area,
             ImageUrl = webRequest.ImageUrl
         };
+
         var request = new UpdateSingleRequest(map);
         var validationResults = new UpdateSingleValidator().Validate(request);
 
@@ -143,7 +149,12 @@ public class MapController : ControllerBase
             }
 
             UpdateSingleResponse response = await handler.Handle(request);
-            return Ok(response.map);
+            if(response.Map is null)
+            {
+                throw new ArgumentException("Failed to update map.");
+            }
+
+            return Ok(response.Map);
         }
         catch (Exception ex)
         {
@@ -173,5 +184,32 @@ public class MapController : ControllerBase
             return NotFound();
         }
         return NoContent();
+    }
+
+
+    /// <summary>
+    /// Returns a map that is closest to the given latitude and longitude coordinates.
+    /// </summary>
+    /// <param name="latitude">Latitude Coordinate of request</param>
+    /// <param name="longitude">Longitude Coordinate of request</param>
+    /// <returns>Either a map which is in line with the given coordinates, or a 404</returns>
+    [HttpGet("closest")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType<Map>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetClosest(
+        [FromQuery] double latitude,
+        [FromQuery] double longitude,
+        [FromServices] IRequestHandler<GetClosestRequest, GetClosestResponse> handler)
+    {
+        var request = new GetClosestRequest(latitude, longitude);
+
+        GetClosestResponse response = await handler.Handle(request);
+        if (response.Map is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(response.Map);
     }
 }

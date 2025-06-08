@@ -1,5 +1,6 @@
 ﻿@using LiveMapDashboard.Web.Extensions
 @inject IOptions<BackendConfigurationOptions> backendConfiguration
+@inject IOptions<ImageConfigurationOptions> imageConfiguration
 @{
     string? mapId = Context.GetCurrentMapId()?.ToString();
     string? currentController = ViewContext.RouteData.Values["controller"]?.ToString();
@@ -34,13 +35,17 @@
 
     <script>
         const BACKEND_URL = "@(backendConfiguration.Value?.Url ?? throw new ArgumentNullException("The given configuration was null"))";
+        const IMAGE_SERVER_URL = "@(imageConfiguration.Value?.Url ?? throw new ArgumentNullException("The given configuration was null"))";
     </script>
 </head>
 <body class="bg-gray-50 dark:bg-neutral-900">
     <div>
         <header class="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800">
             <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-                <a class="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80 dark:text-white" asp-area="" asp-controller="Dashboard" asp-action="Index" asp-route-mapId="@mapId" aria-label="LiveMapDashboard.Web">LiveMapDashboard.Web</a>
+                <a class="flex items-center gap-1 font-semibold text-xl text-black focus:outline-hidden focus:opacity-80 dark:text-white" asp-area="" asp-controller="Dashboard" asp-action="Index" asp-route-mapId="@mapId" aria-label="LiveMapDashboard.Web">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#155dfc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="blue-600 lucide lucide-navigation-icon lucide-navigation shrink size-4"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                    LiveMap
+                </a>
                 <div class="flex flex-row items-center gap-5 mt-5 sm:justify-end sm:mt-0 sm:ps-5">
                     <a class="font-medium @(currentController == "Category" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
@@ -48,7 +53,7 @@
                        asp-action="Index">
                         Categories
                     </a>
-                    <a class="font-medium @(currentController == "Dashboard" && currentAction == "Park" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
+                    <a class="font-medium @(currentController == "Map" ? "text-blue-500" : "text-gray-600 hover:text-gray-400") dark:text-neutral-400 dark:hover:text-neutral-500 focus:outline-hidden"
                        asp-area=""
                        asp-controller="Map"
                        asp-action="Index">
@@ -69,13 +74,13 @@
                         Requests For Change
                     </a>
                     <div>
-                        <button type="button" class="hs-dark-mode hs-dark-mode-active:hidden flex items-center gap-x-2 py-2 px-3 bg-white/10 rounded-full text-sm dark:text-white text-dark hover:bg-white/20 focus:outline-hidden focus:bg-white/20" data-hs-theme-click-value="dark">
+                        <button type="button" class="hs-dark-mode hs-dark-mode-active:hidden py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 active:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:active:bg-neutral-700" data-hs-theme-click-value="dark">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
                             </svg>
                             Dark
                         </button>
-                        <button type="button" class="hs-dark-mode hs-dark-mode-active:inline-flex hidden items-center gap-x-2 py-2 px-3 bg-white/10 rounded-full text-sm dark:text-white text-dark hover:bg-white/20 focus:outline-hidden focus:bg-white/20" data-hs-theme-click-value="light">
+                        <button type="button" class="hs-dark-mode hs-dark-mode-active:inline-flex hidden py-3 px-4 items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 active:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:active:bg-neutral-700" data-hs-theme-click-value="light">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="4"></circle>
                                 <path d="M12 2v2"></path>
@@ -116,29 +121,5 @@
     
     @await RenderSectionAsync("Scripts", required: false)
 </div>
-    <template id="danger-alert">
-        <div class="mt-2 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-danger-label">
-            <span id="hs-soft-color-danger-label" class="font-bold">Danger</span> 
-            <span id="alert-text"></span>
-        </div>
-    </template>
-    <template id="warning-alert">
-        <div class="mt-2 bg-yellow-100 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-warning-label">
-            <span id="hs-soft-color-warning-label" class="font-bold">Warning</span> 
-            <span id="alert-text"></span>
-        </div>
-    </template>
-    <template id="success-alert">
-        <div class="mt-2 bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-success-label">
-            <span id="hs-soft-color-success-label" class="font-bold">Success</span> 
-            <span id="alert-text"></span>
-        </div>
-    </template>
-    <template id="info-alert">
-        <div class="mt-2 bg-blue-100 border border-blue-200 text-sm text-blue-800 rounded-lg p-4 dark:bg-blue-800/10 dark:border-blue-900 dark:text-blue-500" role="alert" tabindex="-1" aria-labelledby="hs-soft-color-info-label">
-            <span id="hs-soft-color-info-label" class="font-bold">Info</span> 
-            <span id="alert-text"></span>
-        </div>
-    </template>
 </body>
 </html>
