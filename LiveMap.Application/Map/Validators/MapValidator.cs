@@ -8,8 +8,8 @@ public class MapValidator : AbstractValidator<Map>
     public MapValidator()
     {
         RuleFor(map => map.Name)
-            .Matches("^[a-zA-Z0-9\\s\\-_\\&\\(\\)\\[\\]\\{\\}\\.\\,\\!\\@\\#\\$\\%\\^\\*\\+\\=]+$")
-            .WithMessage("Map name can only contain alphanumeric characters and basic symbols.");
+            .Matches("^[a-zA-Z ]+$")
+            .WithMessage("Map name must contain only letters.");
         RuleFor(map => map.Name)
             .MaximumLength(30)
             .WithMessage("Map name should not be longer than 30 characters");

@@ -12,7 +12,7 @@ public class SuggestedPointOfInterestValidator : AbstractValidator<SuggestedPoin
             .WithMessage("Title can only contain alphanumeric characters and basic symbols.");
         RuleFor(sugpoi => sugpoi.Title)
             .MaximumLength(100)
-            .WithMessage("Title should not be longer than 50 characters.");
+            .WithMessage("Title should not be longer than 100 characters.");
 
         RuleFor(sugpoi => sugpoi.Description)
             .MaximumLength(1000)

@@ -18,10 +18,6 @@ public class PointOfInterestValidator : AbstractValidator<PointOfInterest>
             .MaximumLength(1000)
             .WithMessage("Description should not be longer than 1000 characters.");
 
-        RuleFor(poi => poi.CategoryName)
-            .NotNull()
-            .WithMessage("Category should not be null");
-
         RuleFor(poi => poi.Image)
             .Must(image => string.IsNullOrEmpty(image) || Uri.IsWellFormedUriString(image, UriKind.Absolute))
             .WithMessage("Image must be a valid absolute URL.");
