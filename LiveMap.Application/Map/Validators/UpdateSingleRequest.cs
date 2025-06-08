@@ -1,14 +1,12 @@
 ﻿using FluentValidation;
-using LiveMap.Application.Category.Validators;
 using LiveMap.Application.Map.Requests;
 
-namespace LiveMap.Application.Map.Validators
+namespace LiveMap.Application.Map.Validators;
+
+public class UpdateSingleValidator : AbstractValidator<UpdateSingleRequest>
 {
-    public class UpdateSingleValidator : AbstractValidator<UpdateSingleRequest>
+    public UpdateSingleValidator() 
     {
-        public UpdateSingleValidator() 
-        {
-            RuleFor(request => request.Map).SetValidator(new MapValidator());
-        }
+        RuleFor(request => request.Map).SetValidator(new MapValidator());
     }
 }

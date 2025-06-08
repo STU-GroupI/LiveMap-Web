@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+
 namespace LiveMap.Application.Category.Validators;
 using Domain.Models;
 

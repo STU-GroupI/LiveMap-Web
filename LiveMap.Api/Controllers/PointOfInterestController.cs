@@ -1,8 +1,10 @@
-﻿using LiveMap.Api.Models.PointOfInterest;
+﻿using FluentValidation;
+using LiveMap.Api.Models.PointOfInterest;
 using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
+using LiveMap.Application.PointOfInterest.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -103,15 +105,22 @@ public class PointOfInterestController : ControllerBase
             StatusName = "Active",
         };
         var request = new CreateSingleRequest(poi);
+        var validationResults = new CreateSingleValidator().Validate(request);
 
         try
         {
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Poi);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
     
@@ -153,15 +162,22 @@ public class PointOfInterestController : ControllerBase
             StatusName = "Active",
         };
         var request = new UpdateSingleRequest(poi);
+        var validationResults = new UpdateSingleValidator().Validate(request);
 
         try
         {
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
             UpdateSingleResponse response = await handler.Handle(request);
             return Ok(response.Poi);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
     

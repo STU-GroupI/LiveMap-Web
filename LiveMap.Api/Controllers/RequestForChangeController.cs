@@ -7,6 +7,8 @@ using LiveMap.Api.Models;
 using LiveMap.Application;
 using LiveMap.Domain.Pagination;
 using LiveMap.Api.Models.RequestForChange;
+using LiveMap.Application.RequestForChange.Validators;
+using FluentValidation;
 
 namespace LiveMap.Api.Controllers;
 
@@ -39,15 +41,22 @@ public class RequestForChangeController : ControllerBase
         };
 
         var request = new CreateSingleRequest(rfc);
+        var validationResults = new CreateSingleValidator().Validate(request);
 
         try
         {
+            if (!validationResults.IsValid)
+            {
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
+            }
+
             CreateSingleResponse response = await handler.Handle(request);
             return Created("", response.Rfc);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
 
@@ -142,20 +151,23 @@ public class RequestForChangeController : ControllerBase
         [FromServices] IRequestHandler<ApprovalRequest, ApprovalResponse> handler)
     {
         var request = new ApprovalRequest(webRequest.Rfc, webRequest.Poi);
+        var validationResults = new ApprovalValidator().Validate(request);
 
         try
         {
-            ApprovalResponse response = await handler.Handle(request);
-            if(!response.Success)
+            if (!validationResults.IsValid)
             {
-                return BadRequest(response);
+                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException(errorMessages);
             }
+
+            ApprovalResponse response = await handler.Handle(request);
 
             return Ok();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
         }
     }
 
