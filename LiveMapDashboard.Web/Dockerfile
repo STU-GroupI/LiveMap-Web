@@ -17,7 +17,7 @@ COPY ["LiveMapDashboard.Web/LiveMapDashboard.Web.csproj", "LiveMapDashboard.Web/
 COPY ["LiveMap.Application/LiveMap.Application.csproj", "LiveMap.Application/"]
 COPY ["LiveMap.Domain/LiveMap.Domain.csproj", "LiveMap.Domain/"]
 COPY ["LiveMap.Persistence/LiveMap.Persistence.csproj", "LiveMap.Persistence/"]
-COPY ["LiveMap.Persistence/LiveMap.Infrastructure.csproj", "LiveMap.Infrastructure/"]
+COPY ["LiveMap.Infrastructure/LiveMap.Infrastructure.csproj", "LiveMap.Infrastructure/"]
 
 RUN dotnet restore "./LiveMapDashboard.Web/LiveMapDashboard.Web.csproj"
 COPY . .

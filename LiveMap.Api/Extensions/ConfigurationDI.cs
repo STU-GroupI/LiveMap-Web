@@ -24,6 +24,8 @@ public static class ConfigurationDI
             ?? options.DefaultConnection 
             ?? throw new ArgumentNullException("No database connection string was provided");
 
+        Console.WriteLine(_DATABASE_CON);
+
         return options.DefaultConnection;
     }
 }
