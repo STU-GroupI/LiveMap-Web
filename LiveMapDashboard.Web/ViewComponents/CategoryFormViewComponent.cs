@@ -1,5 +1,4 @@
 ﻿using LiveMapDashboard.Web.Models.Category;
-using LiveMapDashboard.Web.Models.Poi;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LiveMapDashboard.Web.ViewComponents;

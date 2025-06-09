@@ -47,7 +47,7 @@ public class CategoryHttpService : ICategoryService
         {
             Method = HttpMethod.Post,
             RequestUri = uri,
-            Content = new StringContent(JsonSerializer.Serialize(new { CategoryName = category.CategoryName, IconName = category.IconName}), Encoding.UTF8, "application/json")
+            Content = new StringContent(JsonSerializer.Serialize(new { CategoryName = category.CategoryName, IconName = category.IconName }), Encoding.UTF8, "application/json")
         });
     }
     public async Task<ExternalHttpResponse> Delete(Category category)

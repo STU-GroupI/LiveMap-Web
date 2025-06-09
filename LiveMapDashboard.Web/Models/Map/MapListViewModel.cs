@@ -1,6 +1,6 @@
-﻿using Model = LiveMap.Domain.Models;
-using LiveMap.Domain.Pagination;
+﻿using LiveMap.Domain.Pagination;
 using System.ComponentModel.DataAnnotations;
+using Model = LiveMap.Domain.Models;
 
 namespace LiveMapDashboard.Web.Models.Map;
 using Models = LiveMap.Domain.Models;

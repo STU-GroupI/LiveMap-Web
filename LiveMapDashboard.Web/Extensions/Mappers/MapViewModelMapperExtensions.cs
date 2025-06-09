@@ -9,18 +9,18 @@ public static class MapViewModelMapperExtensions
     {
         return new()
         {
-            Id = viewModel.Id is not null 
-                ? Guid.Parse(viewModel.Id) 
+            Id = viewModel.Id is not null
+                ? Guid.Parse(viewModel.Id)
                 : Guid.Empty,
             Name = viewModel.Name,
             ImageUrl = viewModel.ImageUrl,
             Bounds = [
-            
+
                 viewModel.TopLeft,
                 viewModel.TopRight,
                 viewModel.BottomLeft,
                 viewModel.BottomRight
-            ], 
+            ],
             Area = MapCrudformViewModel.ToCoordinates(viewModel.Area)
         };
     }

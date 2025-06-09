@@ -112,7 +112,7 @@ public class PointOfInterestController : ControllerBase
 
         return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
     }
-    
+
     /// <summary>
     /// Updates a POI for the given request data
     /// </summary>
@@ -161,7 +161,7 @@ public class PointOfInterestController : ControllerBase
 
         return Ok(response.Poi);
     }
-    
+
     /// <summary>
     /// Deletes a POI with the given id
     /// </summary>
@@ -179,7 +179,7 @@ public class PointOfInterestController : ControllerBase
     {
         var request = new DeleteSingleRequest(Guid.Parse(id));
         var result = await handler.Handle(request);
-        if(!result)
+        if (!result)
         {
             return NotFound();
         }

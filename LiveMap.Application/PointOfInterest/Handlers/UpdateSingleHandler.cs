@@ -1,7 +1,6 @@
 ﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
-using System;
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
 public class UpdateSingleHandler : IRequestHandler<UpdateSingleRequest, UpdateSingleResponse>

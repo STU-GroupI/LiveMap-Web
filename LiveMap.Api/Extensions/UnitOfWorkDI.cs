@@ -9,6 +9,6 @@ public static class UnitOfWorkDI
     {
         return services
             .AddTransient<IApproveRfcUnitOfWork, ApproveRfcUnitOfWork>()
-            .AddTransient<IRejectRfcUnitOfWork, RejectRfcUnitOfWork>(); 
+            .AddTransient<IRejectRfcUnitOfWork, RejectRfcUnitOfWork>();
     }
 }
