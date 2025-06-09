@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using LiveMap.Domain.Models;
-using System.Net.Mime;
+using LiveMap.Api.Models;
+using LiveMap.Api.Models.RequestForChange;
+using LiveMap.Application;
 using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
-using LiveMap.Api.Models;
-using LiveMap.Application;
+using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using LiveMap.Api.Models.RequestForChange;
 using LiveMap.Application.RequestForChange.Validators;
-using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace LiveMap.Api.Controllers;
 
@@ -130,16 +129,16 @@ public class RequestForChangeController : ControllerBase
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler
 )
     {
-        var rfc = new RequestForChange() 
-        { 
-            Id = id, 
-            ApprovalStatus = webRequest.ApprovalStatus, 
-            ApprovedOn = webRequest.ApprovalStatus == ApprovalStatus.APPROVED ? DateTime.UtcNow : null, 
+        var rfc = new RequestForChange()
+        {
+            Id = id,
+            ApprovalStatus = webRequest.ApprovalStatus,
+            ApprovedOn = webRequest.ApprovalStatus == ApprovalStatus.APPROVED ? DateTime.UtcNow : null,
             SubmittedOn = DateTime.Now
         };
-        
-        var request = new UpdateSingleRequest(rfc); 
-        
+
+        var request = new UpdateSingleRequest(rfc);
+
         UpdateSingleResponse response = await handler.Handle(request);
         if (response.Rfc is null)
         {
@@ -155,7 +154,7 @@ public class RequestForChangeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<(int, object)>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Approve (
+    public async Task<IActionResult> Approve(
         [FromBody] ApproveRfcWebRequest webRequest,
         [FromServices] IRequestHandler<ApprovalRequest, ApprovalResponse> handler)
     {

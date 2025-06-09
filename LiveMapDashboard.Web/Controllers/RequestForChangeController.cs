@@ -8,6 +8,7 @@ using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
 using LiveMapDashboard.Web.Models.Rfc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LiveMapDashboard.Web.Controllers;
 
@@ -38,14 +39,23 @@ public class RequestForChangeController : Controller
     [HttpPost("approvalSubmit")]
     public async Task<IActionResult> ApprovalFormSubmit(
         RequestForChangeFormViewModel viewModel,
+        [FromServices] IImageService imageService,
         [FromServices] IViewModelProvider<RequestForChangeFormViewModel> formProvider,
-        [FromServices] IViewModelProvider<RequestForChangeListViewModel> indexProvider,
         [FromServices] IRequestForChangeService requestForChangeService)
     {
         if (!ModelState.IsValid) 
         {
             return View("form", await formProvider.Hydrate(viewModel));
         }
+        
+        if (viewModel.CrudformViewModel.ImageFile is IFormFile imageFile)
+        {
+            var imageResult = await imageService.Create(new(ImageHelpers.ToImage(imageFile)));
+            var updatedCrudformViewModel = viewModel.CrudformViewModel with { Image = imageResult.Value };
+            viewModel = viewModel with { CrudformViewModel = updatedCrudformViewModel };
+            ModelState.SetModelValue("ImageUrl", new ValueProviderResult(updatedCrudformViewModel.Image));
+        }
+        
         var result = await requestForChangeService.ApproveRequestForChange(
             viewModel.Rfc, 
             viewModel.CrudformViewModel.ToDomainPointOfInterest());

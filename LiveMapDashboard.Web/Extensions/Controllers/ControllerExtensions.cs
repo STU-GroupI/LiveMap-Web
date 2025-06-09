@@ -34,7 +34,7 @@ public static class ControllerExtensions
         IDictionary<string, object?> dataStore,
         Dictionary<string, string>? messages = null)
     {
-        if(messages is null)
+        if (messages is null)
         {
             messages = controller.CreateMessageDictionary();
         }
@@ -73,7 +73,7 @@ public static class ControllerExtensions
             dataStore: controller.ViewData,
             messages: messages);
     }
-    
+
     public static void BuildResponseMessageForRedirect(
         this Controller controller,
         ExternalHttpResponse result,
@@ -84,7 +84,7 @@ public static class ControllerExtensions
             dataStore: controller.TempData,
             messages: messages);
     }
-   
+
     public static void BuildResponseMessage(
         this Controller controller,
         ExternalHttpResponse result,
@@ -115,13 +115,13 @@ public static class ControllerExtensions
             };
         }
     }
-    
+
     #endregion Response message non-generic
-    
+
     public static Dictionary<string, string> CreateMessageDictionary(
         this Controller controller,
-        string success = "Your request was successfully processed!", 
-        string error = "The submitted data was invalid. Please check the data you submitted.") 
+        string success = "Your request was successfully processed!",
+        string error = "The submitted data was invalid. Please check the data you submitted.")
     {
         return new Dictionary<string, string>
         {

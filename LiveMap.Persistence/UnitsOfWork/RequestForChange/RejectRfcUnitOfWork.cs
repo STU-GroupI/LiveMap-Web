@@ -22,19 +22,19 @@ public class RejectRfcUnitOfWork : IRejectRfcUnitOfWork
     public async Task<bool> CommitAsync(RejectRfcRequest request)
     {
         DomainModels.RequestForChange? rfc = await _rfcRepository.GetSingle(request.RfcId);
-        
+
         if (rfc is null)
         {
             return false;
         }
 
         rfc.ApprovalStatus = ApprovalStatus.REJECTED;
-        
+
         try
         {
             await using var transaction = await _liveMapContext.Database.BeginTransactionAsync();
 
-            if(rfc.SuggestedPoiId is not null)
+            if (rfc.SuggestedPoiId is not null)
             {
                 await _suggestedPointOfInterestRepository.DeleteWithoutCommitAsync(rfc.SuggestedPoiId.Value);
                 rfc.SuggestedPoiId = null;

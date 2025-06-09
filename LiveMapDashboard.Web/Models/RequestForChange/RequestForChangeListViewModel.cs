@@ -1,6 +1,5 @@
 ﻿using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace LiveMapDashboard.Web.Models.Rfc;
