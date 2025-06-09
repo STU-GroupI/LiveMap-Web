@@ -7,12 +7,13 @@ public class CoordinateValidator : AbstractValidator<Coordinate>
 {
     public CoordinateValidator()
     {
+        // The fact is being acknowledged that these two should be switched.
         RuleFor(coord => coord.Latitude)
-            .InclusiveBetween(-90, 90)
-            .WithMessage("Latitude must be between -90 and 90.");
+            .InclusiveBetween(-180, 180)
+            .WithMessage("Latitude must be between -180 and 180.");
 
         RuleFor(coord => coord.Longitude)
-            .InclusiveBetween(-180, 180)
-            .WithMessage("Longitude must be between -180 and 180.");
+            .InclusiveBetween(-90, 90)
+            .WithMessage("Longitude must be between -90 and 90.");
     }
 }
