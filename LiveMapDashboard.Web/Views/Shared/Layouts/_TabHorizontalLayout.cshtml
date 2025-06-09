@@ -1,0 +1,36 @@
+
+<div class="max-w-10xl pt-2 px-4 sm:px-6 lg:px-6 lg:pt-2 mx-auto">
+    <div class="flex justify-between">
+        @await RenderSectionAsync("TopBarActions", required: false)
+    </div>
+</div>
+
+@if (ViewData["SuccessMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["SuccessMessage"]?.ToString() ?? "Your changes have been saved successfully!",
+        Type = ToastType.Success
+    })
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_Toast", new ToastViewModel {
+        Message = ViewData["ErrorMessage"]?.ToString() ?? "An error occurred while processing your request.",
+        Type = ToastType.Error
+    })
+}
+
+<div class="max-w-10xl px-4 pb-10 sm:px-6 lg:px-6 lg:pb-14 mx-auto">
+    <div class="grid">
+        <div class="border-gray-200 dark:border-neutral-700">
+            <nav class="flex gap-x-3" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+                @await RenderSectionAsync("VerticalTabButtons", required: false)
+            </nav>
+        </div>
+
+        <div class="mt-3">
+            @await RenderSectionAsync("VerticalTabContent", required: false)
+        </div>
+    </div>
+</div>

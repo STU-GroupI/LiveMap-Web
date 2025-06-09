@@ -3,7 +3,6 @@ using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using System.Text;
 using System.Text.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LiveMap.Infrastructure.Services;
 public class PointOfInterestHttpService : IPointOfInterestService
@@ -17,7 +16,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
         _backendApiService = backendApiService;
     }
 
-    public async Task<BackendApiHttpResponse<PointOfInterest>> Get(Guid id)
+    public async Task<ExternalHttpResponse<PointOfInterest>> Get(Guid id)
     {
         return await _backendApiService
             .SendRequest<PointOfInterest>(new HttpRequestMessage
@@ -27,7 +26,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
             });
     }
 
-    public async Task<BackendApiHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
+    public async Task<ExternalHttpResponse<PointOfInterest[]>> Get(string mapId, int? skip, int? take)
     {
         string query = $"{nameof(mapId)}={mapId}&{nameof(skip)}={skip}&{nameof(take)}={take}";
         Uri uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
@@ -38,7 +37,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
                 RequestUri = uri
             });
     }
-    public async Task<BackendApiHttpResponse<PointOfInterest>> CreateSingle(PointOfInterest poi)
+    public async Task<ExternalHttpResponse<PointOfInterest>> CreateSingle(PointOfInterest poi)
     {
         return await _backendApiService
             .SendRequest<PointOfInterest>(new HttpRequestMessage
@@ -49,7 +48,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
             });
     }
 
-    public async Task<BackendApiHttpResponse<PointOfInterest>> UpdateSingle(PointOfInterest poi)
+    public async Task<ExternalHttpResponse<PointOfInterest>> UpdateSingle(PointOfInterest poi)
     {
         return await _backendApiService
             .SendRequest<PointOfInterest>(new HttpRequestMessage
@@ -60,7 +59,7 @@ public class PointOfInterestHttpService : IPointOfInterestService
             });
     }
 
-    public async Task<BackendApiHttpResponse> Delete(Guid id)
+    public async Task<ExternalHttpResponse> Delete(Guid id)
     {
         return await _backendApiService
             .SendRequest(new HttpRequestMessage

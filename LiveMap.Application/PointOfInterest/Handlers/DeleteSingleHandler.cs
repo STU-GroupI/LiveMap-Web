@@ -1,6 +1,5 @@
 ﻿using LiveMap.Application.PointOfInterest.Persistance;
 using LiveMap.Application.PointOfInterest.Requests;
-using LiveMap.Application.PointOfInterest.Responses;
 
 namespace LiveMap.Application.PointOfInterest.Handlers;
 
@@ -13,7 +12,6 @@ public class DeleteSingleHandler : IRequestHandler<DeleteSingleRequest>
     }
     public async Task<bool> Handle(DeleteSingleRequest request)
     {
-        bool response = await _pointOfInterestRepository.DeleteSingle(request.Id);
-        return response;
+        return await _pointOfInterestRepository.DeleteSingle(request.Id);
     }
 }

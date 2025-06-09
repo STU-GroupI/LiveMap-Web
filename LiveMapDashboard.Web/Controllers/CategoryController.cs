@@ -4,7 +4,6 @@ using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Models.Category;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LiveMapDashboard.Web.Controllers;
 using Models = LiveMap.Domain.Models;
@@ -35,7 +34,7 @@ public class CategoryController : Controller
         {
             return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, string.Empty, false)));
         }
-        
+
         var category = await categoryService.Get(name);
         return View("CategoryForm", await provider.Hydrate(new CategoryCrudFormViewModel(name, string.Empty, category.Value?.IconName ?? string.Empty, false)));
 
@@ -53,9 +52,9 @@ public class CategoryController : Controller
             return View("CategoryForm", await provider.Hydrate(viewModel));
         }
 
-        BackendApiHttpResponse<Models.Category> result = viewModel switch
+        ExternalHttpResponse<Models.Category> result = viewModel switch
         {
-            var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty  
+            var vm when vm.CategoryName is not null && vm.CategoryName != string.Empty
                 => await categoryService.UpdateSingle(
                     new() { CategoryName = vm.CategoryName!, IconName = "mdi" + viewModel.IconName },
                     new() { CategoryName = vm.NewValue, IconName = "mdi" + viewModel.IconName }),

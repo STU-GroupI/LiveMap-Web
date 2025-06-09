@@ -1,13 +1,14 @@
 import * as turf from 'https://esm.sh/@turf/turf@7.1.0';
 
-const API_PATH = "/api/map"
-
 MapboxDraw.constants.classes.CANVAS  = 'maplibregl-canvas';
 MapboxDraw.constants.classes.CONTROL_BASE  = 'maplibregl-ctrl';
 MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
 MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
-const map = MapFactory.createMap('map', [4.729, 52.045], 15);
+const map = MapFactory.createMap('map', [4.729, 52.045], 15, {
+    layerToggle: true
+});
+window.MapRegistry.formMap = map;
 
 const draw = new MapboxDraw({
     displayControlsDefault: false,
@@ -49,6 +50,7 @@ const draw = new MapboxDraw({
     ]
 });
 map.addControl(draw);
+
 
 map.on('draw.create', onCreateArea);
 map.on('draw.delete', onDeleteArea);
@@ -93,10 +95,9 @@ function hasDrawing() {
 
 function centerOnMap() {
     map.setZoom(15);
-    console.log(draw.getAll().features);
     const features = draw.getAll().features;
     if (features.length === 0) {
-        showAlert('error', 'There are no park boundaries yet.');
+        showAlert('error', 'There are no map boundaries yet.');
         return;
     }
 
@@ -124,45 +125,7 @@ function getCenterOfCoordinates(coordinates) {
     return [centerLongitude, centerLatitude];  // Return in [longitude, latitude] format
 }
 
-// CRUD
-function getMap() {
-    try {
-        const allMaps = `${BACKEND_URL}${API_PATH}`;
-        fetch(`${allMaps}`, {
-            method: 'GET',
-        })
-            .then(response => response.json())
-            .then(data => {
-                mapId = data[0].id;
-                fetch(`${BACKEND_URL}${API_PATH}/${data[0].id}`, {
-                    method: 'GET',
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const newFeature = draw.add({
-                            type: 'Feature',
-                            properties: [],
-                            geometry: {
-                                type: 'Polygon',
-                                coordinates: [ translateArea(data.area), ],
-                            }
-                        });
-                        centerOnMap();
-                        onAreaChanged();
-                    })
-                    .catch(error => {
-                        showAlert('error', 'Cannot fetch park boundaries.');
-                    });
-            })
-            .catch(error => {
-                showAlert('error', 'Cannot fetch park boundaries.');
-            });
-    } catch (error) {
-        showAlert('error', 'Cannot fetch park boundaries.');
-    }
-}
-
-function deleteMap() {
+function deleteBoundaries() {
     const data = draw.getAll();
     if (data.features && data.features.length > 0) {
         draw.delete(data.features[data.features.length - 1].id);
@@ -170,38 +133,14 @@ function deleteMap() {
         document.activeElement.blur();
         onAreaChanged();
     } else {
-        showAlert('error', 'There are no park boundaries to delete.');
+        showAlert('error', 'There are no map boundaries to delete.');
     }
-}
-
-function saveMap() {
-    const features = draw.getAll().features;
-    if (features.length === 0) {
-        showAlert('warning', 'There are no park boundaries to save.');
-        return;
-    }
-
-    // Save Map
-    const coordinates = features[0].geometry.coordinates[0];
-    window.mapCenter = new maplibregl.Marker().setLngLat(coordinates);
-
-    fetch(`${BACKEND_URL}${API_PATH}/${mapId}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(translateCoordinates(coordinates))
-    })
-        .catch(error => {
-            console.log(error);
-            showAlert('error', 'Cannot save park boundaries.');
-        });
 }
 
 function translateArea(apiArea) {
     return apiArea.map(p => [
-        p.latitude,
-        p.longitude
+        p.Latitude,
+        p.Longitude
     ]);
 }
 
@@ -212,45 +151,47 @@ function translateCoordinates(coordinates) {
     return coordinates.map(p => new Object({ "Longitude": p[1], "Latitude": p[0] }));
 }
 
-let mapId = '';
-
 document.addEventListener('DOMContentLoaded', () => {
     {
-        document.querySelector('#latitudeInput').value = '51.6885178';
-        document.querySelector('#longitudeInput').value = '5.2866805';
-
-        getMap();
+        try {
+            const area = document.querySelector('#Area').value; 
+            if (area !== '') {
+                draw.add({
+                    type: 'Feature',
+                    properties: [],
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [translateArea(JSON.parse(area)),],
+                    }
+                });
+                centerOnMap();
+                onAreaChanged();
+            }
+        } catch (error) {
+            showAlert('error', 'Could not load map boundaries');
+        }
     }
 
-    document.getElementById("confirmDelete").addEventListener("click", function () {
-        deleteMap();
-    });
-
-    document.querySelector('#saveMap').addEventListener('click', () => {
-        saveMap();
+    document.querySelector('#map_form').addEventListener('submit', (e) => {
+        try {
+            const features = draw.getAll().features;
+            const coordinates = features[0].geometry.coordinates[0];
+            const jsonArea = JSON.stringify(translateCoordinates(coordinates));
+            document.querySelector('#Area').value = jsonArea;
+        } catch (error) {
+            showAlert('error', 'Could not submit map boundaries.');
+        }
     });
 
     document.querySelector('#drawMap').addEventListener('click', () => {
         if (hasDrawing() === false) {
             draw.changeMode('draw_polygon');  // Enable drawing polygon mode
         } else {
-            showAlert('info', 'There is a park boundary already present.');
+            showAlert('info', 'There is a map boundary already present.');
         }
     });
 
-    document.querySelector('#submitGo').addEventListener('click', () => {
-        try {
-            map.setZoom(15)
-            map.setCenter([
-                document.querySelector('#longitudeInput').value,
-                document.querySelector('#latitudeInput').value
-            ]);
-        } catch (error) {
-            showAlert('warning', 'Coordinates are invalid.');
-        }
-    });
-
-    document.querySelector('#searchPark').addEventListener('click', () => {
-        centerOnMap();
+    document.querySelector('#deleteBoundaries').addEventListener('click', () => {
+        deleteBoundaries();
     });
 });

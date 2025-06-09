@@ -1,9 +1,8 @@
-﻿using LiveMap.Domain.Models;
-
-namespace LiveMapDashboard.Web.Models.Poi
+﻿namespace LiveMapDashboard.Web.Models.Poi
 {
     public sealed record PoiListViewModel()
     {
+        public Guid MapId { get; set; }
         public List<PoiListEntryViewModel> Pois { get; init; } = new();
     }
 

@@ -7,12 +7,13 @@ using Models = LiveMap.Domain.Models;
 
 public sealed record PoiCrudformViewModel(
     string? Id,
-    string Title, 
-    string Category, 
+    string Title,
+    string Category,
     string? Image,
-    string Description, 
+    string Description,
     bool IsWheelchairAccessible,
     string MapId,
+    IFormFile? ImageFile,
     Models.Coordinate Coordinate,
     OpeningHoursViewModel[] OpeningHours,
     Models.Category[]? Categories) : IValidatableObject
@@ -26,6 +27,7 @@ public sealed record PoiCrudformViewModel(
             Description: string.Empty,
             IsWheelchairAccessible: false,
             MapId: string.Empty,
+            ImageFile: null,
             Coordinate: new(0, 0),
             OpeningHours: Enumerable.Repeat(OpeningHoursViewModel.Empty, 7).ToArray(),
             Categories: []);

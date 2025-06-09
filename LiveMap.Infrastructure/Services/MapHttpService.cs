@@ -1,6 +1,9 @@
 ﻿using LiveMap.Application.Infrastructure.Models;
 using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
+using LiveMap.Domain.Pagination;
+using System.Text;
+using System.Text.Json;
 
 namespace LiveMap.Infrastructure.Services;
 public class MapHttpService : IMapService
@@ -13,17 +16,19 @@ public class MapHttpService : IMapService
         _backendApiService = backendApiHttpService;
     }
 
-    public Task<BackendApiHttpResponse<Map>> CreateSingle(Map poi)
+    public async Task<ExternalHttpResponse<Map>> CreateSingle(Map map)
     {
-        throw new NotImplementedException();
+        // Setup for Backend communication
+        return await _backendApiService
+            .SendRequest<Map>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = new StringContent(JsonSerializer.Serialize(map), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri(_ENDPOINT, UriKind.Relative)
+            });
     }
 
-    public Task<BackendApiHttpResponse> Delete(Map poi)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<BackendApiHttpResponse<Map>> Get(Guid id)
+    public async Task<ExternalHttpResponse<Map>> Get(Guid id)
     {
         return await _backendApiService
             .SendRequest<Map>(new HttpRequestMessage
@@ -33,13 +38,13 @@ public class MapHttpService : IMapService
             });
     }
 
-    public async Task<BackendApiHttpResponse<Map[]>> Get(int? skip, int? take)
+    public async Task<ExternalHttpResponse<PaginatedResult<Map>>> Get(int? skip, int? take)
     {
         var query = $"{nameof(skip)}={skip}&{nameof(take)}={take}";
         var uri = new Uri($"{_ENDPOINT}?{query}", UriKind.Relative);
 
         return await _backendApiService
-            .SendRequest<Map[]>(new HttpRequestMessage
+            .SendRequest<PaginatedResult<Map>>(new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri
@@ -47,8 +52,25 @@ public class MapHttpService : IMapService
     }
 
 
-    public Task<BackendApiHttpResponse<Map>> UpdateSingle(Map poi)
+    public async Task<ExternalHttpResponse<Map>> UpdateSingle(Map map)
     {
-        throw new NotImplementedException();
+        // Setup for Backend communication
+        return await _backendApiService
+            .SendRequest<Map>(new HttpRequestMessage
+            {
+                Method = HttpMethod.Patch,
+                Content = new StringContent(JsonSerializer.Serialize(map), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri($"{_ENDPOINT}/{map.Id.ToString()}", UriKind.Relative)
+            });
+    }
+
+    public async Task<ExternalHttpResponse> Delete(Guid id)
+    {
+        return await _backendApiService
+            .SendRequest(new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri($"{_ENDPOINT}/{id.ToString()}", UriKind.Relative)
+            }); ;
     }
 }

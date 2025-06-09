@@ -30,37 +30,51 @@
 
 @section TopBarActions
 {
-    @if (!string.IsNullOrEmpty(Model.Id))
-    {
-        <a asp-controller="Poi" asp-action="Index" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="go-back-alert" data-hs-overlay="#go-back-alert">
-            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            </span>
-            Go back
-        </a>
-    }
-    else
-    {
-        <button type="button" class="bg-transparent hover:bg-transparent py-2 text-blue-500 hover:bg-blue-600 flex justify-center items-center cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
-            <span class="inline-flex justify-center items-center size-11 rounded-full text-blue-600 dark:text-blue-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-icon lucide-arrow-left shrink-0 size-5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            </span>
-            Go back
-        </button>
-    }
-
-    @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBackModal.cshtml", leaveChangesModalModel)
-
-    @if (deleteModalModel != null)
-    {
-        <div class="text-center">
-            <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
-                Delete
-            </button>
+    <div class="mb-5 pb-5 flex w-full justify-between items-center border-b border-gray-200 dark:border-neutral-700">
+        <div class="flex items-center gap-x-4">
+            @if (!string.IsNullOrEmpty(Model.Id))
+            {
+                <a asp-controller="Poi"
+                   asp-action="Index"
+                   asp-route-mapId="@Model.MapId"
+                   class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left-icon lucide-corner-down-left shrink size-4"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg>
+                </a>
+            }
+            else
+            {
+                <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left-icon lucide-corner-down-left shrink size-4"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg>
+                </button>
+            }
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-neutral-200">
+                @if (!string.IsNullOrEmpty(Model.Id))
+                {
+                    <span>Edit point of interest: @Model.Title</span>
+                }
+                else
+                {
+                    <span>Create New Point of interest</span>
+                }
+            </h2>
         </div>
 
-        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
-    }
+        @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_GoBackModal.cshtml", leaveChangesModalModel)
+
+        <div class="inline-flex gap-x-2">
+            @if (deleteModalModel != null)
+            {
+                <div class="text-center">
+                    <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-hidden focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none" aria-haspopup="dialog" aria-expanded="false" aria-controls="@deleteModalId" data-hs-overlay="#@deleteModalId">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2 shrink size-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                        Delete
+                    </button>
+                </div>
+
+                @await Html.PartialAsync("~/Views/Shared/Components/PoiForm/_DeleteModal.cshtml", deleteModalModel)
+            }
+        </div>
+    </div>
 }
 
 @section GridLeftContent
@@ -76,7 +90,7 @@
 
 @section GridRightContent
 {
-    <form method="post" asp-controller="poi" asp-action="submit">
+    <form method="post" asp-controller="poi" asp-action="submit" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
 
@@ -84,6 +98,7 @@
         <input type="hidden" asp-for="MapId" />
         <input type="hidden" asp-for="Coordinate.Latitude" />
         <input type="hidden" asp-for="Coordinate.Longitude" />
+        <input type="hidden" asp-for="Image" />
 
         <div>
             <div class="mb-6 border border-blue-500 p-4 rounded-lg">
@@ -94,13 +109,13 @@
                         <span asp-validation-for="Coordinate" class="text-red-500 mb-4"></span>
                     </div>
                     <button type="button"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-                            id="applyLocationButton">
+                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+                    id="applyLocationButton">
                         + Add location
                     </button>
                 </div>
             </div>
-            
+
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
                 @Html.EditorFor(m => m.Title, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Title..." },
@@ -112,7 +127,7 @@
                     { "IconNames", Model.Categories?.Select(c => c.IconName) },
                     { "Label", "Category" }
                 })
-                
+
                 @Html.EditorFor(m => m.Description, new ViewDataDictionary(ViewData) {
                     { "Placeholder", "Enter Description..." },
                     { "Label", "Description" },
@@ -125,18 +140,33 @@
             </div>
 
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
-                @Html.EditorFor(m => m.Image, new ViewDataDictionary(ViewData) {
-                { "Label", "Image (URL)" },
-                })
+                <div class="group flex flex-col bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
+                    <label for="imageUpload" class="flex flex-col items-center justify-center w-full cursor-pointer">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400 font-semibold">Click to upload</p>
+                        </div>
+                        <input id="imageUpload" name="ImageFile" type="file" class="hidden" accept=".png, .jpg, .jpeg" />
+                    </label>
+                </div>
 
                 <div class="flex justify-center">
                     <div id="previewImageLoader" class="animate-spin size-6 border-3 border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500 hidden" role="status" aria-label="loading">
                         <span class="sr-only">Loading...</span>
                     </div>
 
-                    <img id="previewImage" class="mt-2 w-full rounded-lg hidden" alt="POI main image"/>
-                    <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
+                    <img id="preview" class="mt-2 w-full rounded-lg hidden" alt="POI main image" />
+                     <p id="imagePreviewError" class="text-sm text-yellow-800 mt-2 hidden">Image at URL does not exist.</p>
                 </div>
+
+                @if (Model.Image != null)
+                {
+                    <p class="text-sm font-medium text-gray-700 block mb-1 dark:text-gray-200">Original Image</p>
+                    <img class="mt-2 w-full rounded-lg" src="@Model.Image" />
+                }
+                
             </div>
             
             <div class="mt-1 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-4 dark:bg-neutral-900 dark:border-neutral-700">
@@ -173,13 +203,13 @@
             <div class="flex justify-end gap-3 w-full">
                 @if (!string.IsNullOrEmpty(Model.Id))
                 {
-                    <a asp-controller="Poi" asp-action="Index" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    <a asp-controller="Poi" asp-action="Index" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:focus:bg-white/20 dark:focus:text-white">
                         Cancel
                     </a>
                 }
                 else
                 {
-                    <a class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
+                    <a class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:focus:bg-white/20 dark:focus:text-white" aria-haspopup="dialog" aria-expanded="false" aria-controls="@leaveChangesModalId" data-hs-overlay="#@leaveChangesModalId">
                         Cancel
                     </a>
                 }
@@ -190,5 +220,5 @@
             </div>
         </div>
     </form>
-    <script src="~/js/poi.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/preview-image.js" asp-append-version="true" type="module"></script>
 }

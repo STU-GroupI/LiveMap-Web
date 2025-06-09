@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LiveMap.Application.Persistance;
+﻿namespace LiveMap.Application.Persistance;
 
 public interface IUnitOfWork<TParam, TResponse>
 {

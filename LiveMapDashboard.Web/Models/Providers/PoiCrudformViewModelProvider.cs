@@ -24,15 +24,12 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
     public async Task<PoiCrudformViewModel> Hydrate(PoiCrudformViewModel viewModel)
     {
         Models.Category[] categories = (await _categoryService.Get(null, null)).Value ?? [];
-        var map = (await _mapService.Get(null, null)).Value;
-        var mapId = map is { Length: > 1 } ? map[0].Id : Guid.Empty;
 
         if (!Guid.TryParse(viewModel.Id, out var poiId))
         {
             return viewModel with
             {
-                Categories = categories,
-                MapId = mapId.ToString(),
+                Categories = categories
             };
         }
 
@@ -74,8 +71,8 @@ public class PoiCrudformViewModelProvider : IViewModelProvider<PoiCrudformViewMo
         Models.Category[] categories)
     {
         var poiResult = await _pointOfInterestService.Get(poiId);
-        
-        if (poiResult is not { IsSuccess: true, Value: not null } )
+
+        if (poiResult is not { IsSuccess: true, Value: not null })
         {
             throw new Exception($"The poi for the given ID was not found while hydrating from {this.GetType().FullName}");
         }
