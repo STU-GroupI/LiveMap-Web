@@ -96,20 +96,13 @@ public class MapController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        CreateSingleResponse response = await handler.Handle(request);
+        if (response.Map is null)
         {
-            CreateSingleResponse response = await handler.Handle(request);
-            if (response.Map is null)
-            {
-                return NotFound("Failed to create map.");
-            }
+            return NotFound("Failed to create map.");
+        }
 
-            return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
     }
 
     /// <summary>
@@ -146,20 +139,13 @@ public class MapController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        UpdateSingleResponse response = await handler.Handle(request);
+        if(response.Map is null)
         {
-            UpdateSingleResponse response = await handler.Handle(request);
-            if(response.Map is null)
-            {
-                return NotFound("Failed to update map.");
-            }
+            return NotFound("Failed to update map.");
+        }
 
-            return Ok(response.Map);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return Ok(response.Map);
     }
 
     /// <summary>

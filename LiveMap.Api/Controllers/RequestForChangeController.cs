@@ -99,15 +99,8 @@ public class RequestForChangeController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
-        {
-            CreateSingleResponse response = await handler.Handle(request);
-            return CreatedAtAction(nameof(Get), new { id = response.Rfc.Id.ToString() }, response.Rfc);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
-        }
+        CreateSingleResponse response = await handler.Handle(request);
+        return CreatedAtAction(nameof(Get), new { id = response.Rfc.Id.ToString() }, response.Rfc);
     }
 
     /// <summary>
@@ -167,20 +160,13 @@ public class RequestForChangeController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        ApprovalResponse response = await handler.Handle(request);
+        if (!response.Success)
         {
-            ApprovalResponse response = await handler.Handle(request);
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
+            return BadRequest(response);
+        }
 
-            return Ok();
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return Ok();
     }
 
     [HttpPost("{id}/reject")]

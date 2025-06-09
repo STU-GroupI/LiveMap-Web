@@ -111,20 +111,13 @@ public class PointOfInterestController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        CreateSingleResponse response = await handler.Handle(request);
+        if(response.Poi is null)
         {
-            CreateSingleResponse response = await handler.Handle(request);
-            if(response.Poi is null)
-            {
-                throw new ArgumentException("Failed to create POI.");
-            }
+            throw new ArgumentException("Failed to create POI.");
+        }
 
-            return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
     }
 
     /// <summary>
@@ -173,20 +166,13 @@ public class PointOfInterestController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        UpdateSingleResponse response = await handler.Handle(request);
+        if (response.Poi is null)
         {
-            UpdateSingleResponse response = await handler.Handle(request);
-            if (response.Poi is null)
-            {
-                return NotFound("Failed to update point of interest.");
-            }
+            return NotFound("Failed to update point of interest.");
+        }
 
-            return Ok(response.Poi);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return Ok(response.Poi);
     }
 
     /// <summary>

@@ -32,10 +32,10 @@ public class CategoryController : ControllerBase
         var request = new GetSingleRequest(name);
         GetSingleResponse response = await handler.Handle(request);
 
-            if (response.Category is null)
-            {
-                return NotFound();
-            }
+        if (response.Category is null)
+        {
+            return NotFound();
+        }
 
         var category = response.Category;
         return Ok(category);
@@ -91,23 +91,16 @@ public class CategoryController : ControllerBase
             return BadRequest(errorMessages);
         }
 
-        try
+        CreateSingleResponse response = await handler.Handle(request);
+        if (response.Category is null)
         {
-            CreateSingleResponse response = await handler.Handle(request);
-            if (response.Category is null)
-            {
-                return NotFound("Failed to create category.");
-            }
+            return NotFound("Failed to create category.");
+        }
 
-            return CreatedAtAction(
-                nameof(Get),
-                new { name = response.Category.CategoryName },
-                response.Category);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+        return CreatedAtAction(
+            nameof(Get),
+            new { name = response.Category.CategoryName },
+            response.Category);
     }
 
 
@@ -136,24 +129,17 @@ public class CategoryController : ControllerBase
             return BadRequest(errorMessages);
         }
         
-        try
+        UpdateSingleResponse response = await handler.Handle(request);
+        if (!response.Success)
         {
-            UpdateSingleResponse response = await handler.Handle(request);
-            if (!response.Success)
-            {
-                return NotFound("Category not found");
-            }
+            return NotFound("Category not found");
+        }
 
-            return Ok(new Category
-            {
-                CategoryName = response.NewName,
-                IconName = response.iconName
-            });
-        }
-        catch (Exception)
+        return Ok(new Category
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
-        }
+            CategoryName = response.NewName,
+            IconName = response.iconName
+        });
     }
 
     /// <summary>
