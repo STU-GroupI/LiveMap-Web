@@ -6,6 +6,8 @@ using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LiveMapDashboard.Web.Controllers
 {
@@ -76,6 +78,7 @@ namespace LiveMapDashboard.Web.Controllers
             {
                 var imageResult = await imageService.Create(new(ImageHelpers.ToImage(imageFile)));
                 viewModel = viewModel with { ImageUrl = imageResult.Value };
+                ModelState.SetModelValue("ImageUrl", new ValueProviderResult(viewModel.ImageUrl));
             }
 
             Guid mapId = Guid.TryParse(viewModel.Id, out Guid outMapId) ? outMapId : Guid.Empty;
