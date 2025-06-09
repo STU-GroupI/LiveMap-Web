@@ -84,19 +84,19 @@ public class CategoryController : ControllerBase
 
         var request = new CreateSingleRequest(category);
         var validationResults = new CreateSingleValidator().Validate(request);
+        
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             CreateSingleResponse response = await handler.Handle(request);
             if (response.Category is null)
             {
-                throw new ArgumentException("Failed to create category.");
+                return NotFound("Failed to create category.");
             }
 
             return CreatedAtAction(
@@ -104,9 +104,9 @@ public class CategoryController : ControllerBase
                 new { name = response.Category.CategoryName },
                 response.Category);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 
@@ -129,15 +129,15 @@ public class CategoryController : ControllerBase
     {
         var request = new UpdateSingleRequest(oldName, webRequest.CategoryName, webRequest.IconName);
         var validationResults = new UpdateSingleValidator().Validate(request);
-
+        
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+        
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             UpdateSingleResponse response = await handler.Handle(request);
             if (!response.Success)
             {
@@ -150,9 +150,9 @@ public class CategoryController : ControllerBase
                 IconName = response.iconName
             });
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 

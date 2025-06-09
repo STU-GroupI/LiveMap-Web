@@ -90,25 +90,25 @@ public class MapController : ControllerBase
         var request = new CreateSingleRequest(map);
         var validationResults = new CreateSingleValidator().Validate(request);
 
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             CreateSingleResponse response = await handler.Handle(request);
             if (response.Map is null)
             {
-                throw new ArgumentException("Failed to create map.");
+                return NotFound("Failed to create map.");
             }
 
             return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 
@@ -140,25 +140,25 @@ public class MapController : ControllerBase
         var request = new UpdateSingleRequest(map);
         var validationResults = new UpdateSingleValidator().Validate(request);
 
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             UpdateSingleResponse response = await handler.Handle(request);
             if(response.Map is null)
             {
-                throw new ArgumentException("Failed to update map.");
+                return NotFound("Failed to update map.");
             }
 
             return Ok(response.Map);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 

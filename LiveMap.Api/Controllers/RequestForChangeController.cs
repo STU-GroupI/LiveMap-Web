@@ -94,14 +94,14 @@ public class RequestForChangeController : ControllerBase
         var request = new CreateSingleRequest(rfc);
         var validationResults = new CreateSingleValidator().Validate(request);
 
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             CreateSingleResponse response = await handler.Handle(request);
             return CreatedAtAction(nameof(Get), new { id = response.Rfc.Id.ToString() }, response.Rfc);
         }
@@ -162,14 +162,14 @@ public class RequestForChangeController : ControllerBase
         var request = new ApprovalRequest(webRequest.Rfc, webRequest.Poi);
         var validationResults = new ApprovalValidator().Validate(request);
 
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         try
         {
-            if (!validationResults.IsValid)
-            {
-                var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-                throw new ArgumentException(errorMessages);
-            }
-
             ApprovalResponse response = await handler.Handle(request);
             if (!response.Success)
             {
@@ -178,9 +178,9 @@ public class RequestForChangeController : ControllerBase
 
             return Ok();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message ?? "Something went wrong...");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong...");
         }
     }
 
