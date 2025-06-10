@@ -15,6 +15,9 @@ public class SuggestedPointOfInterestValidator : AbstractValidator<SuggestedPoin
             .WithMessage("Title should not be longer than 100 characters.");
 
         RuleFor(sugpoi => sugpoi.Description)
+            .Matches("^[a-zA-Z0-9\\s\\-_\\&\\(\\)\\[\\]\\{\\}\\.\\,\\!\\@\\#\\$\\%\\^\\*\\+\\=]+$")
+            .WithMessage("Description can only contain alphanumeric characters and basic symbols.");
+        RuleFor(sugpoi => sugpoi.Description)
             .MaximumLength(1000)
             .WithMessage("Description should not be longer than 1000 characters.");
     }
