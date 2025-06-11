@@ -24,9 +24,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - BACKEND_URL=http://api:8080
-      - IMAGE_SERVER_URL=http://imageserver:8080
+      - IMAGE_SERVER_URL=http://localhost:5007
     depends_on:
       - api
+
    
   imageserver:
     image: livemap-imageserver
@@ -37,6 +38,8 @@ services:
       - "5007:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./LiveMapDashboard.ImageServer/wwwroot:/app/wwwroot
 
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
