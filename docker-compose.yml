@@ -12,7 +12,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_CON=Server=sql;Initial Catalog=LiveMap;User Id=sa;Password=SomeStrongPw2201755#!;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;
     depends_on:
-      - sql
+      sql:
+       condition: service_healthy
 
   web:
     image: livemap-web
@@ -48,4 +49,10 @@ services:
       SA_PASSWORD: "SomeStrongPw2201755#!"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433:1433"    
+      - "1433:1433"
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "SomeStrongPw2201755#!" -Q "SELECT 1" -b -o /dev/null -C
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
