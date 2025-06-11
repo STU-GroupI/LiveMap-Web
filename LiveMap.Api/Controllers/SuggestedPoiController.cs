@@ -2,6 +2,7 @@ using LiveMap.Api.Models.SuggestedPoi;
 using LiveMap.Application;
 using LiveMap.Application.SuggestedPoi.Requests;
 using LiveMap.Application.SuggestedPoi.Responses;
+using LiveMap.Application.SuggestedPoi.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -67,6 +68,13 @@ public class SuggestedPoiController : ControllerBase
         };
 
         var request = new CreateSingleRequest(poi);
+        var validationResults = new CreateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         CreateSingleResponse response = await handler.Handle(request);
 

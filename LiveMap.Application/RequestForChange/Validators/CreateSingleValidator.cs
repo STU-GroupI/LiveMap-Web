@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using LiveMap.Application.RequestForChange.Requests;
-using LiveMap.Domain.Models;
 
 namespace LiveMap.Application.RequestForChange.Validators;
 
