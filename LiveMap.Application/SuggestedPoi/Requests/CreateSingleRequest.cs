@@ -1,5 +1,4 @@
-﻿using LiveMap.Domain.Models;
-
-namespace LiveMap.Application.SuggestedPoi.Requests;
+﻿namespace LiveMap.Application.SuggestedPoi.Requests;
+using Domain.Models;
 
 public sealed record CreateSingleRequest(SuggestedPointOfInterest SuggestedPoi);

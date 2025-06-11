@@ -5,6 +5,7 @@ using LiveMap.Application.RequestForChange.Requests;
 using LiveMap.Application.RequestForChange.Responses;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using LiveMap.Application.RequestForChange.Validators;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -90,7 +91,14 @@ public class RequestForChangeController : ControllerBase
         };
 
         var request = new CreateSingleRequest(rfc);
-        
+        var validationResults = new CreateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         CreateSingleResponse response = await handler.Handle(request);
         return CreatedAtAction(nameof(Get), new { id = response.Rfc.Id.ToString() }, response.Rfc);
     }
@@ -144,9 +152,16 @@ public class RequestForChangeController : ControllerBase
         [FromServices] IRequestHandler<ApprovalRequest, ApprovalResponse> handler)
     {
         var request = new ApprovalRequest(webRequest.Rfc, webRequest.Poi);
+        var validationResults = new ApprovalValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         ApprovalResponse response = await handler.Handle(request);
-        if(!response.Success)
+        if (!response.Success)
         {
             return BadRequest(response);
         }

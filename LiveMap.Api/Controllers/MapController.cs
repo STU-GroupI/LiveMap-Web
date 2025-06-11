@@ -2,6 +2,7 @@
 using LiveMap.Application;
 using LiveMap.Application.Map.Requests;
 using LiveMap.Application.Map.Responses;
+using LiveMap.Application.Map.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -28,8 +29,8 @@ public class MapController : ControllerBase
         [FromServices] IRequestHandler<GetSingleRequest, GetSingleResponse> handler)
     {
         var request = new GetSingleRequest(Guid.Parse(id));
+        
         GetSingleResponse response = await handler.Handle(request);
-
         if (response.Map is null)
         {
             return NotFound();
@@ -87,8 +88,20 @@ public class MapController : ControllerBase
             ImageUrl = webRequest.ImageUrl,
         };
         var request = new CreateSingleRequest(map);
+        var validationResults = new CreateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         CreateSingleResponse response = await handler.Handle(request);
+        if (response.Map is null)
+        {
+            return NotFound("Failed to create map.");
+        }
+
         return CreatedAtAction(nameof(Get), new { id = response.Map.Id.ToString() }, response.Map);
     }
 
@@ -118,11 +131,18 @@ public class MapController : ControllerBase
         };
 
         var request = new UpdateSingleRequest(map);
+        var validationResults = new UpdateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         UpdateSingleResponse response = await handler.Handle(request);
-        if (response.Map is null)
+        if(response.Map is null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update map.");
+            return NotFound("Failed to update map.");
         }
 
         return Ok(response.Map);
@@ -171,7 +191,6 @@ public class MapController : ControllerBase
         var request = new GetClosestRequest(latitude, longitude);
 
         GetClosestResponse response = await handler.Handle(request);
-
         if (response.Map is null)
         {
             return NotFound();

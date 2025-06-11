@@ -2,6 +2,7 @@ using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMapDashboard.Web.Exceptions;
 using LiveMapDashboard.Web.Extensions;
+using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
@@ -122,8 +123,7 @@ public class PoiController : Controller
         [FromServices] IPointOfInterestService poiService,
         [FromServices] IImageService imageService,
         [FromServices] IViewModelProvider<PoiCrudformViewModel> provider,
-        PoiCrudformViewModel viewModel,
-        string action)
+        PoiCrudformViewModel viewModel)
     {
         if (!ModelState.IsValid)
         {
@@ -145,29 +145,16 @@ public class PoiController : Controller
             ? await poiService.CreateSingle(poi)
             : await poiService.UpdateSingle(poi);
 
-        if (isNewPoi)
+        if (result.ErrorMessage.HasValue)
         {
-            return RedirectToAction(
-                nameof(Index),
-                "poi",
-                new { mapId = viewModel.MapId });
+            this.BuildResponseMessage(result);
+            return View("PoiForm", await provider.Hydrate(viewModel));
         }
-        
-        if (result.IsSuccess)
-        {
-            ViewData["SuccessMessage"] = "Your request was successfully processed!";
-        }
-        else
-        {
-            ViewData["ErrorMessage"] = result.StatusCode switch
-            {
-                HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
-                HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
-                _ => "Something went wrong while trying to contact the application. Please try again later"
-            };
-        }
-        
-        return View("PoiForm", await provider.Hydrate(viewModel));
+
+        this.BuildResponseMessageForRedirect(result);
+        return RedirectToAction(
+            nameof(Index),
+            "poi",
+            new { mapId = viewModel.MapId });
     }
 }

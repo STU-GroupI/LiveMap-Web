@@ -1,7 +1,8 @@
-﻿using LiveMap.Api.Models.PointOfInterest;
+using LiveMap.Api.Models.PointOfInterest;
 using LiveMap.Application;
 using LiveMap.Application.PointOfInterest.Requests;
 using LiveMap.Application.PointOfInterest.Responses;
+using LiveMap.Application.PointOfInterest.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -102,12 +103,18 @@ public class PointOfInterestController : ControllerBase
             StatusName = "Active",
         };
         var request = new CreateSingleRequest(poi);
+        var validationResults = new CreateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         CreateSingleResponse response = await handler.Handle(request);
-
         if(response.Poi is null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to create POI.");
+            throw new ArgumentException("Failed to create POI.");
         }
 
         return CreatedAtAction(nameof(Get), new { id = response.Poi.Id.ToString() }, response.Poi);
@@ -151,12 +158,18 @@ public class PointOfInterestController : ControllerBase
             StatusName = "Active",
         };
         var request = new UpdateSingleRequest(poi);
+        var validationResults = new UpdateSingleValidator().Validate(request);
+
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
 
         UpdateSingleResponse response = await handler.Handle(request);
-        
-        if(response.Poi is null)
+        if (response.Poi is null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update POI.");
+            return NotFound("Failed to update point of interest.");
         }
 
         return Ok(response.Poi);

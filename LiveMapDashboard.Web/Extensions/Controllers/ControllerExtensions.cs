@@ -43,6 +43,10 @@ public static class ControllerExtensions
         {
             dataStore["SuccessMessage"] = messages["SuccessMessage"];
         }
+        else if(result.ErrorMessage is not null)
+        {
+            dataStore["ErrorMessage"] = result.ErrorMessage.Value.Message;
+        }
         else
         {
             dataStore["ErrorMessage"] = result.StatusCode switch
@@ -95,6 +99,10 @@ public static class ControllerExtensions
         if (result.IsSuccess)
         {
             dataStore["SuccessMessage"] = "Your request was successfully processed!";
+        }
+        else if(result.ErrorMessage is not null)
+        {
+            dataStore["ErrorMessage"] = result.ErrorMessage.Value.Message;
         }
         else
         {

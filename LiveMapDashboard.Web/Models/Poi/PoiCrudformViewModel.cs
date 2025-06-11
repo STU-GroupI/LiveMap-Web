@@ -41,11 +41,6 @@ public sealed record PoiCrudformViewModel(
             results.Add(new ValidationResult("The Title field is required", new[] { nameof(Title) }));
         }
 
-        if (!string.IsNullOrWhiteSpace(Title) && !Regex.IsMatch(Title, @"^[a-zA-Z0-9\s\-_\&\(\)\[\]\{\}\.\,\!\@\#\$\%\^\*\+\=]+$"))
-        {
-            results.Add(new ValidationResult("Title can only contain alphanumeric characters and basic symbols.", new[] { nameof(Title) }));
-        }
-
         if (string.IsNullOrWhiteSpace(MapId) || !Guid.TryParse(MapId, out _))
         {
             results.Add(new ValidationResult("Park ID must be a valid GUID.", new[] { nameof(MapId) }));

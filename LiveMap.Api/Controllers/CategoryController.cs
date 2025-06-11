@@ -1,7 +1,9 @@
-﻿using LiveMap.Api.Models.Category;
+﻿using FluentValidation;
+using LiveMap.Api.Models.Category;
 using LiveMap.Application;
 using LiveMap.Application.Category.Requests;
 using LiveMap.Application.Category.Responses;
+using LiveMap.Application.Category.Validators;
 using LiveMap.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
@@ -30,15 +32,15 @@ public class CategoryController : ControllerBase
         var request = new GetSingleRequest(name);
         GetSingleResponse response = await handler.Handle(request);
 
-            if (response.Category is null)
-            {
-                return NotFound();
-            }
+        if (response.Category is null)
+        {
+            return NotFound();
+        }
 
         var category = response.Category;
         return Ok(category);
     }
-    
+
     /// <summary>
     /// Get multiple categories with optional filtering.
     /// </summary>
@@ -81,10 +83,23 @@ public class CategoryController : ControllerBase
         };
 
         var request = new CreateSingleRequest(category);
+        var validationResults = new CreateSingleValidator().Validate(request);
+        
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+
         CreateSingleResponse response = await handler.Handle(request);
+        if (response.Category is null)
+        {
+            return NotFound("Failed to create category.");
+        }
+
         return CreatedAtAction(
-            nameof(Get), 
-            new { name = response.Category.CategoryName }, 
+            nameof(Get),
+            new { name = response.Category.CategoryName },
             response.Category);
     }
 
@@ -106,9 +121,16 @@ public class CategoryController : ControllerBase
         [FromServices] IRequestHandler<UpdateSingleRequest, UpdateSingleResponse> handler)
     {
         var request = new UpdateSingleRequest(oldName, webRequest.CategoryName, webRequest.IconName);
-        var response = await handler.Handle(request);
-
-        if(!response.Success)
+        var validationResults = new UpdateSingleValidator().Validate(request);
+        
+        if (!validationResults.IsValid)
+        {
+            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
+            return BadRequest(errorMessages);
+        }
+        
+        UpdateSingleResponse response = await handler.Handle(request);
+        if (!response.Success)
         {
             return NotFound("Category not found");
         }
