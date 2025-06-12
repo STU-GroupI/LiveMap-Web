@@ -32,6 +32,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# ENV DATABASE_CON="Server=host.docker.internal;Initial Catalog=LiveMap;User Id=sa;Password=355959;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;"
-
 ENTRYPOINT ["dotnet", "LiveMap.Api.dll"]
