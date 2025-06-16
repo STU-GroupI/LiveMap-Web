@@ -91,13 +91,6 @@ public class RequestForChangeController : ControllerBase
         };
 
         var request = new CreateSingleRequest(rfc);
-        var validationResults = new CreateSingleValidator().Validate(request);
-
-        if (!validationResults.IsValid)
-        {
-            var errorMessages = string.Join(" ", validationResults.Errors.Select(e => e.ErrorMessage));
-            return BadRequest(errorMessages);
-        }
 
         CreateSingleResponse response = await handler.Handle(request);
         return CreatedAtAction(nameof(Get), new { id = response.Rfc.Id.ToString() }, response.Rfc);
