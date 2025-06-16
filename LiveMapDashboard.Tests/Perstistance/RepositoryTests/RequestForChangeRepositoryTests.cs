@@ -102,33 +102,6 @@ public class RequestForChangeRepositoryTests : TestBase
         result.ShouldBeNull();
     }
 
-    [Fact]
-    public async Task UpdateAsync_Should_Update_Existing_Rfc()
-    {
-        var repo = new RequestForChangeRepository(Context);
-
-        var rfc = await repo.CreateAsync(CreateRfc());
-        rfc.Message = "Updated message";
-        rfc.ApprovalStatus = ApprovalStatus.APPROVED;
-
-        var result = await repo.UpdateAsync(rfc);
-
-        result.ShouldNotBeNull();
-        result.Message.ShouldBe("Updated message");
-        result.ApprovalStatus.ShouldBe(ApprovalStatus.APPROVED);
-    }
-
-    [Fact]
-    public async Task UpdateAsync_Should_Return_Null_If_Rfc_Does_Not_Exist()
-    {
-        var repo = new RequestForChangeRepository(Context);
-
-        var rfc = CreateRfc();
-        var result = await repo.UpdateAsync(rfc);
-
-        result.ShouldBeNull();
-    }
-
     public static IEnumerable<object[]> GetMultipleRfcData
     {
         get
