@@ -3,7 +3,9 @@ using LiveMap.Application;
 using LiveMap.Application.Images.Requests;
 using LiveMap.Application.Images.Responses;
 using LiveMap.ImageServer.Models.Image;
+using LiveMap.ImageServer.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace LiveMap.ImageServer.Controllers
@@ -21,7 +23,8 @@ namespace LiveMap.ImageServer.Controllers
 
         [HttpPost("")]
         public async Task<IActionResult> Upload(
-            [FromBody] CreateSingleImageWebRequest webRequest)
+            [FromBody] CreateSingleImageWebRequest webRequest,
+            [FromServices]IOptions<ImageServiceOptions> imageServiceOptions)
         {
             if (string.IsNullOrWhiteSpace(webRequest.Image.Base64Image))
             {
@@ -45,8 +48,8 @@ namespace LiveMap.ImageServer.Controllers
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+                var url = $"{imageServiceOptions.Value.PublicFacingUrl}/images/{uniqueFileName}";
 
-                var url = $"{Request.Scheme}://{Request.Host}/images/{uniqueFileName}";
                 var request = new CreateSingleRequest(url);
                 CreateSingleResponse response = new(request.ImageUrl);
 
