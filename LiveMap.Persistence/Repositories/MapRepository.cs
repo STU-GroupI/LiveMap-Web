@@ -29,7 +29,9 @@ public class MapRepository : IMapRepository
             take = 1;
         }
 
-        var query = _context.Maps.AsQueryable();
+        var query = _context.Maps
+            .OrderBy(map => map.Name)
+            .AsQueryable();
         int totalCount = await query.CountAsync();
 
         if (skip is int fromValue)

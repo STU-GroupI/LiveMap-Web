@@ -1,4 +1,4 @@
-﻿using DomainModels = LiveMap.Domain.Models;
-namespace LiveMap.Application.RequestForChange.Requests;
+﻿namespace LiveMap.Application.RequestForChange.Requests;
+using Domain.Models;
 
-public sealed record ApprovalRequest(DomainModels.RequestForChange Rfc, DomainModels.PointOfInterest Poi);
+public sealed record ApprovalRequest(RequestForChange Rfc, PointOfInterest Poi);

@@ -1,6 +1,7 @@
 ﻿using LiveMap.Application.Infrastructure.Services;
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
+using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Map;
 using LiveMapDashboard.Web.Models.Providers;
@@ -102,27 +103,14 @@ namespace LiveMapDashboard.Web.Controllers
                 ? await service.CreateSingle(map)
                 : await service.UpdateSingle(map);
 
-            if (isNewMap)
+            if(result.ErrorMessage.HasValue)
             {
-                return RedirectToAction(nameof(Index));
+                this.BuildResponseMessage(result);
+                return View("MapForm", await provider.Hydrate(viewModel));
             }
 
-            if (result.IsSuccess)
-            {
-                ViewData["SuccessMessage"] = "Your request was successfully processed!";
-            }
-            else
-            {
-                ViewData["ErrorMessage"] = result.StatusCode switch
-                {
-                    HttpStatusCode.BadRequest => "The submitted data was invalid. Please check the data you submitted.",
-                    HttpStatusCode.Unauthorized => "You are not authorized to perform this action.",
-                    HttpStatusCode.ServiceUnavailable => "The application unavailable. Please try again later.",
-                    _ => "Something went wrong while trying to contact the application. Please try again later"
-                };
-            }
-
-            return View("MapForm", await provider.Hydrate(viewModel));
+            this.BuildResponseMessageForRedirect(result);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost("delete")]

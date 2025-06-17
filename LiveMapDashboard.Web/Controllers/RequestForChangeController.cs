@@ -2,6 +2,7 @@
 using LiveMap.Domain.Models;
 using LiveMap.Domain.Pagination;
 using LiveMapDashboard.Web.Exceptions;
+using LiveMapDashboard.Web.Extensions.Controllers;
 using LiveMapDashboard.Web.Extensions.Mappers;
 using LiveMapDashboard.Web.Models.Poi;
 using LiveMapDashboard.Web.Models.Providers;
@@ -59,6 +60,13 @@ public class RequestForChangeController : Controller
             viewModel.Rfc, 
             viewModel.CrudformViewModel.ToDomainPointOfInterest());
 
+        if (result.ErrorMessage.HasValue)
+        {
+            this.BuildResponseMessage(result);
+            return View("form", await formProvider.Hydrate(viewModel));
+        }
+
+        this.BuildResponseMessageForRedirect(result);
         return RedirectToAction("index", "Rfc", new { mapId = viewModel.CrudformViewModel.MapId });
     }
 
