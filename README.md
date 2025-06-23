@@ -74,3 +74,6 @@ dotnet run --project LiveMap.ImageServer
 ```
 
 > For best results, use separate terminal windows for each `dotnet run` command so you can see the output from each service.
+
+## Tests
+To run the tests, please make sure that you have docker running on your machine. The tests use a testcontainer to boot up database instances per test group to keep the tests isolated from each other. This, however, does mean that the host machine will be running up to +-7 database instances at ones. Please make sure that your machine is able to handle these kinds of loads as the tests may be very slow on a low power machine. You could alternatively run the tests without parralelism enabled. On low power machines this is actually faster than running the tests in normal mode.
