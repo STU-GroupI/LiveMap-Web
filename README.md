@@ -52,8 +52,12 @@
 ### Primary npm Package for Dashboard
 
 **LiveMapDashboard.Web**
-- `@tailwindcss/postcss` (primary CSS processor)
-- Also used: `preline`, `@preline/theme-switch` (for UI components and theming)
+- Postcss - `8.5.3`
+- Tailwindcss - `4.1.3`
+- Preline - `3.0.1`
+- Maplibre - `5.4.0`
+- Geocoder - `1.5.0`
+- Mapbox (draw) - `1.5.0`
 
 ## 🧪 Run
 Please run the following from the root folder to boot the application in debug mode.
